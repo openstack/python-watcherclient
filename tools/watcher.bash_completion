@@ -1,0 +1,27 @@
+_watcher_opts="" # lazy init
+_watcher_flags="" # lazy init
+_watcher_opts_exp="" # lazy init
+_watcher()
+{
+    local cur prev nbc cflags
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    if [ "x$_watcher_opts" == "x" ] ; then
+        nbc="`watcher bash-completion | sed -e "s/  *-h  */ /" -e "s/  *-i  */ /"`"
+        _watcher_opts="`echo "$nbc" | sed -e "s/--[a-z0-9_-]*//g" -e "s/  */ /g"`"
+        _watcher_flags="`echo " $nbc" | sed -e "s/ [^-][^-][a-z0-9_-]*//g" -e "s/  */ /g"`"
+        _watcher_opts_exp="`echo "$_watcher_opts" | tr ' ' '|'`"
+    fi
+
+    if [[ " ${COMP_WORDS[@]} " =~ " "($_watcher_opts_exp)" " && "$prev" != "help" ]] ; then
+        COMPLETION_CACHE=$HOME/.cache/python-watcherclient/*/*-cache
+        cflags="$_watcher_flags "$(cat $COMPLETION_CACHE 2> /dev/null | tr '\n' ' ')
+        COMPREPLY=($(compgen -W "${cflags}" -- ${cur}))
+    else
+        COMPREPLY=($(compgen -W "${_watcher_opts}" -- ${cur}))
+    fi
+    return 0
+}
+complete -F _watcher watcher
