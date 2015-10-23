@@ -30,8 +30,9 @@ class AuditShellTest(utils.BaseTestCase):
         with mock.patch.object(cliutils, 'print_dict', fake_print_dict):
             audit = object()
             a_shell._print_audit_show(audit)
-        exp = ['created_at', 'audit_template_uuid', 'updated_at', 'uuid',
-               'deleted_at', 'state', 'type', 'deadline']
+        exp = ['created_at', 'audit_template_uuid', 'audit_template_name',
+               'updated_at', 'uuid', 'deleted_at', 'state', 'type',
+               'deadline']
         act = actual.keys()
         self.assertEqual(sorted(exp), sorted(act))
 

@@ -13,6 +13,10 @@ oslotest>=1.2.0  # Apache-2.0
 testrepository>=0.0.18
 testscenarios>=0.4
 testtools>=0.9.36,!=1.2.0
-mock>=1.0
+mock>=1.0,<1.1
 # httpretty>=0.8.4,!=0.8.7
 httpretty>=0.8.8
+
+# Needed for pypi packaging
+wheel
+twine

@@ -20,6 +20,7 @@ from watcherclient.v1 import action
 from watcherclient.v1 import action_plan
 from watcherclient.v1 import audit
 from watcherclient.v1 import audit_template
+from watcherclient.v1 import goal
 from watcherclient.v1 import metric_collector
 
 
@@ -41,6 +42,7 @@ class Client(object):
             self.http_client)
         self.action = action.ActionManager(self.http_client)
         self.action_plan = action_plan.ActionPlanManager(self.http_client)
+        self.goal = goal.GoalManager(self.http_client)
         self.metric_collector = metric_collector.MetricCollectorManager(
             self.http_client
         )
