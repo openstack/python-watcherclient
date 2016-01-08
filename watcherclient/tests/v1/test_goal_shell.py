@@ -15,7 +15,8 @@
 #   under the License.
 
 import mock
-from watcherclient.openstack.common import cliutils
+
+from watcherclient.common import cliutils
 from watcherclient.tests import utils
 import watcherclient.v1.goal_shell as a_shell
 

@@ -18,9 +18,10 @@
 # import argparse
 
 from oslo_utils import uuidutils
+
+from watcherclient.common import cliutils
 from watcherclient.common import utils
-from watcherclient.openstack.common.apiclient.exceptions import ValidationError
-from watcherclient.openstack.common import cliutils
+from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
 
 
@@ -41,7 +42,7 @@ def do_action_plan_show(cc, args):
         action_plan = cc.action_plan.get(action_plan_uuid)
         _print_action_plan_show(action_plan)
     else:
-        raise ValidationError()
+        raise exceptions.ValidationError()
 
 
 @cliutils.arg(
@@ -105,7 +106,7 @@ def do_action_plan_delete(cc, args):
             cc.action_plan.delete(p)
             print ('Deleted action plan %s' % p)
         else:
-            raise ValidationError()
+            raise exceptions.ValidationError()
 
 
 @cliutils.arg(
@@ -133,7 +134,7 @@ def do_action_plan_update(cc, args):
         action_plan = cc.action_plan.update(action_plan_uuid, patch)
         _print_action_plan_show(action_plan)
     else:
-        raise ValidationError()
+        raise exceptions.ValidationError()
 
 
 @cliutils.arg('action-plan',
@@ -153,4 +154,4 @@ def do_action_plan_start(cc, args):
         action_plan = cc.action_plan.update(action_plan_uuid, patch)
         _print_action_plan_show(action_plan)
     else:
-        raise ValidationError()
+        raise exceptions.ValidationError()

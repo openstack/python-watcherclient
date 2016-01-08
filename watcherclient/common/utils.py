@@ -20,9 +20,10 @@ from __future__ import print_function
 import argparse
 import json
 
+from oslo_utils import importutils
+
+from watcherclient.common.i18n import _
 from watcherclient import exceptions as exc
-from watcherclient.openstack.common._i18n import _
-from watcherclient.openstack.common import importutils
 
 
 class HelpFormatter(argparse.HelpFormatter):

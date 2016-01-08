@@ -16,8 +16,8 @@
 
 import mock
 
+from watcherclient.common import cliutils
 from watcherclient.common import utils as commonutils
-from watcherclient.openstack.common import cliutils
 from watcherclient.tests import utils
 import watcherclient.v1.metric_collector_shell as mc_shell
 

@@ -16,9 +16,9 @@
 
 import mock
 
+from watcherclient.common import cliutils
 from watcherclient.common import utils as commonutils
-from watcherclient.openstack.common.apiclient.exceptions import ValidationError
-from watcherclient.openstack.common import cliutils
+from watcherclient import exceptions
 from watcherclient.tests import utils
 import watcherclient.v1.action_shell as a_shell
 
@@ -64,7 +64,7 @@ class ActionShellTest(utils.BaseTestCase):
         args = mock.MagicMock()
         args.action = 'not_uuid'
 
-        self.assertRaises(ValidationError, a_shell.do_action_show,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_action_show,
                           client_mock, args)
 
     def test_do_action_delete(self):
@@ -81,7 +81,7 @@ class ActionShellTest(utils.BaseTestCase):
         args = mock.MagicMock()
         args.action = ['not_uuid']
 
-        self.assertRaises(ValidationError, a_shell.do_action_delete,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_action_delete,
                           client_mock, args)
 
     def test_do_action_delete_multiple(self):
@@ -102,7 +102,7 @@ class ActionShellTest(utils.BaseTestCase):
                        'not_uuid'
                        'a5199d0e-0702-4613-9234-5ae2af8dafeb']
 
-        self.assertRaises(ValidationError, a_shell.do_action_delete,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_action_delete,
                           client_mock, args)
         client_mock.action.delete.assert_has_calls(
             [mock.call('a5199d0e-0702-4613-9234-5ae2af8dafea')])
@@ -128,5 +128,5 @@ class ActionShellTest(utils.BaseTestCase):
         args.op = 'add'
         args.attributes = [['arg1=val1', 'arg2=val2']]
 
-        self.assertRaises(ValidationError, a_shell.do_action_update,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_action_update,
                           client_mock, args)

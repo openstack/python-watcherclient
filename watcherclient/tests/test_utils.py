@@ -17,8 +17,8 @@
 
 import mock
 
+from watcherclient.common.apiclient import exceptions as exc
 from watcherclient.common import utils
-from watcherclient import exceptions as exc
 from watcherclient.tests import utils as test_utils
 
 

@@ -30,16 +30,12 @@ from keystoneclient import exceptions as ks_exc
 from keystoneclient import session as kssession
 import six.moves.urllib.parse as urlparse
 
-
 import watcherclient
 from watcherclient import client as watcher_client
+from watcherclient.common import cliutils
+from watcherclient.common.i18n import _
 from watcherclient.common import utils
 from watcherclient import exceptions as exc
-from watcherclient.openstack.common._i18n import _
-from watcherclient.openstack.common import cliutils
-from watcherclient.openstack.common import gettextutils
-
-gettextutils.install('watcherclient')
 
 
 class WatcherShell(object):

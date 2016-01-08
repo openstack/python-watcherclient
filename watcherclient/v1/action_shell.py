@@ -18,9 +18,10 @@
 # import argparse
 
 from oslo_utils import uuidutils
+
+from watcherclient.common import cliutils
 from watcherclient.common import utils
-from watcherclient.openstack.common.apiclient.exceptions import ValidationError
-from watcherclient.openstack.common import cliutils
+from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
 
 
@@ -40,7 +41,7 @@ def do_action_show(cc, args):
         action = cc.action.get(args.action)
         _print_action_show(action)
     else:
-        raise ValidationError()
+        raise exceptions.ValidationError()
 
 
 @cliutils.arg(
@@ -110,7 +111,7 @@ def do_action_delete(cc, args):
             cc.action.delete(p)
             print ('Deleted action %s' % p)
         else:
-            raise ValidationError()
+            raise exceptions.ValidationError()
 
 
 @cliutils.arg('action', metavar='<action>', help="UUID of the action.")
@@ -134,4 +135,4 @@ def do_action_update(cc, args):
         action = cc.action.update(args.action, patch)
         _print_action_show(action)
     else:
-        raise ValidationError()
+        raise exceptions.ValidationError()

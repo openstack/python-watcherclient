@@ -23,7 +23,7 @@ import copy
 
 import six.moves.urllib.parse as urlparse
 
-from watcherclient.openstack.common.apiclient import base
+from watcherclient.common.apiclient import base
 
 
 def getid(obj):

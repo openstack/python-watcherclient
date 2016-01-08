@@ -13,13 +13,13 @@
 #    under the License.
 
 from keystoneclient.v2_0 import client as ksclient
+import oslo_i18n
 
+from watcherclient.common.i18n import _
 from watcherclient.common import utils
 from watcherclient import exceptions as exc
-from watcherclient.openstack.common._i18n import _
-from watcherclient.openstack.common import gettextutils
 
-gettextutils.install('watcherclient')
+oslo_i18n.install('watcherclient')
 
 
 def _get_ksclient(**kwargs):

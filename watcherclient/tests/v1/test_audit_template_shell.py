@@ -16,8 +16,8 @@
 
 import mock
 
+from watcherclient.common import cliutils
 from watcherclient.common import utils as commonutils
-from watcherclient.openstack.common import cliutils
 from watcherclient.tests import utils
 import watcherclient.v1.audit_template_shell as at_shell
 

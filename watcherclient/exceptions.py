@@ -12,21 +12,49 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from watcherclient.openstack.common.apiclient import exceptions
-from watcherclient.openstack.common.apiclient.exceptions import *  # noqa
+from watcherclient.common.apiclient import exceptions
 
 
 # NOTE(akurilin): This alias is left here since v.0.1.3 to support backwards
 # compatibility.
-InvalidEndpoint = EndpointException
-CommunicationError = ConnectionRefused
-HTTPBadRequest = BadRequest
-HTTPInternalServerError = InternalServerError
-HTTPNotFound = NotFound
-HTTPServiceUnavailable = ServiceUnavailable
+InvalidEndpoint = exceptions.EndpointException
+CommunicationError = exceptions.ConnectionRefused
+HTTPBadRequest = exceptions.BadRequest
+HTTPInternalServerError = exceptions.InternalServerError
+HTTPNotFound = exceptions.NotFound
+HTTPServiceUnavailable = exceptions.ServiceUnavailable
 
 
-class AmbiguousAuthSystem(ClientException):
+CommandError = exceptions.CommandError
+"""Error in CLI tool.
+
+An alias of :py:exc:`watcherclient.common.apiclient.CommandError`
+"""
+
+Unauthorized = exceptions.Unauthorized
+"""HTTP 401 - Unauthorized.
+
+Similar to 403 Forbidden, but specifically for use when authentication
+is required and has failed or has not yet been provided.
+An alias of :py:exc:`watcherclient.common.apiclient.Unauthorized`
+"""
+
+InternalServerError = exceptions.InternalServerError
+"""HTTP 500 - Internal Server Error.
+
+A generic error message, given when no more specific message is suitable.
+An alias of :py:exc:`watcherclient.common.apiclient.InternalServerError`
+"""
+
+ValidationError = exceptions.ValidationError
+"""Error in validation on API client side.
+
+A generic error message, given when no more specific message is suitable.
+An alias of :py:exc:`watcherclient.common.apiclient.ValidationError`
+"""
+
+
+class AmbiguousAuthSystem(exceptions.ClientException):
     """Could not obtain token and endpoint using provided credentials."""
     pass
 
@@ -34,7 +62,7 @@ class AmbiguousAuthSystem(ClientException):
 AmbigiousAuthSystem = AmbiguousAuthSystem
 
 
-class InvalidAttribute(ClientException):
+class InvalidAttribute(exceptions.ClientException):
     pass
 
 
@@ -65,7 +93,7 @@ def from_response(response, message=None, traceback=None, method=None,
     if (response.headers['Content-Type'].startswith('text/') and
             not hasattr(response, 'text')):
         # NOTE(clif_h): There seems to be a case in the
-        # openstack.common.apiclient.exceptions module where if the
+        # common.apiclient.exceptions module where if the
         # content-type of the response is text/* then it expects
         # the response to have a 'text' attribute, but that
         # doesn't always seem to necessarily be the case.

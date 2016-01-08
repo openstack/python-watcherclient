@@ -15,8 +15,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from watcherclient.common import cliutils
 from watcherclient.common import utils
-from watcherclient.openstack.common import cliutils
 from watcherclient.v1 import resource_fields as res_fields
 
 

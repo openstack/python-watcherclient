@@ -16,9 +16,9 @@
 
 import mock
 
+from watcherclient.common import cliutils
 from watcherclient.common import utils as commonutils
-from watcherclient.openstack.common.apiclient.exceptions import ValidationError
-from watcherclient.openstack.common import cliutils
+from watcherclient import exceptions
 from watcherclient.tests import utils
 import watcherclient.v1.action_plan_shell as ap_shell
 
@@ -52,8 +52,9 @@ class ActionPlanShellTest(utils.BaseTestCase):
         args = mock.MagicMock()
         setattr(args, 'action-plan', 'not_uuid')
 
-        self.assertRaises(ValidationError, ap_shell.do_action_plan_show,
-                          client_mock, args)
+        self.assertRaises(
+            exceptions.ValidationError,
+            ap_shell.do_action_plan_show, client_mock, args)
 
     def test_do_action_plan_delete(self):
         client_mock = mock.MagicMock()
@@ -70,8 +71,9 @@ class ActionPlanShellTest(utils.BaseTestCase):
         args = mock.MagicMock()
         setattr(args, 'action-plan', ['not_uuid'])
 
-        self.assertRaises(ValidationError, ap_shell.do_action_plan_delete,
-                          client_mock, args)
+        self.assertRaises(
+            exceptions.ValidationError,
+            ap_shell.do_action_plan_delete, client_mock, args)
 
     def test_do_action_plan_delete_multiple(self):
         client_mock = mock.MagicMock()
@@ -93,8 +95,9 @@ class ActionPlanShellTest(utils.BaseTestCase):
                  "not_uuid",
                  "a5199d0e-0702-4613-9234-5ae2af8dafeb"])
 
-        self.assertRaises(ValidationError, ap_shell.do_action_plan_delete,
-                          client_mock, args)
+        self.assertRaises(
+            exceptions.ValidationError,
+            ap_shell.do_action_plan_delete, client_mock, args)
         client_mock.action_plan.delete.assert_has_calls(
             [mock.call('a5199d0e-0702-4613-9234-5ae2af8dafea')])
 
@@ -121,8 +124,9 @@ class ActionPlanShellTest(utils.BaseTestCase):
         args.op = 'add'
         args.attributes = [['arg1=val1', 'arg2=val2']]
 
-        self.assertRaises(ValidationError, ap_shell.do_action_plan_update,
-                          client_mock, args)
+        self.assertRaises(
+            exceptions.ValidationError,
+            ap_shell.do_action_plan_update, client_mock, args)
 
     def test_do_action_plan_start(self):
         client_mock = mock.MagicMock()
@@ -144,5 +148,6 @@ class ActionPlanShellTest(utils.BaseTestCase):
         action_plan = 'not_uuid'
         setattr(args, 'action-plan', action_plan)
 
-        self.assertRaises(ValidationError, ap_shell.do_action_plan_start,
-                          client_mock, args)
+        self.assertRaises(
+            exceptions.ValidationError,
+            ap_shell.do_action_plan_start, client_mock, args)

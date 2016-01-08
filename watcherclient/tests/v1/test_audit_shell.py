@@ -16,9 +16,9 @@
 
 import mock
 
+from watcherclient.common import cliutils
 from watcherclient.common import utils as commonutils
-from watcherclient.openstack.common.apiclient.exceptions import ValidationError
-from watcherclient.openstack.common import cliutils
+from watcherclient import exceptions
 from watcherclient.tests import utils
 import watcherclient.v1.audit_shell as a_shell
 
@@ -53,7 +53,7 @@ class AuditShellTest(utils.BaseTestCase):
         args = mock.MagicMock()
         args.audit = 'not_uuid'
 
-        self.assertRaises(ValidationError, a_shell.do_audit_show,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_audit_show,
                           client_mock, args)
 
     def test_do_audit_delete(self):
@@ -70,7 +70,7 @@ class AuditShellTest(utils.BaseTestCase):
         args = mock.MagicMock()
         args.audit = ['not_uuid']
 
-        self.assertRaises(ValidationError, a_shell.do_audit_delete,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_audit_delete,
                           client_mock, args)
 
     def test_do_audit_delete_multiple(self):
@@ -91,7 +91,7 @@ class AuditShellTest(utils.BaseTestCase):
                       'not_uuid',
                       'a5199d0e-0702-4613-9234-5ae2af8dafeb']
 
-        self.assertRaises(ValidationError, a_shell.do_audit_delete,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_audit_delete,
                           client_mock, args)
         client_mock.audit.delete.assert_has_calls(
             [mock.call('a5199d0e-0702-4613-9234-5ae2af8dafea')])
@@ -117,7 +117,7 @@ class AuditShellTest(utils.BaseTestCase):
         args.op = 'add'
         args.attributes = [['arg1=val1', 'arg2=val2']]
 
-        self.assertRaises(ValidationError, a_shell.do_audit_update,
+        self.assertRaises(exceptions.ValidationError, a_shell.do_audit_update,
                           client_mock, args)
 
     def test_do_audit_create(self):

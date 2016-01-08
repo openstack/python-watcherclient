@@ -18,9 +18,10 @@
 # import argparse
 
 from oslo_utils import uuidutils
+
+from watcherclient.common import cliutils
 from watcherclient.common import utils
-from watcherclient.openstack.common.apiclient.exceptions import ValidationError
-from watcherclient.openstack.common import cliutils
+from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
 
 
@@ -41,7 +42,7 @@ def do_audit_show(cc, args):
         audit = cc.audit.get(args.audit)
         _print_audit_show(audit)
     else:
-        raise ValidationError()
+        raise exceptions.ValidationError()
 
 
 @cliutils.arg(
@@ -132,7 +133,7 @@ def do_audit_delete(cc, args):
             cc.audit.delete(p)
             print ('Deleted audit %s' % p)
         else:
-            raise ValidationError()
+            raise exceptions.ValidationError()
 
 
 @cliutils.arg(
@@ -159,4 +160,4 @@ def do_audit_update(cc, args):
         audit = cc.audit.update(args.audit, patch)
         _print_audit_show(audit)
     else:
-        raise ValidationError()
+        raise exceptions.ValidationError()
