@@ -16,6 +16,7 @@
 # under the License.
 
 import pbr.version
+
 from watcherclient import client
 from watcherclient import exceptions
 
