@@ -22,7 +22,7 @@ import json
 
 from oslo_utils import importutils
 
-from watcherclient.common.i18n import _
+from watcherclient._i18n import _
 from watcherclient import exceptions as exc
 
 

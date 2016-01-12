@@ -26,6 +26,7 @@ from keystoneclient import adapter
 import six
 import six.moves.urllib.parse as urlparse
 
+from watcherclient._i18n import _, _LW, _LE
 from watcherclient import exceptions as exc
 
 
@@ -83,8 +84,8 @@ class HTTPClient(object):
         elif parts.scheme == 'http':
             _class = six.moves.http_client.HTTPConnection
         else:
-            msg = 'Unsupported scheme: %s' % parts.scheme
-            raise exc.EndpointException(msg)
+            raise exc.EndpointException(
+                _('Unsupported scheme: %s'), parts.scheme)
 
         return (_class, _args, _kwargs)
 
@@ -157,15 +158,14 @@ class HTTPClient(object):
             conn.request(method, conn_url, **kwargs)
             resp = conn.getresponse()
         except socket.gaierror as e:
-            message = ("Error finding address for %(url)s: %(e)s"
-                       % dict(url=url, e=e))
-            raise exc.EndpointNotFound(message)
+            raise exc.EndpointNotFound(
+                _("Error finding address for %(url)s: %(e)s"),
+                url=url, e=e)
         except (socket.error, socket.timeout) as e:
             endpoint = self.endpoint
-            message = ("Error communicating with %(endpoint)s %(e)s"
-                       % dict(endpoint=endpoint, e=e))
-            raise exc.ConnectionRefused(message)
-
+            raise exc.ConnectionRefused(
+                _("Error communicating with %(endpoint)s %(e)s"),
+                endpoint=endpoint, e=e)
         body_iter = ResponseBodyIterator(resp)
 
         # Read body into string if it isn't obviously image data
@@ -178,7 +178,7 @@ class HTTPClient(object):
             self.log_http_response(resp)
 
         if 400 <= resp.status < 600:
-            LOG.warn("Request returned failure status.")
+            LOG.warn(_LW("Request returned failure status."))
             error_json = _extract_error_json(body_str)
             raise exc.from_response(
                 resp, error_json.get('faultstring'),
@@ -210,7 +210,7 @@ class HTTPClient(object):
             try:
                 body = json.loads(body)
             except ValueError:
-                LOG.error('Could not decode response body as JSON')
+                LOG.error(_LE('Could not decode response body as JSON'))
         else:
             body = None
 
@@ -334,7 +334,7 @@ class SessionClient(adapter.LegacyJsonAdapter):
             try:
                 body = resp.json()
             except ValueError:
-                LOG.error('Could not decode response body as JSON')
+                LOG.error(_LE('Could not decode response body as JSON'))
         else:
             body = None
 

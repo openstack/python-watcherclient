@@ -1,0 +1,269 @@
+# Translations template for python-watcherclient.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the
+# python-watcherclient project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: python-watcherclient 0.20.1.dev4\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-01-12 01:58+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.1.1\n"
+
+#: watcherclient/client.py:103
+msgid "Must provide Keystone credentials or user-defined endpoint and token"
+msgstr ""
+
+#: watcherclient/shell.py:279
+#, python-format
+msgid ""
+"Unable to determine the Keystone version to authenticate with using the "
+"given auth_url. Identity service may not support API version discovery. "
+"Please provide a versioned auth_url instead. %s"
+msgstr ""
+
+#: watcherclient/shell.py:344
+msgid ""
+"Unable to determine the Keystone version to authenticate with using the "
+"given auth_url."
+msgstr ""
+
+#: watcherclient/shell.py:380
+msgid ""
+"You must provide a username via either --os-username or via "
+"env[OS_USERNAME]"
+msgstr ""
+
+#: watcherclient/shell.py:396
+msgid ""
+"You must provide a password via either --os-password, env[OS_PASSWORD], "
+"or prompted response"
+msgstr ""
+
+#: watcherclient/shell.py:403
+msgid ""
+"You must provide a project name or project id via --os-project-name, "
+"--os-project-id, env[OS_PROJECT_ID] or env[OS_PROJECT_NAME].  You may use"
+" os-project and os-tenant interchangeably."
+msgstr ""
+
+#: watcherclient/shell.py:410
+msgid ""
+"You must provide an auth url via either --os-auth-url or via "
+"env[OS_AUTH_URL]"
+msgstr ""
+
+#: watcherclient/shell.py:473
+msgid "Invalid OpenStack Identity credentials"
+msgstr ""
+
+#: watcherclient/shell.py:483
+#, python-format
+msgid "'%s' is not a valid subcommand"
+msgstr ""
+
+#: watcherclient/common/cliutils.py:40
+#, python-format
+msgid "Missing arguments: %s"
+msgstr ""
+
+#: watcherclient/common/cliutils.py:158
+#, python-format
+msgid ""
+"Field labels list %(labels)s has different number of elements than fields"
+" list %(fields)s"
+msgstr ""
+
+#: watcherclient/common/http.py:88
+#, python-format
+msgid "Unsupported scheme: %s"
+msgstr ""
+
+#: watcherclient/common/http.py:162
+#, python-format
+msgid "Error finding address for %(url)s: %(e)s"
+msgstr ""
+
+#: watcherclient/common/http.py:167
+#, python-format
+msgid "Error communicating with %(endpoint)s %(e)s"
+msgstr ""
+
+#: watcherclient/common/utils.py:87
+#, python-format
+msgid "Attributes must be a list of PATH=VALUE not \"%s\""
+msgstr ""
+
+#: watcherclient/common/utils.py:120
+#, python-format
+msgid "Unknown PATCH operation: %s"
+msgstr ""
+
+#: watcherclient/common/utils.py:136
+#, python-format
+msgid "Expected non-negative --limit, got %s"
+msgstr ""
+
+#: watcherclient/common/utils.py:147
+#, python-format
+msgid ""
+"%(sort_key)s is an invalid field for sorting, valid values for --sort-key"
+" are: %(valid)s"
+msgstr ""
+
+#: watcherclient/common/utils.py:155
+#, python-format
+msgid ""
+"%s is an invalid value for sort direction, valid values for --sort-dir "
+"are: 'asc', 'desc'"
+msgstr ""
+
+#: watcherclient/common/apiclient/base.py:244
+#: watcherclient/common/apiclient/base.py:401
+#, python-format
+msgid "No %(name)s matching %(args)s."
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:83
+#, python-format
+msgid "Authentication failed. Missing options: %s"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:92
+#, python-format
+msgid "AuthSystemNotFound: %r"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:115
+#, python-format
+msgid "AmbiguousEndpoints: %r"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:122
+msgid "HTTP Error"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:142
+msgid "HTTP Redirection"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:150
+msgid "HTTP Client Error"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:159
+msgid "HTTP Server Error"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:169
+msgid "Multiple Choices"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:178
+msgid "Bad Request"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:188
+msgid "Unauthorized"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:197
+msgid "Payment Required"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:207
+msgid "Forbidden"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:217
+msgid "Not Found"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:227
+msgid "Method Not Allowed"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:237
+msgid "Not Acceptable"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:246
+msgid "Proxy Authentication Required"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:255
+msgid "Request Timeout"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:265
+msgid "Conflict"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:275
+msgid "Gone"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:285
+msgid "Length Required"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:295
+msgid "Precondition Failed"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:304
+msgid "Request Entity Too Large"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:321
+msgid "Request-URI Too Long"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:331
+msgid "Unsupported Media Type"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:341
+msgid "Requested Range Not Satisfiable"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:350
+msgid "Expectation Failed"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:360
+msgid "Unprocessable Entity"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:369
+msgid "Internal Server Error"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:380
+msgid "Not Implemented"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:390
+msgid "Bad Gateway"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:399
+msgid "Service Unavailable"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:409
+msgid "Gateway Timeout"
+msgstr ""
+
+#: watcherclient/common/apiclient/exceptions.py:418
+msgid "HTTP Version Not Supported"
+msgstr ""
+

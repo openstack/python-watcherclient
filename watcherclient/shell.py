@@ -31,9 +31,9 @@ from keystoneclient import session as kssession
 import six.moves.urllib.parse as urlparse
 
 import watcherclient
+from watcherclient._i18n import _
 from watcherclient import client as watcher_client
 from watcherclient.common import cliutils
-from watcherclient.common.i18n import _
 from watcherclient.common import utils
 from watcherclient import exceptions as exc
 
@@ -340,9 +340,10 @@ class WatcherShell(object):
             # support only v2
             auth = self._get_keystone_v2_auth(v2_auth_url, **kwargs)
         else:
-            raise exc.CommandError('Unable to determine the Keystone version '
-                                   'to authenticate with using the given '
-                                   'auth_url.')
+            raise exc.CommandError(
+                _('Unable to determine the Keystone version '
+                  'to authenticate with using the given '
+                  'auth_url.'))
 
         return auth
 

@@ -38,7 +38,7 @@ import sys
 
 import six
 
-from watcherclient.common.i18n import _
+from watcherclient._i18n import _
 
 
 class ClientException(Exception):

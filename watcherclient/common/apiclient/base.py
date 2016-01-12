@@ -44,8 +44,8 @@ from oslo_utils import strutils
 import six
 from six.moves.urllib import parse
 
+from watcherclient._i18n import _
 from watcherclient.common.apiclient import exceptions
-from watcherclient.common.i18n import _
 
 
 def getid(obj):

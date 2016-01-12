@@ -30,7 +30,7 @@ import prettytable
 import six
 from six import moves
 
-from watcherclient.common.i18n import _
+from watcherclient._i18n import _
 
 
 class MissingArgs(Exception):
