@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: python-watcherclient 0.20.1.dev4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-01-12 01:58+0100\n"
+"POT-Creation-Date: 2016-01-14 14:57+0100\n"
 "PO-Revision-Date: 2016-01-12 02:05+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -97,6 +97,14 @@ msgstr ""
 #: watcherclient/common/http.py:167
 #, python-format
 msgid "Error communicating with %(endpoint)s %(e)s"
+msgstr ""
+
+#: watcherclient/common/http.py:181
+msgid "Request returned failure status."
+msgstr ""
+
+#: watcherclient/common/http.py:213 watcherclient/common/http.py:337
+msgid "Could not decode response body as JSON"
 msgstr ""
 
 #: watcherclient/common/utils.py:87
