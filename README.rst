@@ -2,15 +2,21 @@
 python-watcherclient
 ====================
 
-Python client library for Watcher API.
+Client for resource optimization service for OpenStack.
 
-Watcher takes advantage of CEP and ML algorithms/metaheuristics to improve physical resources usage through better VM placement. Watcher can improve your cloud optimization by reducing energy footprint and increasing profits.
+OpenStack Watcher provides a flexible and scalable resource optimization
+service for multi-tenant OpenStack-based clouds.
+Watcher provides a complete optimization loop—including everything from a
+metrics receiver, complex event processor and profiler, optimization processor
+and an action plan applier. This provides a robust framework to realize a wide
+range of cloud optimization goals, including the reduction of data center
+operating costs, increased system performance via intelligent virtual machine
+migration, increased energy efficiency—and more!
 
 * Free software: Apache license
 * Wiki: http://wiki.openstack.org/wiki/Watcher
 * Source: http://git.openstack.org/cgit/openstack/python-watcher
 * Bugs: http://bugs.launchpad.net/watcher
-
 
 Installation
 ============
@@ -23,13 +29,13 @@ On Ubuntu (tested on 14.04-64)
 .. code::
 
    sudo apt-get install python-dev libssl-dev python-pip git-core libmysqlclient-dev libffi-dev
-   
+
 On Fedora-based distributions e.g., Fedora/RHEL/CentOS/Scientific Linux (tested on CentOS 6.5)
 
 .. code::
 
    sudo yum install python-virtualenv openssl-devel python-pip git gcc libffi-devel mysql-devel postgresql-devel
-   
+
 On openSUSE-based distributions (SLES 12, openSUSE 13.1, Factory or Tumbleweed)
 
 .. code::
