@@ -137,7 +137,7 @@ class ActionPlanShellTest(utils.BaseTestCase):
 
         ap_shell.do_action_plan_start(client_mock, args)
         patch = commonutils.args_array_to_patch(
-            'replace', ['state=STARTING'])
+            'replace', ['state=TRIGGERED'])
         client_mock.action_plan.update.assert_called_once_with(
             'a5199d0e-0702-4613-9234-5ae2af8dafea', patch)
 
