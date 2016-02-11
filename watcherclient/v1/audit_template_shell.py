@@ -46,10 +46,6 @@ def do_audit_template_show(cc, args):
     default=False,
     help="Show detailed information about audit templates.")
 @cliutils.arg(
-    '--name',
-    metavar='<name>',
-    help='Only show information for the audit template with this name.')
-@cliutils.arg(
     '--goal',
     metavar='<goal>',
     help='Name the goal used for filtering.')
@@ -73,8 +69,6 @@ def do_audit_template_list(cc, args):
     """List the audit templates."""
     params = {}
 
-    if args.name is not None:
-        params['name'] = args.name
     if args.goal is not None:
         params['goal'] = args.goal
     if args.detail:
