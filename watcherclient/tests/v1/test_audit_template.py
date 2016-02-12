@@ -19,7 +19,7 @@ import copy
 
 from six.moves.urllib import parse as urlparse
 import testtools
-from testtools.matchers import HasLength
+from testtools import matchers
 
 from watcherclient.tests import utils
 import watcherclient.v1.audit_template
@@ -41,7 +41,7 @@ AUDIT_TMPL2 = {
     'description': 'Audit Template 2 description',
     'host_aggregate': 8,
     'extra': {'automatic': True},
-    'goal': 'SERVERS_CONSOLIDATION'
+    'goal': 'BASIC_CONSOLIDATION'
 }
 
 AUDIT_TMPL3 = {
@@ -176,6 +176,16 @@ fake_responses_sorting = {
     },
 }
 
+fake_responses_filter_by_goal = {
+    '/v1/audit_templates/?goal=BASIC_CONSOLIDATION':
+    {
+        'GET': (
+            {},
+            {"audit_templates": [AUDIT_TMPL2]}
+        ),
+    },
+}
+
 
 class AuditTemplateManagerTest(testtools.TestCase):
 
@@ -197,6 +207,18 @@ class AuditTemplateManagerTest(testtools.TestCase):
         audit_templates = self.mgr.list(name=AUDIT_TMPL1['name'])
         expect = [
             ('GET', '/v1/audit_templates/?name=%s' % AUDIT_TMPL1['name'],
+             {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(audit_templates))
+
+    def test_audit_templates_list_by_goal(self):
+        self.api = utils.FakeAPI(fake_responses_filter_by_goal)
+        self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
+            self.api)
+        audit_templates = self.mgr.list(goal="BASIC_CONSOLIDATION")
+        expect = [
+            ('GET', '/v1/audit_templates/?goal=%s' % AUDIT_TMPL2['goal'],
              {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
@@ -230,7 +252,7 @@ class AuditTemplateManagerTest(testtools.TestCase):
             ('GET', '/v1/audit_templates/?limit=1', {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(audit_templates, HasLength(1))
+        self.assertThat(audit_templates, matchers.HasLength(1))
 
     def test_audit_templates_list_pagination_no_limit(self):
         self.api = utils.FakeAPI(fake_responses_pagination)
@@ -242,7 +264,7 @@ class AuditTemplateManagerTest(testtools.TestCase):
             ('GET', '/v1/audit_templates/?limit=1', {}, None)
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(audit_templates, HasLength(2))
+        self.assertThat(audit_templates, matchers.HasLength(2))
 
     def test_audit_templates_list_sort_key(self):
         self.api = utils.FakeAPI(fake_responses_sorting)
