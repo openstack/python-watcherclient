@@ -34,7 +34,7 @@ class AuditTemplateManager(base.Manager):
     def _path(id=None):
         return '/v1/audit_templates/%s' % id if id else '/v1/audit_templates'
 
-    def list(self, name=None, limit=None, sort_key=None,
+    def list(self, name=None, goal=None, limit=None, sort_key=None,
              sort_dir=None, detail=False):
         """Retrieve a list of audit template.
 
@@ -65,6 +65,8 @@ class AuditTemplateManager(base.Manager):
         filters = utils.common_filters(limit, sort_key, sort_dir)
         if name is not None:
             filters.append('name=%s' % name)
+        if goal is not None:
+            filters.append("goal=%s" % goal)
 
         path = ''
         if detail:
