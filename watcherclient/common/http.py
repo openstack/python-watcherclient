@@ -178,7 +178,7 @@ class HTTPClient(object):
             self.log_http_response(resp)
 
         if 400 <= resp.status < 600:
-            LOG.warn(_LW("Request returned failure status."))
+            LOG.warning(_LW("Request returned failure status."))
             error_json = _extract_error_json(body_str)
             raise exc.from_response(
                 resp, error_json.get('faultstring'),
