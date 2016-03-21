@@ -145,7 +145,7 @@ def do_action_plan_start(cc, args):
     action_plan_uuid = getattr(args, 'action-plan')
     if uuidutils.is_uuid_like(action_plan_uuid):
         args.op = 'replace'
-        args.attributes = [['state=TRIGGERED']]
+        args.attributes = [['state=PENDING']]
 
         patch = utils.args_array_to_patch(
             args.op,
