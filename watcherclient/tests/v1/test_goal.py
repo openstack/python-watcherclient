@@ -23,13 +23,15 @@ from watcherclient.tests import utils
 import watcherclient.v1.goal
 
 GOAL1 = {
-    'name': "BASIC_CONSOLIDATION",
-    'strategy': 'basic'
+    'uuid': "fc087747-61be-4aad-8126-b701731ae836",
+    'name': "SERVER_CONSOLIDATION",
+    'display_name': 'Server Consolidation'
 }
 
 GOAL2 = {
+    'uuid': "407b03b1-63c6-49b2-adaf-4df5c0090047",
     'name': "COST_OPTIMIZATION",
-    'strategy': 'basic'
+    'display_name': 'Cost Optimization'
 }
 
 fake_responses = {
@@ -46,6 +48,13 @@ fake_responses = {
             {},
             {"goals": [GOAL1]},
         )
+    },
+    '/v1/goals/%s' % GOAL1['uuid']:
+    {
+        'GET': (
+            {},
+            GOAL1,
+        ),
     },
     '/v1/goals/%s' % GOAL1['name']:
     {
@@ -75,7 +84,7 @@ fake_responses_pagination = {
 }
 
 fake_responses_sorting = {
-    '/v1/goals/?sort_key=name':
+    '/v1/goals/?sort_key=id':
     {
         'GET': (
             {},
@@ -139,9 +148,9 @@ class GoalManagerTest(testtools.TestCase):
     def test_goals_list_sort_key(self):
         self.api = utils.FakeAPI(fake_responses_sorting)
         self.mgr = watcherclient.v1.goal.GoalManager(self.api)
-        goals = self.mgr.list(sort_key='name')
+        goals = self.mgr.list(sort_key='id')
         expect = [
-            ('GET', '/v1/goals/?sort_key=name', {}, None)
+            ('GET', '/v1/goals/?sort_key=id', {}, None)
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(2, len(goals))
@@ -157,6 +166,14 @@ class GoalManagerTest(testtools.TestCase):
         self.assertEqual(2, len(goals))
 
     def test_goals_show(self):
+        goal = self.mgr.get(GOAL1['uuid'])
+        expect = [
+            ('GET', '/v1/goals/%s' % GOAL1['uuid'], {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(GOAL1['uuid'], goal.uuid)
+
+    def test_goals_show_by_name(self):
         goal = self.mgr.get(GOAL1['name'])
         expect = [
             ('GET', '/v1/goals/%s' % GOAL1['name'], {}, None),

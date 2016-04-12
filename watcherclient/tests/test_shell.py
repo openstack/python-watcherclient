@@ -148,6 +148,8 @@ class ShellTest(utils.BaseTestCase):
             '.*action-plan-list',
             '.*action-plan-show',
             '.*action-plan-update',
+            '.*goal-list',
+            '.*goal-show',
         ]
         for r in required:
             self.assertThat(stdout,

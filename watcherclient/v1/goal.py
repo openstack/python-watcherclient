@@ -27,11 +27,10 @@ class GoalManager(base.Manager):
     resource_class = Goal
 
     @staticmethod
-    def _path(goal_name=None):
-        return '/v1/goals/%s' % goal_name if goal_name else '/v1/goals'
+    def _path(goal=None):
+        return '/v1/goals/%s' % goal if goal else '/v1/goals'
 
-    def list(self, limit=None, sort_key=None,
-             sort_dir=None, detail=False):
+    def list(self, limit=None, sort_key=None, sort_dir=None, detail=False):
         """Retrieve a list of goal.
 
         :param limit: The maximum number of results to return per
@@ -70,8 +69,8 @@ class GoalManager(base.Manager):
             return self._list_pagination(self._path(path), "goals",
                                          limit=limit)
 
-    def get(self, goal_name):
+    def get(self, goal):
         try:
-            return self._list(self._path(goal_name))[0]
+            return self._list(self._path(goal))[0]
         except IndexError:
             return None

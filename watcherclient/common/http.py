@@ -360,6 +360,8 @@ class ResponseBodyIterator(object):
     def next(self):
         chunk = self.resp.read(CHUNKSIZE)
         if chunk:
+            if six.PY3 and not isinstance(chunk, six.string_types):
+                chunk = chunk.decode("utf-8")
             return chunk
         else:
             raise StopIteration()

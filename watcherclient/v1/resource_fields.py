@@ -72,13 +72,13 @@ ACTION_SHORT_LIST_FIELD_LABELS = ['UUID', 'Next Action', 'State',
                                   'Action Plan', 'Action']
 # Goals
 
-GOAL_FIELDS = ['name', 'strategy']
+GOAL_FIELDS = ['uuid', 'name', 'display_name']
 
-GOAL_FIELD_LABELS = ['Name', 'Strategy']
+GOAL_FIELD_LABELS = ['UUID', 'Name', 'Display name']
 
-GOAL_SHORT_LIST_FIELDS = ['name', 'strategy']
+GOAL_SHORT_LIST_FIELDS = ['uuid', 'name', 'display_name']
 
-GOAL_SHORT_LIST_FIELD_LABELS = ['Name', 'Strategy']
+GOAL_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Display name']
 
 # Metric Collector
 METRIC_COLLECTOR_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',

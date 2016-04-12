@@ -29,7 +29,7 @@ def _print_goal_show(goal):
 @cliutils.arg(
     'goal',
     metavar='<goal>',
-    help="Name of the goal")
+    help="UUID or name of the goal")
 def do_goal_show(cc, args):
     """Show detailed information about a _print_goal_show."""
     goal = cc.goal.get(args.goal)
@@ -41,7 +41,7 @@ def do_goal_show(cc, args):
     dest='detail',
     action='store_true',
     default=False,
-    help="Show detailed information about metric collectors.")
+    help="Show detailed information about each goal.")
 @cliutils.arg(
     '--limit',
     metavar='<limit>',

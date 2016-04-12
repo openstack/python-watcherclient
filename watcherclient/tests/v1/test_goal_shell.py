@@ -29,6 +29,6 @@ class GoalShellTest(utils.BaseTestCase):
         with mock.patch.object(cliutils, 'print_dict', fake_print_dict):
             goal = object()
             a_shell._print_goal_show(goal)
-        exp = ['name', 'strategy']
+        exp = ['uuid', 'name', 'display_name']
         act = actual.keys()
         self.assertEqual(sorted(exp), sorted(act))
