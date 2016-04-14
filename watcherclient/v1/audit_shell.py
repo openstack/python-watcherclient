@@ -115,6 +115,10 @@ def do_audit_create(cc, args):
     field_list = ['audit_template_uuid', 'type', 'deadline']
     fields = dict((k, v) for (k, v) in vars(args).items()
                   if k in field_list and not (v is None))
+    if fields.get('audit_template_uuid'):
+        if not utils.is_uuid_like(fields['audit_template_uuid']):
+            fields['audit_template_uuid'] = cc.audit_template.get(
+                fields['audit_template'])
     audit = cc.audit.create(**fields)
     field_list.append('uuid')
     data = dict([(f, getattr(audit, f, '')) for f in field_list])
