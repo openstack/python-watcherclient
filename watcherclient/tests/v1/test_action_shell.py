@@ -31,7 +31,6 @@ class ActionShellTest(utils.BaseTestCase):
             action = object()
             a_shell._print_action_show(action)
         exp = ['action_type',
-               'alarm',
                'applies_to',
                'created_at',
                'deleted_at',

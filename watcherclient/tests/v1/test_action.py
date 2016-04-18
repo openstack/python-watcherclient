@@ -30,7 +30,6 @@ ACTION1 = {
     'description': 'Action_1 description',
     'next': '239f02a5-9649-4e14-9d33-ac2bf67cb755',
     'state': 'PENDING',
-    'alarm': None
 }
 
 ACTION2 = {
@@ -40,7 +39,6 @@ ACTION2 = {
     'description': 'Action_2 description',
     'next': '67653274-eb24-c7ba-70f6-a84e73d80843',
     'state': 'PENDING',
-    'alarm': None
 }
 
 ACTION3 = {
@@ -50,7 +48,6 @@ ACTION3 = {
     'description': 'Action_3 description',
     'next': None,
     'state': 'PENDING',
-    'alarm': None
 }
 
 ACTION_PLAN1 = {
@@ -254,7 +251,6 @@ class ActionManagerTest(testtools.TestCase):
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(ACTION1['uuid'], action.uuid)
         self.assertEqual(ACTION1['action_plan'], action.action_plan)
-        self.assertEqual(ACTION1['alarm'], action.alarm)
         self.assertEqual(ACTION1['next'], action.next)
 
     def test_delete(self):
