@@ -19,6 +19,7 @@ from __future__ import print_function
 
 import argparse
 import json
+import uuid
 
 from oslo_utils import importutils
 
@@ -178,3 +179,16 @@ def common_filters(limit=None, sort_key=None, sort_dir=None):
     if sort_dir is not None:
         filters.append('sort_dir=%s' % sort_dir)
     return filters
+
+
+def is_uuid_like(val):
+    """Returns validation of a value as a UUID.
+
+    For our purposes, a UUID is a canonical form string:
+    aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+
+    """
+    try:
+        return str(uuid.UUID(val)) == val
+    except (TypeError, ValueError, AttributeError):
+        return False
