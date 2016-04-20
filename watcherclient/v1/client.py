@@ -22,6 +22,7 @@ from watcherclient.v1 import audit
 from watcherclient.v1 import audit_template
 from watcherclient.v1 import goal
 from watcherclient.v1 import metric_collector
+from watcherclient.v1 import strategy
 
 
 class Client(object):
@@ -46,3 +47,4 @@ class Client(object):
         self.metric_collector = metric_collector.MetricCollectorManager(
             self.http_client
         )
+        self.strategy = strategy.StrategyManager(self.http_client)

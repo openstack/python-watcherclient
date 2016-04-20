@@ -80,6 +80,17 @@ GOAL_SHORT_LIST_FIELDS = ['uuid', 'name', 'display_name']
 
 GOAL_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Display name']
 
+# Strategies
+
+STRATEGY_FIELDS = ['uuid', 'name', 'display_name', 'goal_uuid']
+
+STRATEGY_FIELD_LABELS = ['UUID', 'Name', 'Display name', 'Goal UUID']
+
+STRATEGY_SHORT_LIST_FIELDS = ['uuid', 'name', 'display_name', 'goal_uuid']
+
+STRATEGY_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Display name',
+                                    'Goal UUID']
+
 # Metric Collector
 METRIC_COLLECTOR_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
                            'endpoint', 'category']

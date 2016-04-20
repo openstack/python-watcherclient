@@ -19,6 +19,7 @@ from watcherclient.v1 import action_shell
 from watcherclient.v1 import audit_shell
 from watcherclient.v1 import audit_template_shell
 from watcherclient.v1 import goal_shell
+from watcherclient.v1 import strategy_shell
 # from watcherclient.v1 import metric_collector_shell
 
 COMMAND_MODULES = [
@@ -27,7 +28,8 @@ COMMAND_MODULES = [
     action_plan_shell,
     action_shell,
     # metric_collector_shell,
-    goal_shell
+    goal_shell,
+    strategy_shell,
 ]
 
 
