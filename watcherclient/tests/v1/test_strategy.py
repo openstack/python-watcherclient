@@ -23,15 +23,17 @@ from watcherclient.tests import utils
 import watcherclient.v1.strategy
 
 STRATEGY1 = {
-    'id': "basic",
+    'uuid': '2cf86250-d309-4b81-818e-1537f3dba6e5',
+    'name': 'basic',
     'display_name': 'Basic consolidation',
-    'strategy_id': "SERVER_CONSOLIDATION",
+    'strategy_id': 'SERVER_CONSOLIDATION',
 }
 
 STRATEGY2 = {
-    'id': "dummy",
+    'uuid': 'b20bb987-ea8f-457a-a4ea-ab3ffdfeff8b',
+    'name': 'dummy',
     'display_name': 'Dummy',
-    'strategy_id': "DUMMY",
+    'strategy_id': 'DUMMY',
 }
 
 fake_responses = {
@@ -49,7 +51,14 @@ fake_responses = {
             {"strategies": [STRATEGY1]},
         )
     },
-    '/v1/strategies/%s' % STRATEGY1['id']:
+    '/v1/strategies/%s' % STRATEGY1['uuid']:
+    {
+        'GET': (
+            {},
+            STRATEGY1,
+        ),
+    },
+    '/v1/strategies/%s' % STRATEGY1['name']:
     {
         'GET': (
             {},
@@ -159,9 +168,17 @@ class StrategyManagerTest(testtools.TestCase):
         self.assertEqual(2, len(strategies))
 
     def test_strategies_show(self):
-        strategy = self.mgr.get(STRATEGY1['id'])
+        strategy = self.mgr.get(STRATEGY1['uuid'])
         expect = [
-            ('GET', '/v1/strategies/%s' % STRATEGY1['id'], {}, None),
+            ('GET', '/v1/strategies/%s' % STRATEGY1['uuid'], {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertEqual(STRATEGY1['id'], strategy.id)
+        self.assertEqual(STRATEGY1['uuid'], strategy.uuid)
+
+    def test_strategies_show_by_name(self):
+        strategy = self.mgr.get(STRATEGY1['name'])
+        expect = [
+            ('GET', '/v1/strategies/%s' % STRATEGY1['name'], {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(STRATEGY1['name'], strategy.name)

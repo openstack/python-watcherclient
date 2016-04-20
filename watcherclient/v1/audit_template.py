@@ -19,7 +19,7 @@ from watcherclient.common import utils
 from watcherclient import exceptions as exc
 
 CREATION_ATTRIBUTES = ['host_aggregate', 'description', 'name',
-                       'extra', 'goal']
+                       'extra', 'goal_uuid', 'strategy_uuid']
 
 
 class AuditTemplate(base.Resource):
@@ -31,11 +31,11 @@ class AuditTemplateManager(base.Manager):
     resource_class = AuditTemplate
 
     @staticmethod
-    def _path(id=None):
-        return '/v1/audit_templates/%s' % id if id else '/v1/audit_templates'
+    def _path(id_=None):
+        return '/v1/audit_templates/%s' % id_ if id_ else '/v1/audit_templates'
 
-    def list(self, name=None, goal=None, limit=None, sort_key=None,
-             sort_dir=None, detail=False):
+    def list(self, name=None, goal_uuid=None, strategy_uuid=None, limit=None,
+             sort_key=None, sort_dir=None, detail=False):
         """Retrieve a list of audit template.
 
         :param name: Name of the audit template
@@ -65,8 +65,10 @@ class AuditTemplateManager(base.Manager):
         filters = utils.common_filters(limit, sort_key, sort_dir)
         if name is not None:
             filters.append('name=%s' % name)
-        if goal is not None:
-            filters.append("goal=%s" % goal)
+        if goal_uuid is not None:
+            filters.append("goal_uuid=%s" % goal_uuid)
+        if strategy_uuid is not None:
+            filters.append("strategy_uuid=%s" % strategy_uuid)
 
         path = ''
         if detail:

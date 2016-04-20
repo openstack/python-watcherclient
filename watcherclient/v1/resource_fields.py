@@ -20,12 +20,12 @@
 AUDIT_TEMPLATE_FIELDS = [
     'uuid', 'created_at', 'updated_at', 'deleted_at',
     'description', 'host_aggregate', 'name',
-    'extra', 'goal']
+    'extra', 'goal_uuid', 'strategy_uuid']
 
 AUDIT_TEMPLATE_FIELD_LABELS = [
     'UUID', 'Created At', 'Updated At', 'Deleted At',
     'Description', 'Host Aggregate ID or Name', 'Name',
-    'Extra', 'Goal Type']
+    'Extra', 'Goal UUID', 'Strategy UUID']
 
 AUDIT_TEMPLATE_SHORT_LIST_FIELDS = ['uuid', 'name']
 

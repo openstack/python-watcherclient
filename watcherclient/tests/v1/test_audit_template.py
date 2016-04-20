@@ -31,7 +31,8 @@ AUDIT_TMPL1 = {
     'description': 'Audit Template 1 description',
     'host_aggregate': 5,
     'extra': {'automatic': False},
-    'goal': 'MINIMIZE_LICENSING_COST'
+    'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
+    'strategy_uuid': 'bbe6b966-f98e-439b-a01a-17b9b3b8478b',
 }
 
 AUDIT_TMPL2 = {
@@ -41,7 +42,8 @@ AUDIT_TMPL2 = {
     'description': 'Audit Template 2 description',
     'host_aggregate': 8,
     'extra': {'automatic': True},
-    'goal': 'BASIC_CONSOLIDATION'
+    'goal_uuid': 'e75ee410-b32b-465f-88b5-4397705f9473',
+    'strategy_uuid': 'ae99a4a4-acbc-4c67-abe1-e37128fac45d',
 }
 
 AUDIT_TMPL3 = {
@@ -51,7 +53,7 @@ AUDIT_TMPL3 = {
     'description': 'Audit Template 3 description',
     'host_aggregate': 7,
     'extra': {'automatic': True},
-    'goal': 'MINIMIZE_LICENSING_COST'
+    'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
 }
 
 CREATE_AUDIT_TEMPLATE = copy.deepcopy(AUDIT_TMPL1)
@@ -125,14 +127,14 @@ fake_responses = {
             {"audit_templates": [AUDIT_TMPL1]},
         ),
     },
-    '/v1/audit_templates/detail?goal=%s' % AUDIT_TMPL1['goal']:
+    '/v1/audit_templates/detail?goal_uuid=%s' % AUDIT_TMPL1['goal_uuid']:
     {
         'GET': (
             {},
             {"audit_templates": [AUDIT_TMPL1, AUDIT_TMPL3]},
         ),
     },
-    '/v1/audit_templates/?goal=%s' % AUDIT_TMPL1['goal']:
+    '/v1/audit_templates/?goal_uuid=%s' % AUDIT_TMPL1['goal_uuid']:
     {
         'GET': (
             {},
@@ -176,8 +178,18 @@ fake_responses_sorting = {
     },
 }
 
-fake_responses_filter_by_goal = {
-    '/v1/audit_templates/?goal=BASIC_CONSOLIDATION':
+fake_responses_filter_by_goal_uuid = {
+    '/v1/audit_templates/?goal_uuid=e75ee410-b32b-465f-88b5-4397705f9473':
+    {
+        'GET': (
+            {},
+            {"audit_templates": [AUDIT_TMPL2]}
+        ),
+    },
+}
+
+fake_responses_filter_by_strategy_uuid = {
+    '/v1/audit_templates/?strategy_uuid=ae99a4a4-acbc-4c67-abe1-e37128fac45d':
     {
         'GET': (
             {},
@@ -203,7 +215,7 @@ class AuditTemplateManagerTest(testtools.TestCase):
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(1, len(audit_templates))
 
-    def test_audit_templates_list_by_name(self):
+    def test_audit_templates_list_filter_by_name(self):
         audit_templates = self.mgr.list(name=AUDIT_TMPL1['name'])
         expect = [
             ('GET', '/v1/audit_templates/?name=%s' % AUDIT_TMPL1['name'],
@@ -212,13 +224,30 @@ class AuditTemplateManagerTest(testtools.TestCase):
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(1, len(audit_templates))
 
-    def test_audit_templates_list_by_goal(self):
-        self.api = utils.FakeAPI(fake_responses_filter_by_goal)
+    def test_audit_templates_list_filter_by_goal_uuid(self):
+        self.api = utils.FakeAPI(fake_responses_filter_by_goal_uuid)
         self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
             self.api)
-        audit_templates = self.mgr.list(goal="BASIC_CONSOLIDATION")
+        audit_templates = self.mgr.list(
+            goal_uuid="e75ee410-b32b-465f-88b5-4397705f9473")
         expect = [
-            ('GET', '/v1/audit_templates/?goal=%s' % AUDIT_TMPL2['goal'],
+            ('GET',
+             '/v1/audit_templates/?goal_uuid=%s' % AUDIT_TMPL2['goal_uuid'],
+             {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(audit_templates))
+
+    def test_audit_templates_list_filter_by_strategy_uuid(self):
+        self.api = utils.FakeAPI(fake_responses_filter_by_strategy_uuid)
+        self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
+            self.api)
+        audit_templates = self.mgr.list(
+            strategy_uuid="ae99a4a4-acbc-4c67-abe1-e37128fac45d")
+        expect = [
+            ('GET',
+             '/v1/audit_templates/?strategy_uuid=%s' % (
+                 AUDIT_TMPL2['strategy_uuid']),
              {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
@@ -300,9 +329,10 @@ class AuditTemplateManagerTest(testtools.TestCase):
                          audit_template.description)
         self.assertEqual(AUDIT_TMPL1['host_aggregate'],
                          audit_template.host_aggregate)
-        self.assertEqual(AUDIT_TMPL1['goal'], audit_template.goal)
-        self.assertEqual(AUDIT_TMPL1['extra'],
-                         audit_template.extra)
+        self.assertEqual(AUDIT_TMPL1['goal_uuid'], audit_template.goal_uuid)
+        self.assertEqual(AUDIT_TMPL1['strategy_uuid'],
+                         audit_template.strategy_uuid)
+        self.assertEqual(AUDIT_TMPL1['extra'], audit_template.extra)
 
     def test_audit_templates_show_by_name(self):
         audit_template = self.mgr.get(urlparse.quote(AUDIT_TMPL1['name']))
@@ -319,9 +349,10 @@ class AuditTemplateManagerTest(testtools.TestCase):
                          audit_template.description)
         self.assertEqual(AUDIT_TMPL1['host_aggregate'],
                          audit_template.host_aggregate)
-        self.assertEqual(AUDIT_TMPL1['goal'], audit_template.goal)
-        self.assertEqual(AUDIT_TMPL1['extra'],
-                         audit_template.extra)
+        self.assertEqual(AUDIT_TMPL1['goal_uuid'], audit_template.goal_uuid)
+        self.assertEqual(AUDIT_TMPL1['strategy_uuid'],
+                         audit_template.strategy_uuid)
+        self.assertEqual(AUDIT_TMPL1['extra'], audit_template.extra)
 
     def test_create(self):
         audit_template = self.mgr.create(**CREATE_AUDIT_TEMPLATE)

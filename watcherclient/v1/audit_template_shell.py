@@ -46,9 +46,13 @@ def do_audit_template_show(cc, args):
     default=False,
     help="Show detailed information about audit templates.")
 @cliutils.arg(
-    '--goal',
-    metavar='<goal>',
-    help='Name the goal used for filtering.')
+    '--goal-uuid',
+    metavar='<goal-uuid>',
+    help='UUID the goal used for filtering.')
+@cliutils.arg(
+    '--strategy-uuid',
+    metavar='<strategy-uuid>',
+    help='UUID the strategy used for filtering.')
 @cliutils.arg(
     '--limit',
     metavar='<limit>',
@@ -69,8 +73,10 @@ def do_audit_template_list(cc, args):
     """List the audit templates."""
     params = {}
 
-    if args.goal is not None:
-        params['goal'] = args.goal
+    if args.goal_uuid is not None:
+        params['goal_uuid'] = args.goal_uuid
+    if args.strategy_uuid is not None:
+        params['strategy_uuid'] = args.strategy_uuid
     if args.detail:
         fields = res_fields.AUDIT_TEMPLATE_FIELDS
         field_labels = res_fields.AUDIT_TEMPLATE_FIELD_LABELS
@@ -93,9 +99,14 @@ def do_audit_template_list(cc, args):
     metavar='<name>',
     help='Name for this audit template.')
 @cliutils.arg(
-    'goal',
-    metavar='<goal>',
-    help='Goal Type associated to this audit template.')
+    'goal_uuid',
+    metavar='<goal-uuid>',
+    help='Goal ID associated to this audit template.')
+@cliutils.arg(
+    '-s', '--strategy-uuid',
+    dest='strategy_uuid',
+    metavar='<strategy-uuid>',
+    help='Strategy ID associated to this audit template.')
 @cliutils.arg(
     '-d', '--description',
     metavar='<description>',
@@ -113,7 +124,8 @@ def do_audit_template_list(cc, args):
     help='Name or ID of the host aggregate targeted by this audit template.')
 def do_audit_template_create(cc, args):
     """Create a new audit template."""
-    field_list = ['host_aggregate', 'description', 'name', 'extra', 'goal']
+    field_list = ['host_aggregate', 'description', 'name', 'extra',
+                  'goal_uuid', 'strategy_uuid']
     fields = dict((k, v) for (k, v) in vars(args).items()
                   if k in field_list and not (v is None))
     fields = utils.args_array_to_dict(fields, 'extra')

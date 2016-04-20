@@ -93,7 +93,7 @@ def do_metric_collector_list(cc, args):
 @cliutils.arg(
     '-e', '--endpoint-url',
     required=True,
-    metavar='<goal>',
+    metavar='<endpoint-url>',
     help='URL towards which publish metric data.')
 def do_metric_collector_create(cc, args):
     """Create a new metric collector."""

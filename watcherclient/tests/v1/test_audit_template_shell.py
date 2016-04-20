@@ -32,7 +32,7 @@ class AuditTemplateShellTest(utils.BaseTestCase):
         exp = [
             'uuid', 'created_at', 'updated_at', 'deleted_at',
             'description', 'host_aggregate', 'name',
-            'extra', 'goal']
+            'extra', 'goal_uuid', 'strategy_uuid']
         act = actual.keys()
         self.assertEqual(sorted(exp), sorted(act))
 
