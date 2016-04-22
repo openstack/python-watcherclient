@@ -118,7 +118,7 @@ def do_audit_create(cc, args):
     if fields.get('audit_template_uuid'):
         if not utils.is_uuid_like(fields['audit_template_uuid']):
             fields['audit_template_uuid'] = cc.audit_template.get(
-                fields['audit_template'])
+                fields['audit_template_uuid']).uuid
     audit = cc.audit.create(**fields)
     field_list.append('uuid')
     data = dict([(f, getattr(audit, f, '')) for f in field_list])

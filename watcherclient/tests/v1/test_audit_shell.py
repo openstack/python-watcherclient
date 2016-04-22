@@ -123,9 +123,29 @@ class AuditShellTest(utils.BaseTestCase):
     def test_do_audit_create(self):
         client_mock = mock.MagicMock()
         args = mock.MagicMock()
-
         a_shell.do_audit_create(client_mock, args)
         client_mock.audit.create.assert_called_once_with()
+
+    def test_do_audit_create_with_audit_template_uuid(self):
+        client_mock = mock.MagicMock()
+        args = mock.MagicMock()
+        args.audit_template_uuid = 'a5194d0e-1702-4663-9234-5ab2cf8dafea'
+
+        a_shell.do_audit_create(client_mock, args)
+        client_mock.audit.create.assert_called_once_with(
+            audit_template_uuid='a5194d0e-1702-4663-9234-5ab2cf8dafea')
+
+    def test_do_audit_create_with_audit_template_name(self):
+        client_mock = mock.MagicMock(
+            audit_template=mock.Mock(
+                get=mock.Mock(return_value=mock.Mock(
+                    uuid='a5194d0e-1702-4663-9234-5ab2cf8dafea'))))
+        args = mock.MagicMock()
+        args.audit_template_uuid = 'Test AT name'
+
+        a_shell.do_audit_create(client_mock, args)
+        client_mock.audit.create.assert_called_once_with(
+            audit_template_uuid='a5194d0e-1702-4663-9234-5ab2cf8dafea')
 
     def test_do_audit_create_with_deadline(self):
         client_mock = mock.MagicMock()
