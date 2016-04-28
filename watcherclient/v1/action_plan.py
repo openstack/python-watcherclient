@@ -86,3 +86,7 @@ class ActionPlanManager(base.Manager):
 
     def update(self, action_plan_id, patch):
         return self._update(self._path(action_plan_id), patch)
+
+    def start(self, action_plan_id):
+        patch = [{'op': 'replace', 'value': 'PENDING', 'path': '/state'}]
+        return self._update(self._path(action_plan_id), patch)

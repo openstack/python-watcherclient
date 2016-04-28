@@ -16,3 +16,4 @@
 from pbr import version
 
 version_info = version.VersionInfo('python-watcherclient')
+__version__ = version_info.version_string()

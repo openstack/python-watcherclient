@@ -45,6 +45,8 @@ def _trim_endpoint_api_version(url):
 def _extract_error_json(body):
     """Return  error_message from the HTTP response body."""
     error_json = {}
+    if six.PY3 and not isinstance(body, six.string_types):
+        body = body.decode("utf-8")
     try:
         body_json = json.loads(body)
         if 'error_message' in body_json:

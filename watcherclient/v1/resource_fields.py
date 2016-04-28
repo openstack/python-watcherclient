@@ -58,12 +58,12 @@ ACTION_PLAN_SHORT_LIST_FIELD_LABELS = ['UUID', 'Audit', 'State', 'Updated At']
 
 # Action
 ACTION_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at', 'next_uuid',
-                 'description', 'state', 'action_plan_uuid',
-                 'action_type', 'applies_to', 'input_parameters']
+                 'state', 'action_plan_uuid', 'action_type',
+                 'input_parameters']
 
 ACTION_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
-                       'Next Action', 'Description', 'State',
-                       'Action Plan', 'Action', 'Applies to', 'Parameters']
+                       'Next Action', 'State', 'Action Plan', 'Action',
+                       'Parameters']
 
 ACTION_SHORT_LIST_FIELDS = ['uuid', 'next_uuid',
                             'state', 'action_plan_uuid', 'action_type']

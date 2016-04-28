@@ -31,10 +31,8 @@ class ActionShellTest(utils.BaseTestCase):
             action = object()
             a_shell._print_action_show(action)
         exp = ['action_type',
-               'applies_to',
                'created_at',
                'deleted_at',
-               'description',
                'next_uuid',
                'input_parameters',
                'state',

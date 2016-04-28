@@ -21,13 +21,13 @@ import os
 
 import fixtures
 from oslo_utils import strutils
+from oslotest import base
 import six
-import testtools
 
 from watcherclient.common import http
 
 
-class BaseTestCase(testtools.TestCase):
+class BaseTestCase(base.BaseTestCase):
 
     def setUp(self):
         super(BaseTestCase, self).setUp()
