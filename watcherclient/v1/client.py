@@ -16,13 +16,7 @@
 #    under the License.
 
 from watcherclient.common import http
-from watcherclient.v1 import action
-from watcherclient.v1 import action_plan
-from watcherclient.v1 import audit
-from watcherclient.v1 import audit_template
-from watcherclient.v1 import goal
-from watcherclient.v1 import metric_collector
-from watcherclient.v1 import strategy
+from watcherclient import v1
 
 
 class Client(object):
@@ -37,14 +31,14 @@ class Client(object):
 
     def __init__(self, *args, **kwargs):
         """Initialize a new client for the Watcher v1 API."""
-        self.http_client = http._construct_http_client(*args, **kwargs)
-        self.audit = audit.AuditManager(self.http_client)
-        self.audit_template = audit_template.AuditTemplateManager(
-            self.http_client)
-        self.action = action.ActionManager(self.http_client)
-        self.action_plan = action_plan.ActionPlanManager(self.http_client)
-        self.goal = goal.GoalManager(self.http_client)
-        self.metric_collector = metric_collector.MetricCollectorManager(
-            self.http_client
-        )
-        self.strategy = strategy.StrategyManager(self.http_client)
+        self.http_client = self.build_http_client(*args, **kwargs)
+        self.audit = v1.AuditManager(self.http_client)
+        self.audit_template = v1.AuditTemplateManager(self.http_client)
+        self.action = v1.ActionManager(self.http_client)
+        self.action_plan = v1.ActionPlanManager(self.http_client)
+        self.goal = v1.GoalManager(self.http_client)
+        self.strategy = v1.StrategyManager(self.http_client)
+        # self.metric_collector = v1.MetricCollectorManager(self.http_client)
+
+    def build_http_client(self, *args, **kwargs):
+        return http._construct_http_client(*args, **kwargs)
