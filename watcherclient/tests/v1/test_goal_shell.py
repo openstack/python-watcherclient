@@ -28,6 +28,12 @@ GOAL_1 = {
     'uuid': "fc087747-61be-4aad-8126-b701731ae836",
     'name': "SERVER_CONSOLIDATION",
     'display_name': 'Server Consolidation',
+    'efficacy_specification': [
+        {'description': 'Indicator 1', 'name': 'indicator1',
+         'schema': 'Range(min=0, max=100, min_included=True, '
+                   'max_included=True, msg=None)',
+         'unit': '%'}
+    ],
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
@@ -37,6 +43,12 @@ GOAL_2 = {
     'uuid': "407b03b1-63c6-49b2-adaf-4df5c0090047",
     'name': "COST_OPTIMIZATION",
     'display_name': 'Cost Optimization',
+    'efficacy_specification': [
+        {'description': 'Indicator 2', 'name': 'indicator2',
+         'schema': 'Range(min=0, max=100, min_included=True, '
+                   'max_included=True, msg=None)',
+         'unit': '%'}
+    ],
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
@@ -93,10 +105,8 @@ class GoalShellTest(base.CommandTestCase):
 
         self.assertEqual(0, exit_code)
         self.assertEqual(
-            [self.resource_as_dict(goal1, self.SHORT_LIST_FIELDS,
-                                   self.SHORT_LIST_FIELD_LABELS),
-             self.resource_as_dict(goal2, self.SHORT_LIST_FIELDS,
-                                   self.SHORT_LIST_FIELD_LABELS)],
+            [self.resource_as_dict(goal1, self.FIELDS, self.FIELD_LABELS),
+             self.resource_as_dict(goal2, self.FIELDS, self.FIELD_LABELS)],
             results)
 
         self.m_goal_mgr.list.assert_called_once_with(detail=True)
@@ -109,8 +119,8 @@ class GoalShellTest(base.CommandTestCase):
 
         self.assertEqual(0, exit_code)
         self.assertEqual(
-            self.resource_as_dict(goal, self.SHORT_LIST_FIELDS,
-                                  self.SHORT_LIST_FIELD_LABELS),
+            self.resource_as_dict(goal, self.FIELDS,
+                                  self.FIELD_LABELS),
             result)
         self.m_goal_mgr.get.assert_called_once_with('SERVER_CONSOLIDATION')
 
@@ -123,8 +133,8 @@ class GoalShellTest(base.CommandTestCase):
 
         self.assertEqual(0, exit_code)
         self.assertEqual(
-            self.resource_as_dict(goal, self.SHORT_LIST_FIELDS,
-                                  self.SHORT_LIST_FIELD_LABELS),
+            self.resource_as_dict(goal, self.FIELDS,
+                                  self.FIELD_LABELS),
             result)
         self.m_goal_mgr.get.assert_called_once_with(
             'fc087747-61be-4aad-8126-b701731ae836')

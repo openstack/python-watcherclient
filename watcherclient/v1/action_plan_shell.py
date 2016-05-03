@@ -14,14 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from cliff.formatters import yaml_format
 from openstackclient.common import utils
 from oslo_utils import uuidutils
+import six
 
 from watcherclient._i18n import _
 from watcherclient.common import command
 from watcherclient.common import utils as common_utils
 from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
+
+
+def format_global_efficacy(global_efficacy):
+    formatted_global_efficacy = None
+    if (global_efficacy.get('value') is not None and
+            global_efficacy.get('unit')):
+        formatted_global_efficacy = "%(value)s %(unit)s" % dict(
+            unit=global_efficacy.get('unit'),
+            value=global_efficacy.get('value'))
+    elif global_efficacy.get('value') is not None:
+        formatted_global_efficacy = global_efficacy.get('value')
+
+    return formatted_global_efficacy
 
 
 class ShowActionPlan(command.ShowOne):
@@ -36,6 +51,20 @@ class ShowActionPlan(command.ShowOne):
         )
         return parser
 
+    def _format_indicators(self, action_plan, parsed_args):
+        out = six.StringIO()
+        efficacy_indicators = action_plan.efficacy_indicators
+        fields = ['name', 'description', 'value', 'unit']
+        yaml_format.YAMLFormatter().emit_list(
+            column_names=list(field.capitalize()
+                              for field in fields),
+            data=[utils.get_dict_properties(spec, fields)
+                  for spec in efficacy_indicators],
+            stdout=out,
+            parsed_args=parsed_args,
+            )
+        return out.getvalue() or ''
+
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
@@ -48,6 +77,15 @@ class ShowActionPlan(command.ShowOne):
             action_plan = client.action_plan.get(action_plan_uuid)
         except exceptions.HTTPNotFound as exc:
             raise exceptions.CommandError(str(exc))
+
+        if parsed_args.formatter == 'table':
+            # Update the raw efficacy indicators with the formatted ones
+            action_plan.efficacy_indicators = (
+                self._format_indicators(action_plan, parsed_args))
+
+            # Update the raw global efficacy with the formatted one
+            action_plan.global_efficacy = format_global_efficacy(
+                action_plan.global_efficacy)
 
         columns = res_fields.ACTION_PLAN_FIELDS
         column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
@@ -88,6 +126,20 @@ class ListActionPlan(command.Lister):
 
         return parser
 
+    def _format_indicators(self, action_plan, parsed_args):
+        out = six.StringIO()
+        efficacy_indicators = action_plan.efficacy_indicators
+        fields = ['name', 'value', 'unit']
+        yaml_format.YAMLFormatter().emit_list(
+            column_names=list(field.capitalize()
+                              for field in fields),
+            data=[utils.get_dict_properties(spec, fields)
+                  for spec in efficacy_indicators],
+            stdout=out,
+            parsed_args=parsed_args,
+            )
+        return out.getvalue() or ''
+
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
@@ -105,6 +157,16 @@ class ListActionPlan(command.Lister):
             parsed_args, fields, field_labels))
 
         data = client.action_plan.list(**params)
+
+        if parsed_args.formatter == 'table':
+            for action_plan in data:
+                # Update the raw efficacy indicators with the formatted ones
+                action_plan.efficacy_indicators = (
+                    self._format_indicators(action_plan, parsed_args))
+
+                # Update the raw global efficacy with the formatted one
+                action_plan.global_efficacy = format_global_efficacy(
+                    action_plan.global_efficacy)
 
         return (field_labels,
                 (utils.get_item_properties(item, fields) for item in data))
