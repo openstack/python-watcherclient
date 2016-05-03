@@ -15,6 +15,7 @@
 # limitations under the License.
 
 from openstackclient.common import utils
+from oslo_utils import uuidutils
 
 from watcherclient._i18n import _
 from watcherclient.common import command
@@ -64,13 +65,15 @@ class ListAuditTemplate(command.Lister):
             default=False,
             help=_("Show detailed information about audit templates."))
         parser.add_argument(
-            '--goal-uuid',
-            metavar='<goal-uuid>',
-            help=_('UUID the goal used for filtering.'))
+            '--goal',
+            dest='goal',
+            metavar='<goal>',
+            help=_('UUID or name of the goal used for filtering.'))
         parser.add_argument(
-            '--strategy-uuid',
-            metavar='<strategy-uuid>',
-            help=_('UUID the strategy used for filtering.'))
+            '--strategy',
+            dest='strategy',
+            metavar='<strategy>',
+            help=_('UUID or name of the strategy used for filtering.'))
         parser.add_argument(
             '--limit',
             metavar='<limit>',
@@ -95,10 +98,14 @@ class ListAuditTemplate(command.Lister):
 
         params = {}
 
-        if parsed_args.goal_uuid is not None:
-            params['goal_uuid'] = parsed_args.goal_uuid
-        if parsed_args.strategy_uuid is not None:
-            params['strategy_uuid'] = parsed_args.strategy_uuid
+        # Optional
+        if parsed_args.goal:
+            params['goal'] = parsed_args.goal
+
+        # Optional
+        if parsed_args.strategy:
+            params['strategy'] = parsed_args.strategy
+
         if parsed_args.detail:
             fields = res_fields.AUDIT_TEMPLATE_FIELDS
             field_labels = res_fields.AUDIT_TEMPLATE_FIELD_LABELS
@@ -125,14 +132,14 @@ class CreateAuditTemplate(command.ShowOne):
             metavar='<name>',
             help=_('Name for this audit template.'))
         parser.add_argument(
-            'goal_uuid',
-            metavar='<goal-uuid>',
-            help=_('Goal ID associated to this audit template.'))
+            'goal',
+            metavar='<goal>',
+            help=_('Goal UUID or name associated to this audit template.'))
         parser.add_argument(
-            '-s', '--strategy-uuid',
-            dest='strategy_uuid',
-            metavar='<strategy-uuid>',
-            help=_('Strategy ID associated to this audit template.'))
+            '-s', '--strategy',
+            dest='strategy',
+            metavar='<strategy>',
+            help=_('Strategy UUID or name associated to this audit template.'))
         parser.add_argument(
             '-d', '--description',
             metavar='<description>',
@@ -156,9 +163,20 @@ class CreateAuditTemplate(command.ShowOne):
         client = getattr(self.app.client_manager, "infra-optim")
 
         field_list = ['host_aggregate', 'description', 'name', 'extra',
-                      'goal_uuid', 'strategy_uuid']
+                      'goal', 'strategy']
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
+
+        # mandatory
+        if not uuidutils.is_uuid_like(fields['goal']):
+            fields['goal'] = client.goal.get(fields['goal']).uuid
+
+        # optional
+        if fields.get('strategy'):
+            if not uuidutils.is_uuid_like(fields['strategy']):
+                fields['strategy'] = client.strategy.get(
+                    fields['strategy']).uuid
+
         fields = common_utils.args_array_to_dict(fields, 'extra')
         audit_template = client.audit_template.create(**fields)
 

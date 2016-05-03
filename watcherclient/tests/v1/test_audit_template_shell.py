@@ -24,14 +24,35 @@ from watcherclient.tests.v1 import base
 from watcherclient import v1 as resource
 from watcherclient.v1 import resource_fields
 
+GOAL_1 = {
+    'uuid': "fc087747-61be-4aad-8126-b701731ae836",
+    'name': "SERVER_CONSOLIDATION",
+    'display_name': 'Server Consolidation',
+    'created_at': datetime.datetime.now().isoformat(),
+    'updated_at': None,
+    'deleted_at': None,
+}
+
+STRATEGY_1 = {
+    'uuid': '2cf86250-d309-4b81-818e-1537f3dba6e5',
+    'name': 'basic',
+    'display_name': 'Basic consolidation',
+    'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
+    'created_at': datetime.datetime.now().isoformat(),
+    'updated_at': None,
+    'deleted_at': None,
+}
+
 AUDIT_TEMPLATE_1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'name': 'at1',
     'description': 'Audit Template 1 description',
     'host_aggregate': 5,
     'extra': {'automatic': False},
-    'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
-    'strategy_uuid': 'bbe6b966-f98e-439b-a01a-17b9b3b8478b',
+    'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
+    'goal_name': 'SERVER_CONSOLIDATION',
+    'strategy_uuid': '2cf86250-d309-4b81-818e-1537f3dba6e5',
+    'strategy_name': 'basic',
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
@@ -43,8 +64,10 @@ AUDIT_TEMPLATE_2 = {
     'description': 'Audit Template 2',
     'host_aggregate': 3,
     'extra': {'automatic': False},
-    'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
+    'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
+    'goal_name': 'SERVER_CONSOLIDATION',
     'strategy_uuid': None,
+    'strategy_name': None,
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
@@ -62,6 +85,23 @@ class AuditTemplateShellTest(base.CommandTestCase):
     def setUp(self):
         super(self.__class__, self).setUp()
 
+        # goal mock
+        p_goal_manager = mock.patch.object(resource, 'GoalManager')
+        self.m_goal_mgr_cls = p_goal_manager.start()
+        self.addCleanup(p_goal_manager.stop)
+
+        self.m_goal_mgr = mock.Mock()
+        self.m_goal_mgr_cls.return_value = self.m_goal_mgr
+
+        # strategy mock
+        p_strategy_manager = mock.patch.object(resource, 'StrategyManager')
+        self.m_strategy_mgr_cls = p_strategy_manager.start()
+        self.addCleanup(p_strategy_manager.stop)
+
+        self.m_strategy_mgr = mock.Mock()
+        self.m_strategy_mgr_cls.return_value = self.m_strategy_mgr
+
+        # audit template mock
         p_audit_template_manager = mock.patch.object(
             resource, 'AuditTemplateManager')
         self.m_audit_template_mgr_cls = p_audit_template_manager.start()
@@ -70,6 +110,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr = mock.Mock()
         self.m_audit_template_mgr_cls.return_value = self.m_audit_template_mgr
 
+        # stdout mock
         self.stdout = six.StringIO()
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
@@ -116,8 +157,8 @@ class AuditTemplateShellTest(base.CommandTestCase):
             audit_template1, audit_template2]
 
         exit_code, results = self.run_cmd(
-            'audittemplate list --goal-uuid '
-            '7568667b-51fe-4087-9eb1-29b26891036f')
+            'audittemplate list --goal '
+            'fc087747-61be-4aad-8126-b701731ae836')
 
         self.assertEqual(0, exit_code)
         self.assertEqual(
@@ -129,16 +170,46 @@ class AuditTemplateShellTest(base.CommandTestCase):
 
         self.m_audit_template_mgr.list.assert_called_once_with(
             detail=False,
-            goal_uuid='7568667b-51fe-4087-9eb1-29b26891036f',
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+        )
+
+    def test_do_audit_template_list_filter_by_goal_name(self):
+        goal1 = resource.Goal(mock.Mock(), GOAL_1)
+        strategy1 = resource.Strategy(mock.Mock(), STRATEGY_1)
+        audit_template1 = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        audit_template2 = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_2)
+        self.m_goal_mgr.get.return_value = goal1
+        self.m_strategy_mgr.get.return_value = strategy1
+        self.m_audit_template_mgr.list.return_value = [
+            audit_template1, audit_template2]
+
+        exit_code, results = self.run_cmd(
+            'audittemplate list --goal SERVER_CONSOLIDATION')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(audit_template1, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS),
+             self.resource_as_dict(audit_template2, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_audit_template_mgr.list.assert_called_once_with(
+            detail=False,
+            goal='SERVER_CONSOLIDATION',
         )
 
     def test_do_audit_template_list_filter_by_strategy_uuid(self):
+        goal1 = resource.Goal(mock.Mock(), GOAL_1)
+        strategy1 = resource.Strategy(mock.Mock(), STRATEGY_1)
         audit_template1 = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_goal_mgr.get.return_value = goal1
+        self.m_strategy_mgr.get.return_value = strategy1
         self.m_audit_template_mgr.list.return_value = [audit_template1]
 
         exit_code, results = self.run_cmd(
-            'audittemplate list --strategy-uuid '
-            'bbe6b966-f98e-439b-a01a-17b9b3b8478b')
+            'audittemplate list --strategy '
+            '2cf86250-d309-4b81-818e-1537f3dba6e5')
 
         self.assertEqual(0, exit_code)
         self.assertEqual(
@@ -148,7 +219,26 @@ class AuditTemplateShellTest(base.CommandTestCase):
 
         self.m_audit_template_mgr.list.assert_called_once_with(
             detail=False,
-            strategy_uuid='bbe6b966-f98e-439b-a01a-17b9b3b8478b',
+            strategy='2cf86250-d309-4b81-818e-1537f3dba6e5',
+        )
+
+    def test_do_audit_template_list_filter_by_strategy_name(self):
+        audit_template1 = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.list.return_value = [audit_template1]
+
+        exit_code, results = self.run_cmd(
+            'audittemplate list --strategy '
+            'basic')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(audit_template1, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_audit_template_mgr.list.assert_called_once_with(
+            detail=False,
+            strategy='basic',
         )
 
     def test_do_audit_template_show_by_name(self):
@@ -224,14 +314,14 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.create.return_value = audit_template
 
         exit_code, result = self.run_cmd(
-            'audittemplate create at1 7568667b-51fe-4087-9eb1-29b26891036f')
+            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836')
 
         self.assertEqual(0, exit_code)
         self.assertEqual(self.resource_as_dict(audit_template, self.FIELDS,
                                                self.FIELD_LABELS),
                          result)
         self.m_audit_template_mgr.create.assert_called_once_with(
-            goal_uuid='7568667b-51fe-4087-9eb1-29b26891036f',
+            goal='fc087747-61be-4aad-8126-b701731ae836',
             name='at1')
 
     def test_do_audit_template_create_with_description(self):
@@ -239,7 +329,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.create.return_value = audit_template
 
         exit_code, result = self.run_cmd(
-            'audittemplate create at1 7568667b-51fe-4087-9eb1-29b26891036f '
+            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836 '
             '-d "Audit Template 1 description"')
 
         self.assertEqual(0, exit_code)
@@ -247,7 +337,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
                                                self.FIELD_LABELS),
                          result)
         self.m_audit_template_mgr.create.assert_called_once_with(
-            goal_uuid='7568667b-51fe-4087-9eb1-29b26891036f',
+            goal='fc087747-61be-4aad-8126-b701731ae836',
             name='at1',
             description='Audit Template 1 description')
 
@@ -256,7 +346,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.create.return_value = audit_template
 
         exit_code, result = self.run_cmd(
-            'audittemplate create at1 7568667b-51fe-4087-9eb1-29b26891036f '
+            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836 '
             '-a 5')
 
         self.assertEqual(0, exit_code)
@@ -264,7 +354,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
                                                self.FIELD_LABELS),
                          result)
         self.m_audit_template_mgr.create.assert_called_once_with(
-            goal_uuid='7568667b-51fe-4087-9eb1-29b26891036f',
+            goal='fc087747-61be-4aad-8126-b701731ae836',
             name='at1',
             host_aggregate='5')
 
@@ -273,7 +363,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.create.return_value = audit_template
 
         exit_code, result = self.run_cmd(
-            'audittemplate create at1 7568667b-51fe-4087-9eb1-29b26891036f '
+            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836 '
             '-e automatic=true')
 
         self.assertEqual(0, exit_code)
@@ -281,6 +371,6 @@ class AuditTemplateShellTest(base.CommandTestCase):
                                                self.FIELD_LABELS),
                          result)
         self.m_audit_template_mgr.create.assert_called_once_with(
-            goal_uuid='7568667b-51fe-4087-9eb1-29b26891036f',
+            goal='fc087747-61be-4aad-8126-b701731ae836',
             name='at1',
             extra={'automatic': True})

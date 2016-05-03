@@ -18,7 +18,6 @@
 import copy
 
 from six.moves.urllib import parse as urlparse
-import testtools
 from testtools import matchers
 
 from watcherclient.tests import utils
@@ -32,7 +31,9 @@ AUDIT_TMPL1 = {
     'host_aggregate': 5,
     'extra': {'automatic': False},
     'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
+    'goal_name': 'SERVER_CONSOLIDATION',
     'strategy_uuid': 'bbe6b966-f98e-439b-a01a-17b9b3b8478b',
+    'strategy_name': 'server_consolidation',
 }
 
 AUDIT_TMPL2 = {
@@ -43,7 +44,9 @@ AUDIT_TMPL2 = {
     'host_aggregate': 8,
     'extra': {'automatic': True},
     'goal_uuid': 'e75ee410-b32b-465f-88b5-4397705f9473',
+    'goal_name': 'DUMMY',
     'strategy_uuid': 'ae99a4a4-acbc-4c67-abe1-e37128fac45d',
+    'strategy_name': 'dummy',
 }
 
 AUDIT_TMPL3 = {
@@ -54,11 +57,16 @@ AUDIT_TMPL3 = {
     'host_aggregate': 7,
     'extra': {'automatic': True},
     'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
+    'goal_name': 'SERVER_CONSOLIDATION',
 }
 
 CREATE_AUDIT_TEMPLATE = copy.deepcopy(AUDIT_TMPL1)
 del CREATE_AUDIT_TEMPLATE['id']
 del CREATE_AUDIT_TEMPLATE['uuid']
+del CREATE_AUDIT_TEMPLATE['goal_name']
+del CREATE_AUDIT_TEMPLATE['strategy_name']
+CREATE_AUDIT_TEMPLATE['goal'] = CREATE_AUDIT_TEMPLATE.pop('goal_uuid')
+CREATE_AUDIT_TEMPLATE['strategy'] = CREATE_AUDIT_TEMPLATE.pop('strategy_uuid')
 
 UPDATED_AUDIT_TMPL1 = copy.deepcopy(AUDIT_TMPL1)
 NEW_NAME = 'Audit Template_1 new name'
@@ -127,14 +135,14 @@ fake_responses = {
             {"audit_templates": [AUDIT_TMPL1]},
         ),
     },
-    '/v1/audit_templates/detail?goal_uuid=%s' % AUDIT_TMPL1['goal_uuid']:
+    '/v1/audit_templates/detail?goal=%s' % AUDIT_TMPL1['goal_uuid']:
     {
         'GET': (
             {},
             {"audit_templates": [AUDIT_TMPL1, AUDIT_TMPL3]},
         ),
     },
-    '/v1/audit_templates/?goal_uuid=%s' % AUDIT_TMPL1['goal_uuid']:
+    '/v1/audit_templates/?goal=%s' % AUDIT_TMPL1['goal_uuid']:
     {
         'GET': (
             {},
@@ -179,7 +187,17 @@ fake_responses_sorting = {
 }
 
 fake_responses_filter_by_goal_uuid = {
-    '/v1/audit_templates/?goal_uuid=e75ee410-b32b-465f-88b5-4397705f9473':
+    '/v1/audit_templates/?goal=e75ee410-b32b-465f-88b5-4397705f9473':
+    {
+        'GET': (
+            {},
+            {"audit_templates": [AUDIT_TMPL2]}
+        ),
+    },
+}
+
+fake_responses_filter_by_goal_name = {
+    '/v1/audit_templates/?goal=DUMMY':
     {
         'GET': (
             {},
@@ -189,7 +207,27 @@ fake_responses_filter_by_goal_uuid = {
 }
 
 fake_responses_filter_by_strategy_uuid = {
-    '/v1/audit_templates/?strategy_uuid=ae99a4a4-acbc-4c67-abe1-e37128fac45d':
+    '/v1/audit_templates/?strategy=ae99a4a4-acbc-4c67-abe1-e37128fac45d':
+    {
+        'GET': (
+            {},
+            {"audit_templates": [AUDIT_TMPL2]}
+        ),
+    },
+}
+
+fake_responses_filter_by_strategy_name = {
+    '/v1/audit_templates/?strategy=dummy':
+    {
+        'GET': (
+            {},
+            {"audit_templates": [AUDIT_TMPL2]}
+        ),
+    },
+}
+
+fake_responses_filter_by_strategy_and_goal_name = {
+    '/v1/audit_templates/?goal=DUMMY&strategy=dummy':
     {
         'GET': (
             {},
@@ -199,7 +237,7 @@ fake_responses_filter_by_strategy_uuid = {
 }
 
 
-class AuditTemplateManagerTest(testtools.TestCase):
+class AuditTemplateManagerTest(utils.BaseTestCase):
 
     def setUp(self):
         super(AuditTemplateManagerTest, self).setUp()
@@ -229,10 +267,23 @@ class AuditTemplateManagerTest(testtools.TestCase):
         self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
             self.api)
         audit_templates = self.mgr.list(
-            goal_uuid="e75ee410-b32b-465f-88b5-4397705f9473")
+            goal="e75ee410-b32b-465f-88b5-4397705f9473")
         expect = [
             ('GET',
-             '/v1/audit_templates/?goal_uuid=%s' % AUDIT_TMPL2['goal_uuid'],
+             '/v1/audit_templates/?goal=%s' % AUDIT_TMPL2['goal_uuid'],
+             {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(audit_templates))
+
+    def test_audit_templates_list_filter_by_goal_name(self):
+        self.api = utils.FakeAPI(fake_responses_filter_by_goal_name)
+        self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
+            self.api)
+        audit_templates = self.mgr.list(goal="DUMMY")
+        expect = [
+            ('GET',
+             '/v1/audit_templates/?goal=%s' % AUDIT_TMPL2['goal_name'],
              {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
@@ -243,11 +294,40 @@ class AuditTemplateManagerTest(testtools.TestCase):
         self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
             self.api)
         audit_templates = self.mgr.list(
-            strategy_uuid="ae99a4a4-acbc-4c67-abe1-e37128fac45d")
+            strategy="ae99a4a4-acbc-4c67-abe1-e37128fac45d")
         expect = [
             ('GET',
-             '/v1/audit_templates/?strategy_uuid=%s' % (
+             '/v1/audit_templates/?strategy=%s' % (
                  AUDIT_TMPL2['strategy_uuid']),
+             {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(audit_templates))
+
+    def test_audit_templates_list_filter_by_strategy_name(self):
+        self.api = utils.FakeAPI(fake_responses_filter_by_strategy_name)
+        self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
+            self.api)
+        audit_templates = self.mgr.list(strategy="dummy")
+        expect = [
+            ('GET',
+             '/v1/audit_templates/?strategy=%s' % (
+                 AUDIT_TMPL2['strategy_name']),
+             {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(audit_templates))
+
+    def test_audit_templates_list_filter_by_goal_and_strategy_name(self):
+        self.api = utils.FakeAPI(
+            fake_responses_filter_by_strategy_and_goal_name)
+        self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
+            self.api)
+        audit_templates = self.mgr.list(goal="DUMMY", strategy="dummy")
+        expect = [
+            ('GET',
+             '/v1/audit_templates/?goal=%s&strategy=%s' % (
+                 AUDIT_TMPL2['goal_name'], AUDIT_TMPL2['strategy_name']),
              {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
