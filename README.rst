@@ -55,7 +55,7 @@ You can install the Watcher CLI with the following command:
 Configuration
 =============
 
-Create a **creds** file containing your Openstack credentials:
+Create a **creds** file containing your OpenStack credentials:
 
 .. code::
 
@@ -105,7 +105,7 @@ Install the openstack CLI :
 
    # pip install python-openstackclient
 
-Make sure that your Openstack credentials are correct. If so, you should be able to verify that the watcher user has been declared in your Openstack keystone :
+Make sure that your OpenStack credentials are correct. If so, you should be able to verify that the watcher user has been declared in your OpenStack keystone :
 
 .. code::
 
