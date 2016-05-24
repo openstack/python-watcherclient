@@ -20,10 +20,10 @@ import mock
 import six
 
 from watcherclient import exceptions
-from watcherclient.tests.v1.osc import base
+from watcherclient import shell
+from watcherclient.tests.v1 import base
 from watcherclient import v1 as resource
 from watcherclient.v1 import resource_fields
-from watcherclient import watcher as shell
 
 ACTION_PLAN_1 = {
     'uuid': 'd9d9978e-6db5-4a05-8eab-1531795d7004',

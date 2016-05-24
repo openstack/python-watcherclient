@@ -19,9 +19,9 @@ import shlex
 
 import mock
 
+from watcherclient import shell
 from watcherclient.tests import utils
 from watcherclient.v1 import client
-from watcherclient import watcher
 
 
 class CommandTestCase(utils.BaseTestCase):
@@ -35,7 +35,7 @@ class CommandTestCase(utils.BaseTestCase):
 
         self.m_watcher_client = mock.Mock(side_effect=client.Client)
         self.p_create_client = mock.patch.object(
-            watcher.WatcherShell, 'create_client', self.m_watcher_client)
+            shell.WatcherShell, 'create_client', self.m_watcher_client)
         self.p_create_client.start()
 
         self.addCleanup(self.p_build_http_client.stop)

@@ -19,11 +19,10 @@ import datetime
 import mock
 import six
 
-from watcherclient.tests.v1.osc import base
+from watcherclient import shell
+from watcherclient.tests.v1 import base
 from watcherclient import v1 as resource
 from watcherclient.v1 import resource_fields
-from watcherclient import watcher as shell
-
 
 AUDIT_TEMPLATE_1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',

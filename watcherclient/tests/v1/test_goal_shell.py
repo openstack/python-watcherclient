@@ -19,11 +19,10 @@ import datetime
 import mock
 import six
 
-from watcherclient.tests.v1.osc import base
+from watcherclient import shell
+from watcherclient.tests.v1 import base
 from watcherclient import v1 as resource
 from watcherclient.v1 import resource_fields
-from watcherclient import watcher
-
 
 GOAL_1 = {
     'uuid': "fc087747-61be-4aad-8126-b701731ae836",
@@ -64,7 +63,7 @@ class GoalShellTest(base.CommandTestCase):
         self.m_goal_mgr_cls.return_value = self.m_goal_mgr
 
         self.stdout = six.StringIO()
-        self.cmd = watcher.WatcherShell(stdout=self.stdout)
+        self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_goal_list(self):
         goal1 = resource.Goal(mock.Mock(), GOAL_1)
