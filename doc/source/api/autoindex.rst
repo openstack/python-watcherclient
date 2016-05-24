@@ -1,23 +1,25 @@
 .. toctree::
    :maxdepth: 1
 
+   watcherclient._i18n.rst
    watcherclient.client.rst
    watcherclient.common.apiclient.base.rst
    watcherclient.common.apiclient.exceptions.rst
    watcherclient.common.base.rst
    watcherclient.common.cliutils.rst
+   watcherclient.common.command.rst
    watcherclient.common.http.rst
-   watcherclient.common.i18n.rst
    watcherclient.common.utils.rst
    watcherclient.exceptions.rst
+   watcherclient.plugin.rst
    watcherclient.shell.rst
    watcherclient.tests.keystone_client_fixtures.rst
    watcherclient.tests.test_client.rst
    watcherclient.tests.test_http.rst
    watcherclient.tests.test_import.rst
-   watcherclient.tests.test_shell.rst
    watcherclient.tests.test_utils.rst
    watcherclient.tests.utils.rst
+   watcherclient.tests.v1.base.rst
    watcherclient.tests.v1.test_action.rst
    watcherclient.tests.v1.test_action_plan.rst
    watcherclient.tests.v1.test_action_plan_shell.rst
@@ -29,7 +31,8 @@
    watcherclient.tests.v1.test_goal.rst
    watcherclient.tests.v1.test_goal_shell.rst
    watcherclient.tests.v1.test_metric_collector.rst
-   watcherclient.tests.v1.test_metric_collector_shell.rst
+   watcherclient.tests.v1.test_strategy.rst
+   watcherclient.tests.v1.test_strategy_shell.rst
    watcherclient.v1.action.rst
    watcherclient.v1.action_plan.rst
    watcherclient.v1.action_plan_shell.rst
@@ -42,7 +45,7 @@
    watcherclient.v1.goal.rst
    watcherclient.v1.goal_shell.rst
    watcherclient.v1.metric_collector.rst
-   watcherclient.v1.metric_collector_shell.rst
    watcherclient.v1.resource_fields.rst
-   watcherclient.v1.shell.rst
+   watcherclient.v1.strategy.rst
+   watcherclient.v1.strategy_shell.rst
    watcherclient.version.rst

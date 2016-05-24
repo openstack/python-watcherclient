@@ -18,6 +18,7 @@ Contents:
    installation
    api_v1
    cli
+   openstack_cli
    contributing
 
 Contributing

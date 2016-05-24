@@ -49,8 +49,16 @@ You can install the Watcher CLI with the following command:
 
 .. code::
 
-   pip install python-watcherclient
+   sudo pip install python-watcherclient
 
+
+You can also use the `OpenStack client <http://docs.openstack.org/cli-reference/overview.html>`_
+with Watcher (our watcher plugin for OpenStack client is included in the
+python-watcherclient package). To install it, you have just to run this command:
+
+.. code::
+
+   sudo pip install python-openstackclient
 
 Configuration
 =============
@@ -73,31 +81,48 @@ Source these credentials into your current shell session:
 
    # source creds
 
-You should be able to launch the following command which gets the list of previously created Audit Templates:
+You should be able to launch the following command which gets the list of
+previously created Audit Templates:
 
 .. code::
 
-   # watcher audit-template-list
-   +------+------+
-   | UUID | Name |
-   +------+------+
-   +------+------+
+   # watcher audittemplate list
 
-You can view the entire list of available Watcher commands and options using this command:
+or::
+
+   # openstack optimize audittemplate list
+   +--------------------------------+------+----------------------+----------+
+   | UUID                           | Name | Goal                 | Strategy |
+   +--------------------------------+------+----------------------+----------+
+   +--------------------------------+------+----------------------+----------+
+
+
+You can view the entire list of available Watcher commands and options using
+this command:
 
 .. code::
 
    # watcher help
 
+or::
+
+   # openstack help optimize
+
 
 Troubleshootings
 ================
 
-If any watcher command fails, you can obtain more details with the **--debug** option :
+If any watcher command fails, you can obtain more details with the **--debug**
+option :
 
 .. code::
 
-   # watcher --debug audit-template-list
+   # watcher --debug audittemplate list
+
+or::
+
+   # openstack --debug optimize audittemplate list
+
 
 Install the openstack CLI :
 
@@ -105,7 +130,8 @@ Install the openstack CLI :
 
    # pip install python-openstackclient
 
-Make sure that your OpenStack credentials are correct. If so, you should be able to verify that the watcher user has been declared in your OpenStack keystone :
+Make sure that your Openstack credentials are correct. If so, you should be able
+to verify that the watcher user has been declared in your Openstack keystone :
 
 .. code::
 

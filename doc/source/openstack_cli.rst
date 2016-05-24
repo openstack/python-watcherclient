@@ -1,25 +1,26 @@
-==============================================
-:program:`watcher` Command-Line Interface (CLI)
-==============================================
+=====================================================================
+:program:`openstack` Command-Line Interface (CLI) with Watcher plugin
+=====================================================================
 
-.. program:: watcher
+.. program:: openstack
 .. highlight:: bash
 
 SYNOPSIS
 ========
 
-:program:`watcher` [options] <command> [command-options]
+:program:`openstack` [options] :program:`optimize` <command> [command-options]
 
-:program:`watcher help`
+:program:`openstack help optimize`
 
-:program:`watcher help` <command>
+:program:`openstack help optimize` <command>
 
 
 DESCRIPTION
 ===========
 
-The :program:`watcher` command-line interface (CLI) interacts with the
-OpenStack infra-optim Service (Watcher).
+The :program:`openstack` command-line interface (CLI) can interact with the
+OpenStack infra-optim Service (Watcher), by using our additional plugin
+(included into the python-watcherclient package).
 
 In order to use the CLI, you must provide your OpenStack username, password,
 project (historically called tenant), and auth endpoint. You can use
@@ -39,8 +40,8 @@ credentials for every request. You can override this behavior by manually
 supplying an auth token using :option:`--watcher-url` and
 :option:`--os-auth-token`, or by setting the corresponding environment variables::
 
-    $ export WATCHER_URL=http://watcher.example.org:9322/
-    $ export OS_AUTH_TOKEN=3bcc3d3a03f44e3d8377f9247b0ad155
+    export WATCHER_URL=http://watcher.example.org:9322/
+    export OS_AUTH_TOKEN=3bcc3d3a03f44e3d8377f9247b0ad155
 
 Since Keystone can return multiple regions in the Service Catalog, you can
 specify the one you want with :option:`--os-region-name` or set the following
@@ -49,28 +50,16 @@ environment variable. (It defaults to the first in the list returned.)
 
     $ export OS_REGION_NAME=region
 
-Watcher CLI supports bash completion. The command-line tool can automatically
-fill partially typed commands. To use this feature, source the below file
-(available at
-https://git.openstack.org/cgit/openstack/python-watcherclient/tree/tools/watcher.bash_completion)
-to your terminal and then bash completion should work::
-
-    $ source watcher.bash_completion
-
-To avoid doing this every time, add this to your ``.bashrc`` or copy the
-watcher.bash_completion file to the default bash completion scripts directory
-on your linux distribution.
-
 OPTIONS
 =======
 
 To get a list of available (sub)commands and options, run::
 
-    $ watcher help
+    $ openstack help optimize
 
 To get usage and options of a command, run::
 
-    $ watcher help <command>
+    $ openstack help optimize <command>
 
 
 EXAMPLES
@@ -78,12 +67,15 @@ EXAMPLES
 
 Get information about the audit-create command::
 
-    $ watcher help audit create
+    $ openstack help optimize audit create
+
 
 Get a list of available goal::
 
-    $ watcher goal list
+    $ openstack optimize goal list
+
 
 Get a list of audits::
 
-    $ watcher audit list
+    $ openstack optimize audit list
+
