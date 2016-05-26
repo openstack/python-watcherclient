@@ -33,6 +33,7 @@ STRATEGY_1 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
+    'parameters_spec': {},
 }
 
 STRATEGY_2 = {
@@ -44,6 +45,7 @@ STRATEGY_2 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
+    'parameters_spec': {},
 }
 
 
@@ -96,10 +98,10 @@ class StrategyShellTest(base.CommandTestCase):
 
         self.assertEqual(0, exit_code)
         self.assertEqual(
-            [self.resource_as_dict(strategy1, self.SHORT_LIST_FIELDS,
-                                   self.SHORT_LIST_FIELD_LABELS),
-             self.resource_as_dict(strategy2, self.SHORT_LIST_FIELDS,
-                                   self.SHORT_LIST_FIELD_LABELS)],
+            [self.resource_as_dict(strategy1, self.FIELDS,
+                                   self.FIELD_LABELS),
+             self.resource_as_dict(strategy2, self.FIELDS,
+                                   self.FIELD_LABELS)],
             results)
 
         self.m_strategy_mgr.list.assert_called_once_with(detail=True)

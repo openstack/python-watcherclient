@@ -132,15 +132,23 @@ class CreateAudit(command.ShowOne):
             metavar='<audit_type>',
             default='ONESHOT',
             help=_("Audit type."))
+        parser.add_argument(
+            '-p', '--parameter',
+            dest='parameters',
+            metavar='<name=value>',
+            action='append',
+            help=_("Record strategy parameter/value metadata. "
+                   "Can be specified multiple times."))
 
         return parser
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
-
-        field_list = ['audit_template_uuid', 'audit_type', 'deadline']
+        field_list = ['audit_template_uuid', 'audit_type', 'deadline',
+                      'parameters']
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
+        fields = common_utils.args_array_to_dict(fields, 'parameters')
         if fields.get('audit_template_uuid'):
             if not uuidutils.is_uuid_like(fields['audit_template_uuid']):
                 fields['audit_template_uuid'] = client.audit_template.get(

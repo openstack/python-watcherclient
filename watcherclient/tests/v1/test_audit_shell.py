@@ -48,6 +48,7 @@ AUDIT_1 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
+    'parameters': None,
 }
 
 AUDIT_2 = {
@@ -60,6 +61,7 @@ AUDIT_2 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
+    'parameters': None,
 }
 
 
@@ -277,3 +279,21 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
             audit_type='ONESHOT')
+
+    def test_do_audit_create_with_parameter(self):
+        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.get.return_value = audit_template
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -a at1 -p para1=10 -p para2=20')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
+            audit_type='ONESHOT',
+            parameters={'para1': 10, 'para2': 20})

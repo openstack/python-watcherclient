@@ -35,11 +35,11 @@ AUDIT_TEMPLATE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Goal', 'Strategy']
 # Audit
 AUDIT_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
                 'deadline', 'state', 'audit_type', 'audit_template_uuid',
-                'audit_template_name']
+                'audit_template_name', 'parameters']
 
 AUDIT_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
                       'Deadline', 'State', 'Audit Type', 'Audit Template uuid',
-                      'Audit Template Name']
+                      'Audit Template Name', 'Parameters']
 
 AUDIT_SHORT_LIST_FIELDS = [
     'uuid', 'audit_type', 'audit_template_name', 'state']
@@ -88,9 +88,11 @@ GOAL_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Display name']
 
 # Strategies
 
-STRATEGY_FIELDS = ['uuid', 'name', 'display_name', 'goal_name']
+STRATEGY_FIELDS = ['uuid', 'name', 'display_name', 'goal_name',
+                   'parameters_spec']
 
-STRATEGY_FIELD_LABELS = ['UUID', 'Name', 'Display name', 'Goal']
+STRATEGY_FIELD_LABELS = ['UUID', 'Name', 'Display name', 'Goal',
+                         'Parameters spec']
 
 STRATEGY_SHORT_LIST_FIELDS = ['uuid', 'name', 'display_name', 'goal_name']
 
