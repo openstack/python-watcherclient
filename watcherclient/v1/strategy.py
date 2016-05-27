@@ -33,11 +33,11 @@ class StrategyManager(base.Manager):
         return ('/v1/strategies/%s' % strategy
                 if strategy else '/v1/strategies')
 
-    def list(self, goal_uuid=None, limit=None, sort_key=None,
+    def list(self, goal=None, limit=None, sort_key=None,
              sort_dir=None, detail=False):
         """Retrieve a list of strategy.
 
-        :param goal_uuid: The UUID of the goal to filter by
+        :param goal: The UUID of the goal to filter by
         :param limit: The maximum number of results to return per
                       request, if:
 
@@ -63,8 +63,8 @@ class StrategyManager(base.Manager):
 
         filters = utils.common_filters(limit, sort_key, sort_dir)
 
-        if goal_uuid:
-            filters.append(parse.urlencode(dict(goal_uuid=goal_uuid)))
+        if goal:
+            filters.append(parse.urlencode(dict(goal=goal)))
 
         path = ''
         if detail:

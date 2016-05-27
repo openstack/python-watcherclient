@@ -55,10 +55,10 @@ class ListStrategy(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListStrategy, self).get_parser(prog_name)
         parser.add_argument(
-            '--goal-uuid',
-            metavar='<goal_uuid>',
-            dest='goal_uuid',
-            help=_('UUID of the goal'))
+            '--goal',
+            metavar='<goal>',
+            dest='goal',
+            help=_('UUID or name of the goal'))
         parser.add_argument(
             '--detail',
             dest='detail',
@@ -95,8 +95,8 @@ class ListStrategy(command.Lister):
             fields = res_fields.STRATEGY_SHORT_LIST_FIELDS
             field_labels = res_fields.STRATEGY_SHORT_LIST_FIELD_LABELS
 
-        if parsed_args.goal_uuid:
-            params["goal_uuid"] = parsed_args.goal_uuid
+        if parsed_args.goal:
+            params["goal"] = parsed_args.goal
 
         params.update(
             common_utils.common_params_for_list(

@@ -29,6 +29,7 @@ STRATEGY_1 = {
     'name': 'basic',
     'display_name': 'Basic consolidation',
     'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
+    'goal_name': 'SERVER_CONSOLIDATION',
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
@@ -39,6 +40,7 @@ STRATEGY_2 = {
     'name': 'dummy',
     'display_name': 'Dummy',
     'goal_uuid': '407b03b1-63c6-49b2-adaf-4df5c0090047',
+    'goal_name': 'DUMMY',
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
@@ -102,13 +104,32 @@ class StrategyShellTest(base.CommandTestCase):
 
         self.m_strategy_mgr.list.assert_called_once_with(detail=True)
 
-    def test_do_strategy_list_filter_by_goal(self):
+    def test_do_strategy_list_filter_by_goal_name(self):
+        strategy2 = resource.Strategy(mock.Mock(), STRATEGY_2)
+        self.m_strategy_mgr.list.return_value = [strategy2]
+
+        exit_code, results = self.run_cmd(
+            'strategy list --goal '
+            'DUMMY')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(strategy2, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_strategy_mgr.list.assert_called_once_with(
+            detail=False,
+            goal='DUMMY',
+        )
+
+    def test_do_strategy_list_filter_by_goal_uuid(self):
         strategy1 = resource.Strategy(mock.Mock(), STRATEGY_1)
         self.m_strategy_mgr.list.return_value = [strategy1]
 
         exit_code, results = self.run_cmd(
-            'strategy list --goal-uuid '
-            '770ef053-ecb3-48b0-85b5-d55a2dbc6588')
+            'strategy list --goal '
+            'fc087747-61be-4aad-8126-b701731ae836')
 
         self.assertEqual(0, exit_code)
         self.assertEqual(
@@ -118,7 +139,7 @@ class StrategyShellTest(base.CommandTestCase):
 
         self.m_strategy_mgr.list.assert_called_once_with(
             detail=False,
-            goal_uuid='770ef053-ecb3-48b0-85b5-d55a2dbc6588',
+            goal='fc087747-61be-4aad-8126-b701731ae836',
         )
 
     def test_do_strategy_show_by_uuid(self):
