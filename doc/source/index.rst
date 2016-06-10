@@ -40,12 +40,4 @@ The preferred way to run the unit tests is using ``tox``.
 See `Consistent Testing Interface`_ for more details.
 
 .. _Consistent Testing Interface: http://git.openstack.org/cgit/openstack/governance/tree/reference/project-testing-interface.rst
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
 .. _Watcher: https://wiki.openstack.org/wiki/Watcher
