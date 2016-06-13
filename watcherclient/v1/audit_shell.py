@@ -132,13 +132,19 @@ class CreateAudit(command.ShowOne):
             metavar='<type>',
             default='ONESHOT',
             help=_("Audit type."))
+        parser.add_argument(
+            '-p', '--period',
+            dest='period',
+            metavar='<period>',
+            default=3600,
+            help=_("Audit period."))
 
         return parser
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
-        field_list = ['audit_template_uuid', 'type', 'deadline']
+        field_list = ['audit_template_uuid', 'type', 'deadline', 'period']
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
         if fields.get('audit_template_uuid'):
