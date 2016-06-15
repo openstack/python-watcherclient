@@ -110,3 +110,9 @@ METRIC_COLLECTOR_SHORT_LIST_FIELDS = ['uuid', 'endpoint', 'category']
 
 METRIC_COLLECTOR_SHORT_LIST_FIELD_LABELS = ['UUID', 'Endpoint URL',
                                             'Metric Category']
+# Scoring Engines
+SCORING_ENGINE_FIELDS = ['uuid', 'name', 'description', 'metainfo']
+SCORING_ENGINE_FIELD_LABELS = ['UUID', 'Name', 'Description', 'Metainfo']
+
+SCORING_ENGINE_SHORT_LIST_FIELDS = ['uuid', 'name', 'description']
+SCORING_ENGINE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Description']

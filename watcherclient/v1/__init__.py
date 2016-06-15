@@ -19,6 +19,7 @@ from watcherclient.v1 import action_plan
 from watcherclient.v1 import audit
 from watcherclient.v1 import audit_template
 from watcherclient.v1 import goal
+from watcherclient.v1 import scoring_engine
 from watcherclient.v1 import strategy
 
 Action = action.Action
@@ -31,10 +32,13 @@ AuditTemplate = audit_template.AuditTemplate
 AuditTemplateManager = audit_template.AuditTemplateManager
 Goal = goal.Goal
 GoalManager = goal.GoalManager
+ScoringEngine = scoring_engine.ScoringEngine
+ScoringEngineManager = scoring_engine.ScoringEngineManager
 Strategy = strategy.Strategy
 StrategyManager = strategy.StrategyManager
 
 __all__ = (
     "Action", "ActionManager", "ActionPlan", "ActionPlanManager",
     "Audit", "AuditManager", "AuditTemplate", "AuditTemplateManager",
-    "Goal", "GoalManager", "Strategy", "StrategyManager")
+    "Goal", "GoalManager", "ScoringEngine", "ScoringEngineManager",
+    "Strategy", "StrategyManager")
