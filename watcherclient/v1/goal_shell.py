@@ -16,6 +16,7 @@
 #    under the License.
 
 from openstackclient.common import utils
+import six
 
 from watcherclient._i18n import _
 from watcherclient.common import command
@@ -36,6 +37,16 @@ class ShowGoal(command.ShowOne):
         )
         return parser
 
+    def _format_indicator_spec_table(self, spec, parsed_args):
+        out = six.StringIO()
+        self.formatter.emit_one(
+            column_names=list(field.capitalize() for field in spec.keys()),
+            data=utils.get_dict_properties(spec, spec.keys()),
+            stdout=out,
+            parsed_args=parsed_args,
+            )
+        return out.getvalue() or ''
+
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
@@ -46,6 +57,15 @@ class ShowGoal(command.ShowOne):
 
         columns = res_fields.GOAL_FIELDS
         column_headers = res_fields.GOAL_FIELD_LABELS
+
+        if parsed_args.formatter == 'table':
+            indicator_specs = ''
+            # Format complex data types:
+            for indicator_spec in goal.efficacy_specification:
+                indicator_specs += self._format_indicator_spec_table(
+                    indicator_spec, parsed_args)
+            # Update the raw efficacy specs with the formatted one
+            goal.efficacy_specification = indicator_specs
 
         return column_headers, utils.get_item_properties(goal, columns)
 
@@ -80,6 +100,20 @@ class ListGoal(command.Lister):
 
         return parser
 
+    def _format_indicator_spec_table(self, goal, parsed_args):
+        out = six.StringIO()
+        efficacy_specification = goal.efficacy_specification
+        fields = ['name', 'unit']
+        self.formatter.emit_list(
+            column_names=list(field.capitalize()
+                              for field in fields),
+            data=[utils.get_dict_properties(spec, fields)
+                  for spec in efficacy_specification],
+            stdout=out,
+            parsed_args=parsed_args,
+            )
+        return out.getvalue() or ''
+
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
@@ -99,6 +133,12 @@ class ListGoal(command.Lister):
             data = client.goal.list(**params)
         except exceptions.HTTPNotFound as ex:
             raise exceptions.CommandError(str(ex))
+
+        if parsed_args.formatter == 'table':
+            for goal in data:
+                # Update the raw efficacy specs with the formatted one
+                goal.efficacy_specification = (
+                    self._format_indicator_spec_table(goal, parsed_args))
 
         return (field_labels,
                 (utils.get_item_properties(item, fields) for item in data))

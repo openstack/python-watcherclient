@@ -29,8 +29,17 @@ ACTION_PLAN_1 = {
     'uuid': 'd9d9978e-6db5-4a05-8eab-1531795d7004',
     'audit_uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588',
     'state': 'RECOMMENDED',
+    'efficacy_indicators': [{'description': 'Indicator 1',
+                             'name': 'indicator1',
+                             'unit': '%'}],
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
+    'global_efficacy': {
+        "value": 99,
+        "unit": "%",
+        "name": "dummy_global_efficacy",
+        "description": "Dummy Global Efficacy",
+    },
     'deleted_at': None,
 }
 
@@ -39,7 +48,16 @@ ACTION_PLAN_2 = {
     'audit_uuid': '239f02a5-9649-4e14-9d33-ac2bf67cb755',
     'state': 'RECOMMENDED',
     'created_at': datetime.datetime.now().isoformat(),
+    'efficacy_indicators': [{'description': 'Indicator 2',
+                             'name': 'indicator2',
+                             'unit': '%'}],
     'updated_at': None,
+    'global_efficacy': {
+        "value": 87,
+        "unit": "%",
+        "name": "dummy_global_efficacy",
+        "description": "Dummy Global Efficacy",
+    },
     'deleted_at': None,
 }
 
