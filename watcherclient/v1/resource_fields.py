@@ -34,18 +34,20 @@ AUDIT_TEMPLATE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Goal', 'Strategy']
 
 # Audit
 AUDIT_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
-                'deadline', 'state', 'audit_type', 'audit_template_uuid',
-                'audit_template_name', 'parameters', 'interval']
+                'deadline', 'state', 'audit_type',
+                'parameters', 'interval',
+                'host_aggregate', 'goal_name', 'strategy_name']
 
 AUDIT_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
-                      'Deadline', 'State', 'Audit Type', 'Audit Template uuid',
-                      'Audit Template Name', 'Parameters', 'Interval']
+                      'Deadline', 'State', 'Audit Type',
+                      'Parameters', 'Interval', 'Host Aggregate ID or Name',
+                      'Goal', 'Strategy']
 
-AUDIT_SHORT_LIST_FIELDS = [
-    'uuid', 'audit_type', 'audit_template_name', 'state']
+AUDIT_SHORT_LIST_FIELDS = ['uuid', 'audit_type',
+                           'state', 'goal_name', 'strategy_name']
 
-AUDIT_SHORT_LIST_FIELD_LABELS = [
-    'UUID', 'Audit Type', 'Audit Template', 'State']
+AUDIT_SHORT_LIST_FIELD_LABELS = ['UUID', 'Audit Type', 'State', 'Goal',
+                                 'Strategy']
 
 # Action Plan
 ACTION_PLAN_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',

@@ -23,12 +23,14 @@ from testtools.matchers import HasLength
 from watcherclient.tests import utils
 import watcherclient.v1.audit
 
+
 AUDIT1 = {
     'id': 1,
-    'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
+    'uuid': '5869da81-4876-4687-a1ed-12cd64cf53d9',
     'deadline': None,
     'audit_type': 'ONE_SHOT',
-    'audit_template_uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588'
+    'goal': 'fc087747-61be-4aad-8126-b701731ae836',
+    'strategy': '2cf86250-d309-4b81-818e-1537f3dba6e5',
 }
 
 AUDIT2 = {
@@ -36,8 +38,10 @@ AUDIT2 = {
     'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
     'deadline': None,
     'audit_type': 'ONE_SHOT',
-    'audit_template_uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588'
+    'goal': 'fc087747-61be-4aad-8126-b701731ae836',
+    'strategy': None,
 }
+
 
 CREATE_AUDIT = copy.deepcopy(AUDIT1)
 del CREATE_AUDIT['id']
@@ -125,19 +129,8 @@ fake_responses_sorting = {
     },
 }
 
-fake_responses_filters = {
-    '/v1/audits/?audit_template=%s' % AUDIT2['audit_template_uuid']:
-    {
-        'GET': (
-            {},
-            {"audits": [AUDIT2]}
-        ),
-    },
-}
-
 
 class AuditManagerTest(testtools.TestCase):
-
     def setUp(self):
         super(AuditManagerTest, self).setUp()
         self.api = utils.FakeAPI(fake_responses)
@@ -199,16 +192,6 @@ class AuditManagerTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(2, len(audits))
-
-    def test_audits_list_filter_by_audit_template(self):
-        self.api = utils.FakeAPI(fake_responses_filters)
-        self.mgr = watcherclient.v1.audit.AuditManager(self.api)
-        self.mgr.list(audit_template=AUDIT2['audit_template_uuid'])
-        expect = [
-            ('GET', '/v1/audits/?audit_template=%s' %
-             AUDIT2['audit_template_uuid'], {}, None),
-        ]
-        self.assertEqual(expect, self.api.calls)
 
     def test_audits_show(self):
         audit = self.mgr.get(AUDIT1['uuid'])

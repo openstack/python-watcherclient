@@ -56,16 +56,21 @@ class ListAudit(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListAudit, self).get_parser(prog_name)
         parser.add_argument(
-            '--audit-template',
-            metavar='<audit_template>',
-            dest='audit_template',
-            help=_('Name or UUID of an audit template used for filtering.'))
-        parser.add_argument(
             '--detail',
             dest='detail',
             action='store_true',
             default=False,
             help=_("Show detailed information about audits."))
+        parser.add_argument(
+            '--goal',
+            dest='goal',
+            metavar='<goal>',
+            help=_('UUID or name of the goal used for filtering.'))
+        parser.add_argument(
+            '--strategy',
+            dest='strategy',
+            metavar='<strategy>',
+            help=_('UUID or name of the strategy used for filtering.'))
         parser.add_argument(
             '--limit',
             metavar='<limit>',
@@ -89,8 +94,15 @@ class ListAudit(command.Lister):
         client = getattr(self.app.client_manager, "infra-optim")
 
         params = {}
-        if parsed_args.audit_template is not None:
-            params['audit_template'] = parsed_args.audit_template
+
+        # Optional
+        if parsed_args.goal:
+            params['goal'] = parsed_args.goal
+
+        # Optional
+        if parsed_args.strategy:
+            params['strategy'] = parsed_args.strategy
+
         if parsed_args.detail:
             fields = res_fields.AUDIT_FIELDS
             field_labels = res_fields.AUDIT_FIELD_LABELS
@@ -116,12 +128,6 @@ class CreateAudit(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(CreateAudit, self).get_parser(prog_name)
         parser.add_argument(
-            '-a', '--audit-template',
-            required=True,
-            dest='audit_template_uuid',
-            metavar='<audit_template>',
-            help=_('Audit template used for this audit (name or uuid).'))
-        parser.add_argument(
             '-d', '--deadline',
             dest='deadline',
             metavar='<deadline>',
@@ -144,22 +150,52 @@ class CreateAudit(command.ShowOne):
             dest='interval',
             metavar='<interval>',
             help=_("Audit interval."))
-
+        parser.add_argument(
+            '-g', '--goal',
+            dest='goal',
+            metavar='<goal>',
+            help=_('Goal UUID or name associated to this audit.'))
+        parser.add_argument(
+            '-s', '--strategy',
+            dest='strategy',
+            metavar='<strategy>',
+            help=_('Strategy UUID or name associated to this audit.'))
+        parser.add_argument(
+            '-r', '--host-aggregate',
+            dest='host_aggregate',
+            metavar='<host-aggregate>',
+            help=_('Name or UUID of the host aggregate targeted '
+                   'by this audit.'))
+        parser.add_argument(
+            '-a', '--audit-template',
+            dest='audit_template_uuid',
+            metavar='<audit_template>',
+            help=_('Audit template used for this audit (name or uuid).'))
         return parser
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
-        field_list = ['audit_template_uuid', 'audit_type',
-                      'deadline', 'parameters', 'interval']
+        field_list = ['audit_template_uuid', 'host_aggregate',
+                      'audit_type', 'deadline', 'parameters', 'interval',
+                      'goal', 'strategy']
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
-        fields = common_utils.args_array_to_dict(fields, 'parameters')
+
+        if fields.get('goal'):
+            if not uuidutils.is_uuid_like(fields['goal']):
+                fields['goal'] = client.goal.get(fields['goal']).uuid
+
         if fields.get('audit_template_uuid'):
             if not uuidutils.is_uuid_like(fields['audit_template_uuid']):
                 fields['audit_template_uuid'] = client.audit_template.get(
                     fields['audit_template_uuid']).uuid
+        # optional
+        if fields.get('strategy'):
+            if not uuidutils.is_uuid_like(fields['strategy']):
+                fields['strategy'] = client.strategy.get(
+                    fields['strategy']).uuid
 
         audit = client.audit.create(**fields)
 
