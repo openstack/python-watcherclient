@@ -48,7 +48,6 @@ AUDIT_1 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
-    'period': 3600,
 }
 
 AUDIT_2 = {
@@ -61,7 +60,6 @@ AUDIT_2 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
-    'period': 3600,
 }
 
 
@@ -227,7 +225,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            type='ONESHOT', period=3600)
+            type='ONESHOT')
 
     def test_do_audit_create_with_audit_template_name(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -243,7 +241,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            type='ONESHOT', period=3600)
+            type='ONESHOT')
 
     def test_do_audit_create_with_deadline(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -261,8 +259,7 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
             type='ONESHOT',
-            deadline='2016-04-28T10:48:32.064802',
-            period=3600)
+            deadline='2016-04-28T10:48:32.064802')
 
     def test_do_audit_create_with_type(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -279,4 +276,4 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            type='ONESHOT', period=3600)
+            type='ONESHOT')
