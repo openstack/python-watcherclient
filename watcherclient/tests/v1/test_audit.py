@@ -27,7 +27,7 @@ AUDIT1 = {
     'id': 1,
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'deadline': None,
-    'type': 'ONE_SHOT',
+    'audit_type': 'ONE_SHOT',
     'audit_template_uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588'
 }
 
@@ -35,7 +35,7 @@ AUDIT2 = {
     'id': 2,
     'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
     'deadline': None,
-    'type': 'ONE_SHOT',
+    'audit_type': 'ONE_SHOT',
     'audit_template_uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588'
 }
 

@@ -127,9 +127,9 @@ class CreateAudit(command.ShowOne):
             metavar='<deadline>',
             help=_('Descrition of the audit.'))
         parser.add_argument(
-            '-t', '--type',
-            dest='type',
-            metavar='<type>',
+            '-t', '--audit_type',
+            dest='audit_type',
+            metavar='<audit_type>',
             default='ONESHOT',
             help=_("Audit type."))
 
@@ -138,7 +138,7 @@ class CreateAudit(command.ShowOne):
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
-        field_list = ['audit_template_uuid', 'type', 'deadline']
+        field_list = ['audit_template_uuid', 'audit_type', 'deadline']
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
         if fields.get('audit_template_uuid'):

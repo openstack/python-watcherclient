@@ -41,7 +41,7 @@ AUDIT_TEMPLATE_1 = {
 AUDIT_1 = {
     'uuid': '5869da81-4876-4687-a1ed-12cd64cf53d9',
     'deadline': None,
-    'type': 'ONESHOT',
+    'audit_type': 'ONESHOT',
     'state': 'PENDING',
     'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'audit_template_name': 'at1',
@@ -53,7 +53,7 @@ AUDIT_1 = {
 AUDIT_2 = {
     'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
     'deadline': None,
-    'type': 'ONESHOT',
+    'audit_type': 'ONESHOT',
     'audit_template_uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588',
     'audit_template_name': 'at2',
     'state': 'PENDING',
@@ -225,7 +225,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            type='ONESHOT')
+            audit_type='ONESHOT')
 
     def test_do_audit_create_with_audit_template_name(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -241,7 +241,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            type='ONESHOT')
+            audit_type='ONESHOT')
 
     def test_do_audit_create_with_deadline(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -258,7 +258,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            type='ONESHOT',
+            audit_type='ONESHOT',
             deadline='2016-04-28T10:48:32.064802')
 
     def test_do_audit_create_with_type(self):
@@ -276,4 +276,4 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            type='ONESHOT')
+            audit_type='ONESHOT')
