@@ -49,6 +49,7 @@ AUDIT_1 = {
     'updated_at': None,
     'deleted_at': None,
     'parameters': None,
+    'interval': None,
 }
 
 AUDIT_2 = {
@@ -62,6 +63,21 @@ AUDIT_2 = {
     'updated_at': None,
     'deleted_at': None,
     'parameters': None,
+    'interval': None,
+}
+
+AUDIT_3 = {
+    'uuid': '43199d0e-0712-1213-9674-5ae2af8dhgte',
+    'deadline': None,
+    'audit_type': 'CONTINUOUS',
+    'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
+    'audit_template_name': 'at1',
+    'state': 'PENDING',
+    'created_at': datetime.datetime.now().isoformat(),
+    'updated_at': None,
+    'deleted_at': None,
+    'parameters': None,
+    'interval': 3600,
 }
 
 
@@ -297,3 +313,21 @@ class AuditShellTest(base.CommandTestCase):
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
             audit_type='ONESHOT',
             parameters={'para1': 10, 'para2': 20})
+
+    def test_do_audit_create_with_type_continuous(self):
+        audit = resource.Audit(mock.Mock(), AUDIT_3)
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.get.return_value = audit_template
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -a at1 -t CONTINUOUS -i 3600')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
+            audit_type='CONTINUOUS',
+            interval='3600')

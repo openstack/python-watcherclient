@@ -139,13 +139,20 @@ class CreateAudit(command.ShowOne):
             action='append',
             help=_("Record strategy parameter/value metadata. "
                    "Can be specified multiple times."))
+        parser.add_argument(
+            '-i', '--interval',
+            dest='interval',
+            metavar='<interval>',
+            help=_("Audit interval."))
 
         return parser
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
-        field_list = ['audit_template_uuid', 'audit_type', 'deadline',
-                      'parameters']
+
+        field_list = ['audit_template_uuid', 'audit_type',
+                      'deadline', 'parameters', 'interval']
+
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
         fields = common_utils.args_array_to_dict(fields, 'parameters')

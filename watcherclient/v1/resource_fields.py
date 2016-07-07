@@ -35,11 +35,11 @@ AUDIT_TEMPLATE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Goal', 'Strategy']
 # Audit
 AUDIT_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
                 'deadline', 'state', 'audit_type', 'audit_template_uuid',
-                'audit_template_name', 'parameters']
+                'audit_template_name', 'parameters', 'interval']
 
 AUDIT_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
                       'Deadline', 'State', 'Audit Type', 'Audit Template uuid',
-                      'Audit Template Name', 'Parameters']
+                      'Audit Template Name', 'Parameters', 'Interval']
 
 AUDIT_SHORT_LIST_FIELDS = [
     'uuid', 'audit_type', 'audit_template_name', 'state']
