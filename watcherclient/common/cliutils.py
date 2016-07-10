@@ -169,15 +169,18 @@ def print_list(objs, fields, formatters=None, sortby_index=0,
     for o in objs:
         row = []
         for field in fields:
+            data = '-'
             if field in formatters:
-                row.append(formatters[field](o))
+                data = formatters[field](o)
             else:
                 if field in mixed_case_fields:
                     field_name = field.replace(' ', '_')
                 else:
                     field_name = field.lower().replace(' ', '_')
                 data = getattr(o, field_name, '')
-                row.append(data)
+            if data is None:
+                data = '-'
+            row.append(data)
         pt.add_row(row)
 
     if six.PY3:
@@ -210,6 +213,8 @@ def print_dict(dct, dict_property="Property", wrap=0):
                 pt.add_row([col1, line])
                 col1 = ''
         else:
+            if v is None:
+                v = '-'
             pt.add_row([k, v])
 
     if six.PY3:
