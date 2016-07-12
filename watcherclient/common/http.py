@@ -165,7 +165,7 @@ class HTTPClient(object):
                 url=url, e=e)
         except (socket.error, socket.timeout) as e:
             endpoint = self.endpoint
-            raise exc.ConnectionRefused(
+            raise exc.CommunicationError(
                 _("Error communicating with %(endpoint)s %(e)s"),
                 endpoint=endpoint, e=e)
         body_iter = ResponseBodyIterator(resp)
