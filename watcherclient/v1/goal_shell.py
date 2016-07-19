@@ -15,7 +15,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from openstackclient.common import utils
+from osc_lib import utils
 import six
 
 from watcherclient._i18n import _

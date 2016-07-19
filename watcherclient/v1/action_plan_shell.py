@@ -15,7 +15,7 @@
 # limitations under the License.
 
 from cliff.formatters import yaml_format
-from openstackclient.common import utils
+from osc_lib import utils
 from oslo_utils import uuidutils
 import six
 

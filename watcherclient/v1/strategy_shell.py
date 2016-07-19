@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import json
-from openstackclient.common import utils
+from osc_lib import utils
 
 from watcherclient._i18n import _
 from watcherclient.common import command

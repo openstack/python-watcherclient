@@ -30,8 +30,8 @@ from keystoneclient.auth.identity import v3
 from keystoneclient import discover
 from keystoneclient import exceptions as ks_exc
 from keystoneclient import session
-from openstackclient.common import logs
-from openstackclient.common import utils
+from osc_lib import logs
+from osc_lib import utils
 import six.moves.urllib.parse as urlparse
 
 from watcherclient._i18n import _
