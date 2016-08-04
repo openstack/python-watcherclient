@@ -19,8 +19,9 @@ from watcherclient.common import utils
 from watcherclient import exceptions as exc
 
 
-CREATION_ATTRIBUTES = ['audit_template_uuid', 'deadline',
-                       'audit_type', 'parameters', 'interval']
+CREATION_ATTRIBUTES = ['audit_template_uuid', 'host_aggregate',
+                       'deadline', 'audit_type', 'interval',
+                       'goal', 'strategy']
 
 
 class Audit(base.Resource):
