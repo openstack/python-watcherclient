@@ -220,7 +220,7 @@ class UpdateAudit(command.ShowOne):
             'op',
             metavar='<op>',
             choices=['add', 'replace', 'remove'],
-            help=_("Operation: 'add'), 'replace', or 'remove'."))
+            help=_("Operation: 'add', 'replace', or 'remove'."))
         parser.add_argument(
             'attributes',
             metavar='<path=value>',
