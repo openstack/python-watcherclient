@@ -51,12 +51,12 @@ AUDIT_SHORT_LIST_FIELD_LABELS = ['UUID', 'Audit Type', 'State', 'Goal',
 
 # Action Plan
 ACTION_PLAN_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
-                      'audit_uuid', 'state', 'efficacy_indicators',
-                      'global_efficacy']
+                      'audit_uuid', 'strategy_name', 'state',
+                      'efficacy_indicators', 'global_efficacy']
 
 ACTION_PLAN_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
-                            'Audit', 'State', 'Efficacy indicators',
-                            'Global efficacy']
+                            'Audit', 'Strategy', 'State',
+                            'Efficacy indicators', 'Global efficacy']
 
 ACTION_PLAN_SHORT_LIST_FIELDS = ['uuid', 'audit_uuid', 'state',
                                  'updated_at', 'global_efficacy']
