@@ -28,6 +28,7 @@ from watcherclient.v1 import resource_fields
 ACTION_PLAN_1 = {
     'uuid': 'd9d9978e-6db5-4a05-8eab-1531795d7004',
     'audit_uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588',
+    'strategy_name': 'dummy',
     'state': 'RECOMMENDED',
     'efficacy_indicators': [{'description': 'Indicator 1',
                              'name': 'indicator1',
@@ -46,6 +47,7 @@ ACTION_PLAN_1 = {
 ACTION_PLAN_2 = {
     'uuid': 'd6363285-5afa-4a26-96f2-89441e335765',
     'audit_uuid': '239f02a5-9649-4e14-9d33-ac2bf67cb755',
+    'strategy_name': 'dummy',
     'state': 'RECOMMENDED',
     'created_at': datetime.datetime.now().isoformat(),
     'efficacy_indicators': [{'description': 'Indicator 2',
