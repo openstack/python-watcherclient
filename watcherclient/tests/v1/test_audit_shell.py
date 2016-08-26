@@ -388,7 +388,7 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
             audit_type='ONESHOT',
-            parameters=['para1=10', 'para2=20'])
+            parameters={'para1': 10, 'para2': 20})
 
     def test_do_audit_create_with_type_continuous(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
