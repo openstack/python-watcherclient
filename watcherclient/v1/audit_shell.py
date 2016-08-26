@@ -184,6 +184,7 @@ class CreateAudit(command.ShowOne):
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
+        fields = common_utils.args_array_to_dict(fields, 'parameters')
 
         if fields.get('goal'):
             if not uuidutils.is_uuid_like(fields['goal']):
