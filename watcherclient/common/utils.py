@@ -19,7 +19,9 @@ from __future__ import print_function
 
 import argparse
 import json
+import os
 import uuid
+import yaml
 
 from oslo_utils import importutils
 
@@ -192,3 +194,10 @@ def is_uuid_like(val):
         return str(uuid.UUID(val)) == val
     except (TypeError, ValueError, AttributeError):
         return False
+
+
+def serialize_file_to_dict(filename):
+    filename = os.path.expanduser(filename)
+    with open(filename, "rb") as stream:
+        scope = yaml.safe_load(stream.read())
+    return scope

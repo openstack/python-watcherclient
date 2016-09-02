@@ -47,7 +47,6 @@ AUDIT_TEMPLATE_1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'name': 'at1',
     'description': 'Audit Template 1 description',
-    'host_aggregate': 5,
     'extra': {'automatic': False},
     'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
     'goal_name': 'SERVER_CONSOLIDATION',
@@ -56,13 +55,13 @@ AUDIT_TEMPLATE_1 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
+    'scope': []
 }
 
 AUDIT_TEMPLATE_2 = {
     'uuid': '2a60ca9b-09b0-40ff-8674-de8a36fc4bc8',
     'name': 'at2',
     'description': 'Audit Template 2',
-    'host_aggregate': 3,
     'extra': {'automatic': False},
     'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
     'goal_name': 'SERVER_CONSOLIDATION',
@@ -71,6 +70,7 @@ AUDIT_TEMPLATE_2 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
+    'scope': []
 }
 
 
@@ -299,7 +299,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.update.return_value = audit_template
 
         exit_code, result = self.run_cmd(
-            'audittemplate update at1 replace host_aggregate=5')
+            'audittemplate update at1 replace description="New description"')
 
         self.assertEqual(0, exit_code)
         self.assertEqual(self.resource_as_dict(audit_template, self.FIELDS,
@@ -307,7 +307,8 @@ class AuditTemplateShellTest(base.CommandTestCase):
                          result)
         self.m_audit_template_mgr.update.assert_called_once_with(
             'at1',
-            [{'op': 'replace', 'path': '/host_aggregate', 'value': 5}])
+            [{'op': 'replace', 'path': '/description',
+              'value': 'New description'}])
 
     def test_do_audit_template_create(self):
         audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
@@ -346,8 +347,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.create.return_value = audit_template
 
         exit_code, result = self.run_cmd(
-            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836 '
-            '-a 5')
+            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836')
 
         self.assertEqual(0, exit_code)
         self.assertEqual(self.resource_as_dict(audit_template, self.FIELDS,
@@ -355,8 +355,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
                          result)
         self.m_audit_template_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
-            name='at1',
-            host_aggregate='5')
+            name='at1')
 
     def test_do_audit_template_create_with_extra(self):
         audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)

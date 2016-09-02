@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
+
 from osc_lib import utils
 from oslo_utils import uuidutils
 
@@ -126,7 +128,17 @@ class CreateAuditTemplate(command.ShowOne):
     """Create new audit template."""
 
     def get_parser(self, prog_name):
-        parser = super(CreateAuditTemplate, self).get_parser(prog_name)
+        class SmartFormatter(argparse.HelpFormatter):
+
+            def _split_lines(self, text, width):
+                if '\n' in text:
+                    return text.splitlines()
+                else:
+                    return argparse.HelpFormatter._split_lines(
+                        self, text, width)
+
+        parser = super(CreateAuditTemplate, self).get_parser(
+            prog_name, formatter_class=SmartFormatter)
         parser.add_argument(
             'name',
             metavar='<name>',
@@ -151,19 +163,53 @@ class CreateAuditTemplate(command.ShowOne):
             help=_("Record arbitrary key/value metadata. "
                    "Can be specified multiple times."))
         parser.add_argument(
-            '-a', '--host-aggregate',
-            dest='host_aggregate',
-            metavar='<host-aggregate>',
-            help=_('Name or UUID of the host aggregate targeted '
-                   'by this audit template.'))
+            '--scope',
+            metavar='<path>',
+            help=_("Part of the cluster on which an audit will be done.\n"
+                   "Can be provided either in yaml or json file.\n"
+                   "YAML example:\n"
+                   "---\n"
+                   " - host_aggregates:\n"
+                   "   - id: 1\n"
+                   "   - id: 2\n"
+                   "   - id: 3\n"
+                   " - availability_zones:\n"
+                   "   - name: AZ1\n"
+                   "   - name: AZ2\n"
+                   " - exclude:\n"
+                   "   - instances:\n"
+                   "     - uuid: UUID1\n"
+                   "    - uuid: UUID2\n"
+                   "   - compute_nodes:\n"
+                   "     - name: compute1\n"
+                   "\n"
+                   "JSON example:\n"
+                   "[{'host_aggregates': [\n"
+                   "     {'id': 1},\n"
+                   "     {'id': 2},\n"
+                   "     {'id': 3}]},\n"
+                   " {'availability_zones': [\n"
+                   "     {'name': 'AZ1'},\n"
+                   "     {'name': 'AZ2'}]},\n"
+                   " {'exclude': [\n"
+                   "     {'instances': [\n"
+                   "         {'uuid': 'UUID1'},\n"
+                   "         {'uuid': 'UUID2'}\n"
+                   "     ]},\n"
+                   "     {'compute_nodes': [\n"
+                   "         {'name': 'compute1'}\n"
+                   "     ]}\n"
+                   "]}]\n"
+                   )
+        )
 
         return parser
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
-        field_list = ['host_aggregate', 'description', 'name', 'extra',
-                      'goal', 'strategy']
+        field_list = ['description', 'name', 'extra', 'goal', 'strategy',
+                      'scope']
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
 
@@ -176,6 +222,9 @@ class CreateAuditTemplate(command.ShowOne):
             if not uuidutils.is_uuid_like(fields['strategy']):
                 fields['strategy'] = client.strategy.get(
                     fields['strategy']).uuid
+        if fields.get('scope'):
+            fields['scope'] = common_utils.serialize_file_to_dict(
+                fields['scope'])
 
         fields = common_utils.args_array_to_dict(fields, 'extra')
         audit_template = client.audit_template.create(**fields)
