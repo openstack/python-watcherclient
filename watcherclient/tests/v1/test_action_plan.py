@@ -18,7 +18,7 @@
 import copy
 
 import testtools
-from testtools.matchers import HasLength
+from testtools import matchers
 
 from watcherclient.tests import utils
 import watcherclient.v1.action_plan
@@ -147,7 +147,7 @@ class ActionPlanManagerTest(testtools.TestCase):
             ('GET', '/v1/action_plans/?limit=1', {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(action_plans, HasLength(1))
+        self.assertThat(action_plans, matchers.HasLength(1))
 
     def test_action_plans_list_pagination_no_limit(self):
         self.api = utils.FakeAPI(fake_responses_pagination)
@@ -158,7 +158,7 @@ class ActionPlanManagerTest(testtools.TestCase):
             ('GET', '/v1/action_plans/?limit=1', {}, None)
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(action_plans, HasLength(2))
+        self.assertThat(action_plans, matchers.HasLength(2))
 
     def test_action_plans_list_sort_key(self):
         self.api = utils.FakeAPI(fake_responses_sorting)

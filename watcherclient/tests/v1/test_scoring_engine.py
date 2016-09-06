@@ -16,7 +16,7 @@
 
 
 import testtools
-from testtools.matchers import HasLength
+from testtools import matchers
 
 from watcherclient.tests import utils
 import watcherclient.v1.scoring_engine
@@ -133,7 +133,7 @@ class ScoringEngineManagerTest(testtools.TestCase):
             ('GET', '/v1/scoring_engines/?limit=1', {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(scoring_engines, HasLength(1))
+        self.assertThat(scoring_engines, matchers.HasLength(1))
 
     def test_scoring_engines_list_pagination_no_limit(self):
         self.api = utils.FakeAPI(fake_responses_pagination)
@@ -145,7 +145,7 @@ class ScoringEngineManagerTest(testtools.TestCase):
             ('GET', '/v1/scoring_engines/?limit=1', {}, None)
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(scoring_engines, HasLength(2))
+        self.assertThat(scoring_engines, matchers.HasLength(2))
 
     def test_scoring_engines_list_sort_key(self):
         self.api = utils.FakeAPI(fake_responses_sorting)

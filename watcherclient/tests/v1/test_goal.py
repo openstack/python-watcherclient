@@ -17,7 +17,7 @@
 
 
 import testtools
-from testtools.matchers import HasLength
+from testtools import matchers
 
 from watcherclient.tests import utils
 import watcherclient.v1.goal
@@ -132,7 +132,7 @@ class GoalManagerTest(testtools.TestCase):
             ('GET', '/v1/goals/?limit=1', {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(goals, HasLength(1))
+        self.assertThat(goals, matchers.HasLength(1))
 
     def test_goals_list_pagination_no_limit(self):
         self.api = utils.FakeAPI(fake_responses_pagination)
@@ -143,7 +143,7 @@ class GoalManagerTest(testtools.TestCase):
             ('GET', '/v1/goals/?limit=1', {}, None)
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertThat(goals, HasLength(2))
+        self.assertThat(goals, matchers.HasLength(2))
 
     def test_goals_list_sort_key(self):
         self.api = utils.FakeAPI(fake_responses_sorting)
