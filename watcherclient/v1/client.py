@@ -38,6 +38,7 @@ class Client(object):
         self.action_plan = v1.ActionPlanManager(self.http_client)
         self.goal = v1.GoalManager(self.http_client)
         self.scoring_engine = v1.ScoringEngineManager(self.http_client)
+        self.service = v1.ServiceManager(self.http_client)
         self.strategy = v1.StrategyManager(self.http_client)
         # self.metric_collector = v1.MetricCollectorManager(self.http_client)
 

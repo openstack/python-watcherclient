@@ -118,3 +118,9 @@ SCORING_ENGINE_FIELD_LABELS = ['UUID', 'Name', 'Description', 'Metainfo']
 
 SCORING_ENGINE_SHORT_LIST_FIELDS = ['uuid', 'name', 'description']
 SCORING_ENGINE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Description']
+
+# Services
+SERVICE_FIELDS = ['id', 'name', 'host', 'status', 'last_seen_up']
+SERVICE_FIELD_LABELS = ['ID', 'Name', 'Host', 'Status', 'Last seen up']
+SERVICE_SHORT_LIST_FIELDS = ['id', 'name', 'host', 'status']
+SERVICE_SHORT_LIST_FIELD_LABELS = ['ID', 'Name', 'Host', 'Status']
