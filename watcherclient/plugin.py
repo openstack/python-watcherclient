@@ -39,12 +39,19 @@ def make_client(instance):
         interface=instance._interface,
     )
 
+    auth_url = instance._auth_url \
+        if hasattr(instance, '_auth_url') else instance.auth.auth_url
+    username = instance._username \
+        if hasattr(instance, '_username') else instance.auth._username
+    password = instance._password \
+        if hasattr(instance, '_password') else instance.auth._password
+
     client = watcher_client(
         endpoint=endpoint,
         session=instance.session,
-        auth_url=instance._auth_url,
-        username=instance._username,
-        password=instance._password,
+        auth_url=auth_url,
+        username=username,
+        password=password,
         region_name=instance._region_name,
     )
 
