@@ -25,17 +25,11 @@ from cliff import command
 from cliff import commandmanager
 from cliff import complete
 from cliff import help as cli_help
-from keystoneclient.auth.identity import v2
-from keystoneclient.auth.identity import v3
-from keystoneclient import discover
-from keystoneclient import exceptions as ks_exc
 from keystoneclient import session
 from osc_lib import logs
 from osc_lib import utils
-import six.moves.urllib.parse as urlparse
 
-from watcherclient._i18n import _
-from watcherclient import exceptions as exc
+from watcherclient import client as watcherclient
 from watcherclient import version
 
 LOG = logging.getLogger(__name__)
@@ -75,144 +69,8 @@ class WatcherShell(app.App):
         )
 
     def create_client(self, args):
-        service_type = 'infra-optim'
-        project_id = args.os_project_id or args.os_tenant_id
-        project_name = args.os_project_name or args.os_tenant_name
-
-        keystone_session = session.Session.load_from_cli_options(args)
-
-        kwargs = {
-            'username': args.os_username,
-            'user_domain_id': args.os_user_domain_id,
-            'user_domain_name': args.os_user_domain_name,
-            'password': args.os_password,
-            'auth_token': args.os_auth_token,
-            'project_id': project_id,
-            'project_name': project_name,
-            'project_domain_id': args.os_project_domain_id,
-            'project_domain_name': args.os_project_domain_name,
-        }
-        keystone_auth = self._get_keystone_auth(keystone_session,
-                                                args.os_auth_url,
-                                                **kwargs)
-        region_name = args.os_region_name
-        endpoint = keystone_auth.get_endpoint(keystone_session,
-                                              service_type=service_type,
-                                              region_name=region_name)
-
-        endpoint_type = args.os_endpoint_type or 'publicURL'
-        kwargs = {
-            'auth_url': args.os_auth_url,
-            'session': keystone_session,
-            'auth': keystone_auth,
-            'service_type': service_type,
-            'endpoint_type': endpoint_type,
-            'region_name': args.os_region_name,
-            'username': args.os_username,
-            'password': args.os_password,
-        }
-
-        watcher_client = utils.get_client_class(
-            API_NAME,
-            args.watcher_api_version or 1,
-            API_VERSIONS)
-        LOG.debug('Instantiating infra-optim client: %s', watcher_client)
-
-        client = watcher_client(args.watcher_api_version, endpoint, **kwargs)
-
+        client = watcherclient.get_client('1', **args.__dict__)
         return client
-
-    def _discover_auth_versions(self, session, auth_url):
-        # discover the API versions the server is supporting base on the
-        # given URL
-        v2_auth_url = None
-        v3_auth_url = None
-        try:
-            ks_discover = discover.Discover(session=session, auth_url=auth_url)
-            v2_auth_url = ks_discover.url_for('2.0')
-            v3_auth_url = ks_discover.url_for('3.0')
-        except ks_exc.ClientException:
-            # Identity service may not support discover API version.
-            # Let's try to figure out the API version from the original URL.
-            url_parts = urlparse.urlparse(auth_url)
-            (scheme, netloc, path, params, query, fragment) = url_parts
-            path = path.lower()
-            if path.startswith('/v3'):
-                v3_auth_url = auth_url
-            elif path.startswith('/v2'):
-                v2_auth_url = auth_url
-            else:
-                # not enough information to determine the auth version
-                msg = _('Unable to determine the Keystone version '
-                        'to authenticate with using the given '
-                        'auth_url. Identity service may not support API '
-                        'version discovery. Please provide a versioned '
-                        'auth_url instead. %s') % auth_url
-                raise exc.CommandError(msg)
-
-        return (v2_auth_url, v3_auth_url)
-
-    def _get_keystone_v3_auth(self, v3_auth_url, **kwargs):
-        auth_token = kwargs.pop('auth_token', None)
-        if auth_token:
-            return v3.Token(v3_auth_url, auth_token)
-        else:
-            return v3.Password(v3_auth_url, **kwargs)
-
-    def _get_keystone_v2_auth(self, v2_auth_url, **kwargs):
-        auth_token = kwargs.pop('auth_token', None)
-        if auth_token:
-            return v2.Token(
-                v2_auth_url,
-                auth_token,
-                tenant_id=kwargs.pop('project_id', None),
-                tenant_name=kwargs.pop('project_name', None))
-        else:
-            return v2.Password(
-                v2_auth_url,
-                username=kwargs.pop('username', None),
-                password=kwargs.pop('password', None),
-                tenant_id=kwargs.pop('project_id', None),
-                tenant_name=kwargs.pop('project_name', None))
-
-    def _get_keystone_auth(self, session, auth_url, **kwargs):
-        # FIXME(dhu): this code should come from keystoneclient
-
-        # discover the supported keystone versions using the given url
-        (v2_auth_url, v3_auth_url) = self._discover_auth_versions(
-            session=session,
-            auth_url=auth_url)
-
-        # Determine which authentication plugin to use. First inspect the
-        # auth_url to see the supported version. If both v3 and v2 are
-        # supported, then use the highest version if possible.
-        auth = None
-        if v3_auth_url and v2_auth_url:
-            user_domain_name = kwargs.get('user_domain_name', None)
-            user_domain_id = kwargs.get('user_domain_id', None)
-            project_domain_name = kwargs.get('project_domain_name', None)
-            project_domain_id = kwargs.get('project_domain_id', None)
-
-            # support both v2 and v3 auth. Use v3 if domain information is
-            # provided.
-            if (user_domain_name or user_domain_id or project_domain_name or
-                    project_domain_id):
-                auth = self._get_keystone_v3_auth(v3_auth_url, **kwargs)
-            else:
-                auth = self._get_keystone_v2_auth(v2_auth_url, **kwargs)
-        elif v3_auth_url:
-            # support only v3
-            auth = self._get_keystone_v3_auth(v3_auth_url, **kwargs)
-        elif v2_auth_url:
-            # support only v2
-            auth = self._get_keystone_v2_auth(v2_auth_url, **kwargs)
-        else:
-            raise exc.CommandError(
-                _('Unable to determine the Keystone version '
-                  'to authenticate with using the given '
-                  'auth_url.'))
-
-        return auth
 
     def build_option_parser(self, description, version, argparse_kwargs=None):
         """Introduces global arguments for the application.
@@ -291,14 +149,20 @@ class WatcherShell(app.App):
                             metavar='<auth-token>',
                             default=utils.env('OS_AUTH_TOKEN'),
                             help='Defaults to env[OS_AUTH_TOKEN].')
-        parser.add_argument('--watcher-api-version',
-                            metavar='<watcher-api-version>',
-                            default=utils.env('WATCHER_API_VERSION'),
-                            help='Defaults to env[WATCHER_API_VERSION].')
+        parser.add_argument('--os-watcher-api-version',
+                            metavar='<os-watcher-api-version>',
+                            default=utils.env('OS_WATCHER_API_VERSION',
+                                              default='1'),
+                            help='Defaults to env[OS_WATCHER_API_VERSION].')
         parser.add_argument('--os-endpoint-type',
                             default=utils.env('OS_ENDPOINT_TYPE'),
                             help='Defaults to env[OS_ENDPOINT_TYPE] or '
                                  '"publicURL"')
+        parser.add_argument('--os-endpoint-override',
+                            metavar='<endpoint-override>',
+                            default=utils.env('OS_ENDPOINT_OVERRIDE'),
+                            help="Use this API endpoint instead of the "
+                                 "Service Catalog.")
         parser.epilog = ('See "watcher help COMMAND" for help '
                          'on a specific command.')
         session.Session.register_cli_options(parser)

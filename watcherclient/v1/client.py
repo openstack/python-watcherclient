@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright 2012 OpenStack LLC.
 # All Rights Reserved.
 #
@@ -15,7 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from watcherclient.common import http
+from watcherclient._i18n import _
+from watcherclient.common import httpclient
+from watcherclient import exceptions
 from watcherclient import v1
 
 
@@ -29,9 +29,25 @@ class Client(object):
                             http requests. (optional)
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, endpoint=None, *args, **kwargs):
         """Initialize a new client for the Watcher v1 API."""
-        self.http_client = self.build_http_client(*args, **kwargs)
+        if kwargs.get('os_watcher_api_version'):
+            kwargs['api_version_select_state'] = "user"
+        else:
+            if not endpoint:
+                raise exceptions.EndpointException(
+                    _("Must provide 'endpoint' if os_watcher_api_version "
+                      "isn't specified"))
+
+            # If the user didn't specify a version, use a cached version if
+            # one has been stored
+            host, netport = httpclient.get_server(endpoint)
+            kwargs['api_version_select_state'] = "default"
+            kwargs['os_watcher_api_version'] = httpclient.DEFAULT_VER
+
+        self.http_client = httpclient._construct_http_client(
+            endpoint, *args, **kwargs)
+
         self.audit = v1.AuditManager(self.http_client)
         self.audit_template = v1.AuditTemplateManager(self.http_client)
         self.action = v1.ActionManager(self.http_client)
@@ -39,7 +55,3 @@ class Client(object):
         self.goal = v1.GoalManager(self.http_client)
         self.scoring_engine = v1.ScoringEngineManager(self.http_client)
         self.strategy = v1.StrategyManager(self.http_client)
-        # self.metric_collector = v1.MetricCollectorManager(self.http_client)
-
-    def build_http_client(self, *args, **kwargs):
-        return http._construct_http_client(*args, **kwargs)

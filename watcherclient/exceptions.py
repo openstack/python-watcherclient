@@ -53,6 +53,20 @@ A generic error message, given when no more specific message is suitable.
 An alias of :py:exc:`watcherclient.common.apiclient.ValidationError`
 """
 
+Conflict = exceptions.Conflict
+ConnectionRefused = exceptions.ConnectionRefused
+EndpointException = exceptions.EndpointException
+EndpointNotFound = exceptions.EndpointNotFound
+ServiceUnavailable = exceptions.ServiceUnavailable
+
+
+class UnsupportedVersion(Exception):
+    """Unsupported API Version
+
+    Indicates that the user is trying to use an unsupported version of the API.
+    """
+    pass
+
 
 class AmbiguousAuthSystem(exceptions.ClientException):
     """Could not obtain token and endpoint using provided credentials."""
@@ -86,11 +100,10 @@ def from_response(response, message=None, traceback=None, method=None,
             'Content-Type': response.getheader('content-type', "")}
 
     if hasattr(response, 'status_code'):
-        # NOTE(jiangfei): These modifications allow SessionClient
-        # to handle faultstring.
+        # NOTE(hongbin): This allows SessionClient to handle faultstring.
         response.json = lambda: {'error': error_body}
 
-    if (response.headers['Content-Type'].startswith('text/') and
+    if (response.headers.get('Content-Type', '').startswith('text/') and
             not hasattr(response, 'text')):
         # NOTE(clif_h): There seems to be a case in the
         # common.apiclient.exceptions module where if the
@@ -100,4 +113,4 @@ def from_response(response, message=None, traceback=None, method=None,
         # This is to work around that problem.
         response.text = ''
 
-    return exceptions.from_response(response, message, url)
+    return exceptions.from_response(response, method, url)
