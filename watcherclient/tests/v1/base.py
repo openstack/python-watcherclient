@@ -18,10 +18,10 @@ import json
 import shlex
 
 import mock
+from osc_lib import utils as oscutils
 
-from watcherclient import shell
+from watcherclient.common import httpclient
 from watcherclient.tests import utils
-from watcherclient.v1 import client
 
 
 class CommandTestCase(utils.BaseTestCase):
@@ -29,17 +29,29 @@ class CommandTestCase(utils.BaseTestCase):
     def setUp(self):
         super(CommandTestCase, self).setUp()
 
-        self.p_build_http_client = mock.patch.object(
-            client.Client, 'build_http_client')
-        self.m_build_http_client = self.p_build_http_client.start()
+        self.fake_env = {
+            'debug': False,
+            'insecure': False,
+            'no_auth': False,
+            'os_auth_token': '',
+            'os_auth_url': 'http://127.0.0.1:5000/v2.0',
+            'os_endpoint_override': 'http://watcher-endpoint:9322',
+            'os_username': 'test',
+            'os_password': 'test',
+            'timeout': 600,
+            'os_watcher_api_version': '1'}
+        self.m_env = mock.Mock(
+            name='m_env',
+            side_effect=lambda x, *args, **kwargs: self.fake_env.get(
+                x.lower(), kwargs.get('default', '')))
+        self.p_env = mock.patch.object(oscutils, 'env', self.m_env)
+        self.p_env.start()
+        self.addCleanup(self.p_env.stop)
 
-        self.m_watcher_client = mock.Mock(side_effect=client.Client)
-        self.p_create_client = mock.patch.object(
-            shell.WatcherShell, 'create_client', self.m_watcher_client)
-        self.p_create_client.start()
-
-        self.addCleanup(self.p_build_http_client.stop)
-        self.addCleanup(self.p_create_client.stop)
+        self.p_construct_http_client = mock.patch.object(
+            httpclient, '_construct_http_client')
+        self.m_construct_http_client = self.p_construct_http_client.start()
+        self.addCleanup(self.p_construct_http_client.stop)
 
     def run_cmd(self, cmd, formatting='json'):
         if formatting:

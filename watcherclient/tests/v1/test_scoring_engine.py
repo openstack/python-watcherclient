@@ -70,7 +70,7 @@ fake_responses_pagination = {
         'GET': (
             {},
             {"scoring_engines": [SE1],
-             "next": "http://127.0.0.1:6385/v1/scoring_engines/?limit=1"}
+             "next": "http://127.0.0.1:9322/v1/scoring_engines/?limit=1"}
         ),
     },
     '/v1/scoring_engines/?limit=1':

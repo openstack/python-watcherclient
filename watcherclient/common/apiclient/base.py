@@ -497,7 +497,7 @@ class Resource(object):
     def get(self):
         """Support for lazy loading details.
 
-        Some clients, such as novaclient have the option to lazy load the
+        Some clients, such as watcherclient have the option to lazy load the
         details, details which can be loaded with this function.
         """
         # set_loaded() first ... so if we have to bail, we know we tried.

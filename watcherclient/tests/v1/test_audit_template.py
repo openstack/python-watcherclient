@@ -157,7 +157,7 @@ fake_responses_pagination = {
         'GET': (
             {},
             {"audit_templates": [AUDIT_TMPL1],
-             "next": "http://127.0.0.1:6385/v1/audit_templates/?limit=1"}
+             "next": "http://127.0.0.1:9322/v1/audit_templates/?limit=1"}
         ),
     },
     '/v1/audit_templates/?limit=1':

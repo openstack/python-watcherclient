@@ -26,32 +26,16 @@ API_VERSIONS = {
 
 
 def make_client(instance):
-    """Returns an infra-optim service client"""
-    watcher_client = utils.get_client_class(
+    """Returns an infra-optim service client."""
+    infraoptim_client_class = utils.get_client_class(
         API_NAME,
         instance._api_version[API_NAME],
         API_VERSIONS)
-    LOG.debug('Instantiating infra-optim client: %s', watcher_client)
+    LOG.debug('Instantiating infraoptim client: %s', infraoptim_client_class)
 
-    endpoint = instance.get_endpoint_for_service_type(
-        API_NAME,
-        region_name=instance._region_name,
-        interface=instance._interface,
-    )
-
-    auth_url = instance._auth_url \
-        if hasattr(instance, '_auth_url') else instance.auth.auth_url
-    username = instance._username \
-        if hasattr(instance, '_username') else instance.auth._username
-    password = instance._password \
-        if hasattr(instance, '_password') else instance.auth._password
-
-    client = watcher_client(
-        endpoint=endpoint,
+    client = infraoptim_client_class(
+        os_watcher_api_version=instance._api_version[API_NAME],
         session=instance.session,
-        auth_url=auth_url,
-        username=username,
-        password=password,
         region_name=instance._region_name,
     )
 
