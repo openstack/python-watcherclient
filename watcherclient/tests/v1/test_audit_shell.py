@@ -29,7 +29,6 @@ AUDIT_TEMPLATE_1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'name': 'at1',
     'description': 'Audit Template 1 description',
-    'host_aggregate': 5,
     'extra': {'automatic': False},
     'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
     'strategy_uuid': '2cf86250-d309-4b81-818e-1537f3dba6e5',
@@ -64,7 +63,6 @@ AUDIT_1 = {
     'state': 'PENDING',
     'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'audit_template_name': 'at1',
-    'host_aggregate': 5,
     'goal_name': 'SERVER_CONSOLIDATION',
     'strategy_name': 'basic',
     'created_at': datetime.datetime.now().isoformat(),
@@ -72,6 +70,7 @@ AUDIT_1 = {
     'deleted_at': None,
     'parameters': None,
     'interval': None,
+    'scope': '',
 }
 
 AUDIT_2 = {
@@ -81,7 +80,6 @@ AUDIT_2 = {
     'state': 'PENDING',
     'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'audit_template_name': 'at1',
-    'host_aggregate': None,
     'goal_name': 'fc087747-61be-4aad-8126-b701731ae836',
     'strategy_name': None,
     'created_at': datetime.datetime.now().isoformat(),
@@ -89,6 +87,7 @@ AUDIT_2 = {
     'deleted_at': None,
     'parameters': None,
     'interval': None,
+    'scope': '',
 }
 
 AUDIT_3 = {
@@ -98,7 +97,6 @@ AUDIT_3 = {
     'state': 'PENDING',
     'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'audit_template_name': 'at1',
-    'host_aggregate': 3,
     'goal_name': None,
     'strategy_name': None,
     'created_at': datetime.datetime.now().isoformat(),
@@ -106,6 +104,7 @@ AUDIT_3 = {
     'deleted_at': None,
     'parameters': None,
     'interval': 3600,
+    'scope': '',
 }
 
 

@@ -43,4 +43,8 @@ class Lister(Command, lister.Lister):
 
 
 class ShowOne(Command, show.ShowOne):
-    pass
+    def get_parser(self, prog_name, formatter_class=None):
+        parser = super(ShowOne, self).get_parser(prog_name)
+        if formatter_class:
+            parser.formatter_class = formatter_class
+        return parser

@@ -28,7 +28,6 @@ AUDIT_TMPL1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'name': 'Audit Template 1',
     'description': 'Audit Template 1 description',
-    'host_aggregate': 5,
     'extra': {'automatic': False},
     'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
     'goal_name': 'SERVER_CONSOLIDATION',
@@ -41,7 +40,6 @@ AUDIT_TMPL2 = {
     'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
     'name': 'Audit Template 2',
     'description': 'Audit Template 2 description',
-    'host_aggregate': 8,
     'extra': {'automatic': True},
     'goal_uuid': 'e75ee410-b32b-465f-88b5-4397705f9473',
     'goal_name': 'DUMMY',
@@ -54,7 +52,6 @@ AUDIT_TMPL3 = {
     'uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588',
     'name': 'Audit Template 3',
     'description': 'Audit Template 3 description',
-    'host_aggregate': 7,
     'extra': {'automatic': True},
     'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
     'goal_name': 'SERVER_CONSOLIDATION',
@@ -407,8 +404,6 @@ class AuditTemplateManagerTest(utils.BaseTestCase):
         self.assertEqual(AUDIT_TMPL1['name'], audit_template.name)
         self.assertEqual(AUDIT_TMPL1['description'],
                          audit_template.description)
-        self.assertEqual(AUDIT_TMPL1['host_aggregate'],
-                         audit_template.host_aggregate)
         self.assertEqual(AUDIT_TMPL1['goal_uuid'], audit_template.goal_uuid)
         self.assertEqual(AUDIT_TMPL1['strategy_uuid'],
                          audit_template.strategy_uuid)
@@ -427,8 +422,6 @@ class AuditTemplateManagerTest(utils.BaseTestCase):
         self.assertEqual(AUDIT_TMPL1['name'], audit_template.name)
         self.assertEqual(AUDIT_TMPL1['description'],
                          audit_template.description)
-        self.assertEqual(AUDIT_TMPL1['host_aggregate'],
-                         audit_template.host_aggregate)
         self.assertEqual(AUDIT_TMPL1['goal_uuid'], audit_template.goal_uuid)
         self.assertEqual(AUDIT_TMPL1['strategy_uuid'],
                          audit_template.strategy_uuid)

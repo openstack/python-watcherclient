@@ -163,12 +163,6 @@ class CreateAudit(command.ShowOne):
             metavar='<strategy>',
             help=_('Strategy UUID or name associated to this audit.'))
         parser.add_argument(
-            '-r', '--host-aggregate',
-            dest='host_aggregate',
-            metavar='<host-aggregate>',
-            help=_('Name or UUID of the host aggregate targeted '
-                   'by this audit.'))
-        parser.add_argument(
             '-a', '--audit-template',
             dest='audit_template_uuid',
             metavar='<audit_template>',
@@ -178,9 +172,8 @@ class CreateAudit(command.ShowOne):
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
-        field_list = ['audit_template_uuid', 'host_aggregate',
-                      'audit_type', 'deadline', 'parameters', 'interval',
-                      'goal', 'strategy']
+        field_list = ['audit_template_uuid', 'audit_type', 'deadline',
+                      'parameters', 'interval', 'goal', 'strategy']
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
