@@ -17,7 +17,7 @@ from keystoneauth1 import loading as kaloading
 from watcherclient import client as watcherclient
 from watcherclient.common import httpclient
 from watcherclient import exceptions
-from watcherclient.tests import utils
+from watcherclient.tests.unit import utils
 
 
 class ClientTest(utils.BaseTestCase):

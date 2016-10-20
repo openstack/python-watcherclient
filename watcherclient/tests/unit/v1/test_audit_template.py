@@ -18,7 +18,7 @@ import copy
 from six.moves.urllib import parse as urlparse
 from testtools import matchers
 
-from watcherclient.tests import utils
+from watcherclient.tests.unit import utils
 import watcherclient.v1.audit_template
 
 AUDIT_TMPL1 = {

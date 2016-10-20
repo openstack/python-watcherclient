@@ -14,12 +14,11 @@
 #   under the License.
 
 import datetime
-
 import mock
 import six
 
 from watcherclient import shell
-from watcherclient.tests.v1 import base
+from watcherclient.tests.unit.v1 import base
 from watcherclient import v1 as resource
 from watcherclient.v1 import resource_fields
 

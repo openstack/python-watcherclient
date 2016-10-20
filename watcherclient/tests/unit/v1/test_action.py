@@ -16,7 +16,7 @@
 import testtools
 from testtools import matchers
 
-from watcherclient.tests import utils
+from watcherclient.tests.unit import utils
 import watcherclient.v1.action
 
 ACTION1 = {

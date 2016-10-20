@@ -17,7 +17,7 @@ import mock
 
 from watcherclient.common import api_versioning
 from watcherclient import exceptions
-from watcherclient.tests import utils
+from watcherclient.tests.unit import utils
 
 
 class APIVersionTestCase(utils.BaseTestCase):

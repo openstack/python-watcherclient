@@ -20,7 +20,7 @@ import mock
 from osc_lib import utils as oscutils
 
 from watcherclient.common import httpclient
-from watcherclient.tests import utils
+from watcherclient.tests.unit import utils
 
 
 class CommandTestCase(utils.BaseTestCase):
