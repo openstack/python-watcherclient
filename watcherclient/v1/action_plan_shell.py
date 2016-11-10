@@ -184,11 +184,6 @@ class CreateActionPlan(command.ShowOne):
             metavar='<audit_template>',
             help=_('ActionPlan template used for this audit (name or uuid).'))
         parser.add_argument(
-            '-d', '--deadline',
-            dest='deadline',
-            metavar='<deadline>',
-            help=_('Descrition of the audit.'))
-        parser.add_argument(
             '-t', '--audit_type',
             dest='audit_type',
             metavar='<audit_type>',
@@ -200,7 +195,7 @@ class CreateActionPlan(command.ShowOne):
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
-        field_list = ['audit_template_uuid', 'audit_type', 'deadline']
+        field_list = ['audit_template_uuid', 'audit_type']
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
         if fields.get('audit_template_uuid'):

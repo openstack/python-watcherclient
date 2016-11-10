@@ -27,7 +27,6 @@ import watcherclient.v1.audit
 AUDIT1 = {
     'id': 1,
     'uuid': '5869da81-4876-4687-a1ed-12cd64cf53d9',
-    'deadline': None,
     'audit_type': 'ONE_SHOT',
     'goal': 'fc087747-61be-4aad-8126-b701731ae836',
     'strategy': '2cf86250-d309-4b81-818e-1537f3dba6e5',
@@ -36,7 +35,6 @@ AUDIT1 = {
 AUDIT2 = {
     'id': 2,
     'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
-    'deadline': None,
     'audit_type': 'ONE_SHOT',
     'goal': 'fc087747-61be-4aad-8126-b701731ae836',
     'strategy': None,

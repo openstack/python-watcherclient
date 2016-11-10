@@ -47,7 +47,6 @@ AUDIT_TEMPLATE_1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'name': 'at1',
     'description': 'Audit Template 1 description',
-    'extra': {'automatic': False},
     'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
     'goal_name': 'SERVER_CONSOLIDATION',
     'strategy_uuid': '2cf86250-d309-4b81-818e-1537f3dba6e5',
@@ -62,7 +61,6 @@ AUDIT_TEMPLATE_2 = {
     'uuid': '2a60ca9b-09b0-40ff-8674-de8a36fc4bc8',
     'name': 'at2',
     'description': 'Audit Template 2',
-    'extra': {'automatic': False},
     'goal_uuid': 'fc087747-61be-4aad-8126-b701731ae836',
     'goal_name': 'SERVER_CONSOLIDATION',
     'strategy_uuid': None,
@@ -356,20 +354,3 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
             name='at1')
-
-    def test_do_audit_template_create_with_extra(self):
-        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
-        self.m_audit_template_mgr.create.return_value = audit_template
-
-        exit_code, result = self.run_cmd(
-            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836 '
-            '-e automatic=true')
-
-        self.assertEqual(0, exit_code)
-        self.assertEqual(self.resource_as_dict(audit_template, self.FIELDS,
-                                               self.FIELD_LABELS),
-                         result)
-        self.m_audit_template_mgr.create.assert_called_once_with(
-            goal='fc087747-61be-4aad-8126-b701731ae836',
-            name='at1',
-            extra={'automatic': True})

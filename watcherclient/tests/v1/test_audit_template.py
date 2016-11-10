@@ -28,7 +28,6 @@ AUDIT_TMPL1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
     'name': 'Audit Template 1',
     'description': 'Audit Template 1 description',
-    'extra': {'automatic': False},
     'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
     'goal_name': 'SERVER_CONSOLIDATION',
     'strategy_uuid': 'bbe6b966-f98e-439b-a01a-17b9b3b8478b',
@@ -40,7 +39,6 @@ AUDIT_TMPL2 = {
     'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
     'name': 'Audit Template 2',
     'description': 'Audit Template 2 description',
-    'extra': {'automatic': True},
     'goal_uuid': 'e75ee410-b32b-465f-88b5-4397705f9473',
     'goal_name': 'DUMMY',
     'strategy_uuid': 'ae99a4a4-acbc-4c67-abe1-e37128fac45d',
@@ -52,7 +50,6 @@ AUDIT_TMPL3 = {
     'uuid': '770ef053-ecb3-48b0-85b5-d55a2dbc6588',
     'name': 'Audit Template 3',
     'description': 'Audit Template 3 description',
-    'extra': {'automatic': True},
     'goal_uuid': '7568667b-51fe-4087-9eb1-29b26891036f',
     'goal_name': 'SERVER_CONSOLIDATION',
 }
@@ -407,7 +404,6 @@ class AuditTemplateManagerTest(utils.BaseTestCase):
         self.assertEqual(AUDIT_TMPL1['goal_uuid'], audit_template.goal_uuid)
         self.assertEqual(AUDIT_TMPL1['strategy_uuid'],
                          audit_template.strategy_uuid)
-        self.assertEqual(AUDIT_TMPL1['extra'], audit_template.extra)
 
     def test_audit_templates_show_by_name(self):
         audit_template = self.mgr.get(urlparse.quote(AUDIT_TMPL1['name']))
@@ -425,7 +421,6 @@ class AuditTemplateManagerTest(utils.BaseTestCase):
         self.assertEqual(AUDIT_TMPL1['goal_uuid'], audit_template.goal_uuid)
         self.assertEqual(AUDIT_TMPL1['strategy_uuid'],
                          audit_template.strategy_uuid)
-        self.assertEqual(AUDIT_TMPL1['extra'], audit_template.extra)
 
     def test_create(self):
         audit_template = self.mgr.create(**CREATE_AUDIT_TEMPLATE)

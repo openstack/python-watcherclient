@@ -157,12 +157,6 @@ class CreateAuditTemplate(command.ShowOne):
             metavar='<description>',
             help=_('Descrition of the audit template.'))
         parser.add_argument(
-            '-e', '--extra',
-            metavar='<key=value>',
-            action='append',
-            help=_("Record arbitrary key/value metadata. "
-                   "Can be specified multiple times."))
-        parser.add_argument(
             '--scope',
             metavar='<path>',
             help=_("Part of the cluster on which an audit will be done.\n"
@@ -208,8 +202,7 @@ class CreateAuditTemplate(command.ShowOne):
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
-        field_list = ['description', 'name', 'extra', 'goal', 'strategy',
-                      'scope']
+        field_list = ['description', 'name', 'goal', 'strategy', 'scope']
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
 
@@ -226,7 +219,6 @@ class CreateAuditTemplate(command.ShowOne):
             fields['scope'] = common_utils.serialize_file_to_dict(
                 fields['scope'])
 
-        fields = common_utils.args_array_to_dict(fields, 'extra')
         audit_template = client.audit_template.create(**fields)
 
         columns = res_fields.AUDIT_TEMPLATE_FIELDS

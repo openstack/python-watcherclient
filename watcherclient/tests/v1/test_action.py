@@ -15,8 +15,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import copy
-
 import testtools
 from testtools import matchers
 
@@ -57,10 +55,6 @@ ACTION_PLAN1 = {
     'state': 'RECOMMENDED'
 }
 
-UPDATED_ACTION1 = copy.deepcopy(ACTION1)
-NEW_EXTRA = 'key1=val1'
-UPDATED_ACTION1['extra'] = NEW_EXTRA
-
 fake_responses = {
     '/v1/actions':
     {
@@ -99,10 +93,6 @@ fake_responses = {
         'DELETE': (
             {},
             None,
-        ),
-        'PATCH': (
-            {},
-            UPDATED_ACTION1,
         ),
     },
     '/v1/actions/detail?action_plan_uuid=%s' % ACTION1['action_plan']:
@@ -252,22 +242,3 @@ class ActionManagerTest(testtools.TestCase):
         self.assertEqual(ACTION1['uuid'], action.uuid)
         self.assertEqual(ACTION1['action_plan'], action.action_plan)
         self.assertEqual(ACTION1['next'], action.next)
-
-    def test_delete(self):
-        action = self.mgr.delete(action_id=ACTION1['uuid'])
-        expect = [
-            ('DELETE', '/v1/actions/%s' % ACTION1['uuid'], {}, None),
-        ]
-        self.assertEqual(expect, self.api.calls)
-        self.assertIsNone(action)
-
-    def test_update(self):
-        patch = {'op': 'replace',
-                 'value': NEW_EXTRA,
-                 'path': '/extra'}
-        action = self.mgr.update(action_id=ACTION1['uuid'], patch=patch)
-        expect = [
-            ('PATCH', '/v1/actions/%s' % ACTION1['uuid'], {}, patch),
-        ]
-        self.assertEqual(expect, self.api.calls)
-        self.assertEqual(NEW_EXTRA, action.extra)
