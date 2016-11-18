@@ -11,7 +11,7 @@
 # under the License.
 
 import json
-import uuid
+from oslo_utils import uuidutils
 
 from keystoneclient.fixture import v2 as ks_v2_fixture
 from keystoneclient.fixture import v3 as ks_v3_fixture
@@ -49,7 +49,7 @@ V3_VERSION = {'id': 'v3.0',
               'status': 'stable',
               'updated': UPDATED}
 
-TOKENID = uuid.uuid4().hex
+TOKENID = uuidutils.generate_uuid()
 
 
 def _create_version_list(versions):
