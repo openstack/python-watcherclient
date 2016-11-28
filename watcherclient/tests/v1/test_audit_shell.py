@@ -69,6 +69,7 @@ AUDIT_1 = {
     'parameters': None,
     'interval': None,
     'scope': '',
+    'auto_trigger': False,
 }
 
 AUDIT_2 = {
@@ -85,6 +86,7 @@ AUDIT_2 = {
     'parameters': None,
     'interval': None,
     'scope': '',
+    'auto_trigger': False,
 }
 
 AUDIT_3 = {
@@ -101,6 +103,7 @@ AUDIT_3 = {
     'parameters': None,
     'interval': 3600,
     'scope': '',
+    'auto_trigger': True,
 }
 
 
@@ -284,7 +287,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            audit_type='ONESHOT')
+            audit_type='ONESHOT', auto_trigger=False)
 
     def test_do_audit_create_with_audit_template_name(self):
         audit = resource.Audit(mock.Mock(), AUDIT_3)
@@ -300,6 +303,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
+            auto_trigger=False,
             audit_type='ONESHOT')
 
     def test_do_audit_create_with_goal(self):
@@ -315,6 +319,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
+            auto_trigger=False,
             audit_type='ONESHOT'
         )
 
@@ -333,6 +338,7 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
             strategy='2cf86250-d309-4b81-818e-1537f3dba6e5',
+            auto_trigger=False,
             audit_type='ONESHOT'
         )
 
@@ -349,7 +355,7 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
-            audit_type='ONESHOT')
+            auto_trigger=False, audit_type='ONESHOT')
 
     def test_do_audit_create_with_parameter(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -366,6 +372,7 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
             audit_type='ONESHOT',
+            auto_trigger=False,
             parameters={'para1': 10, 'para2': 20})
 
     def test_do_audit_create_with_type_continuous(self):
@@ -383,4 +390,5 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
             audit_type='CONTINUOUS',
+            auto_trigger=False,
             interval='3600')
