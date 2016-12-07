@@ -49,7 +49,7 @@ V3_VERSION = {'id': 'v3.0',
               'status': 'stable',
               'updated': UPDATED}
 
-TOKENID = uuidutils.generate_uuid()
+TOKENID = uuidutils.generate_uuid(dashed=False)
 
 
 def _create_version_list(versions):
