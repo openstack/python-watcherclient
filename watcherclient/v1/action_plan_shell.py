@@ -30,7 +30,7 @@ def format_global_efficacy(global_efficacy):
     formatted_global_efficacy = None
     if (global_efficacy.get('value') is not None and
             global_efficacy.get('unit')):
-        formatted_global_efficacy = "%(value)s %(unit)s" % dict(
+        formatted_global_efficacy = "%(value).2f %(unit)s" % dict(
             unit=global_efficacy.get('unit'),
             value=global_efficacy.get('value'))
     elif global_efficacy.get('value') is not None:
