@@ -14,7 +14,6 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
-   readme
    installation
    api_v1
    cli
