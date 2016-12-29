@@ -151,7 +151,8 @@ class CreateAudit(command.ShowOne):
             '-i', '--interval',
             dest='interval',
             metavar='<interval>',
-            help=_('Audit interval (in seconds).'))
+            help=_('Audit interval (in seconds). '
+                   "Only used if the audit is CONTINUOUS."))
         parser.add_argument(
             '-g', '--goal',
             dest='goal',
