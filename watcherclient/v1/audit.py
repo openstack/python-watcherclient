@@ -36,7 +36,7 @@ class AuditManager(base.Manager):
         return '/v1/audits/%s' % id if id else '/v1/audits'
 
     def list(self, audit_template=None, limit=None, sort_key=None,
-             sort_dir=None, detail=False):
+             sort_dir=None, detail=False, goal=None, strategy=None):
         """Retrieve a list of audit.
 
         :param audit_template: Name of the audit
@@ -67,6 +67,10 @@ class AuditManager(base.Manager):
         filters = utils.common_filters(limit, sort_key, sort_dir)
         if audit_template is not None:
             filters.append('audit_template=%s' % audit_template)
+        if goal is not None:
+            filters.append('goal=%s' % goal)
+        if strategy is not None:
+            filters.append('strategy=%s' % strategy)
 
         path = ''
         if detail:

@@ -127,6 +127,26 @@ fake_responses_sorting = {
     },
 }
 
+fake_responses_goal = {
+    '/v1/audits/?goal=dummy':
+    {
+        'GET': (
+            {},
+            {"audits": [AUDIT2, AUDIT1]}
+        ),
+    },
+}
+
+fake_responses_strategy = {
+    '/v1/audits/?strategy=dummy':
+    {
+        'GET': (
+            {},
+            {"audits": [AUDIT1]}
+        ),
+    },
+}
+
 
 class AuditManagerTest(testtools.TestCase):
     def setUp(self):
@@ -190,6 +210,26 @@ class AuditManagerTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(2, len(audits))
+
+    def test_audits_list_goal(self):
+        self.api = utils.FakeAPI(fake_responses_goal)
+        self.mgr = watcherclient.v1.audit.AuditManager(self.api)
+        audits = self.mgr.list(goal='dummy')
+        expect = [
+            ('GET', '/v1/audits/?goal=dummy', {}, None)
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(2, len(audits))
+
+    def test_audits_list_strategy(self):
+        self.api = utils.FakeAPI(fake_responses_strategy)
+        self.mgr = watcherclient.v1.audit.AuditManager(self.api)
+        audits = self.mgr.list(strategy='dummy')
+        expect = [
+            ('GET', '/v1/audits/?strategy=dummy', {}, None)
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(audits))
 
     def test_audits_show(self):
         audit = self.mgr.get(AUDIT1['uuid'])
