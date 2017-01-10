@@ -155,7 +155,7 @@ class CreateAuditTemplate(command.ShowOne):
         parser.add_argument(
             '-d', '--description',
             metavar='<description>',
-            help=_('Descrition of the audit template.'))
+            help=_('Description of the audit template.'))
         parser.add_argument(
             '--scope',
             metavar='<path>',
