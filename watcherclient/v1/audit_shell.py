@@ -41,6 +41,8 @@ class ShowAudit(command.ShowOne):
 
         try:
             audit = client.audit.get(parsed_args.audit)
+            if audit.strategy_name is None:
+                audit.strategy_name = 'auto'
         except exceptions.HTTPNotFound as exc:
             raise exceptions.CommandError(str(exc))
 
@@ -115,6 +117,9 @@ class ListAudit(command.Lister):
 
         try:
             data = client.audit.list(**params)
+            for audit in data:
+                if audit.strategy_name is None:
+                    audit.strategy_name = 'auto'
         except exceptions.HTTPNotFound as ex:
             raise exceptions.CommandError(str(ex))
 
@@ -189,6 +194,8 @@ class CreateAudit(command.ShowOne):
                     fields['strategy']).uuid
 
         audit = client.audit.create(**fields)
+        if audit.strategy_name is None:
+            audit.strategy_name = 'auto'
 
         columns = res_fields.AUDIT_FIELDS
         column_headers = res_fields.AUDIT_FIELD_LABELS
