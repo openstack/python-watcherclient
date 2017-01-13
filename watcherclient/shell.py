@@ -25,7 +25,7 @@ from cliff import command
 from cliff import commandmanager
 from cliff import complete
 from cliff import help as cli_help
-from keystoneclient import session
+from keystoneauth1 import loading
 from osc_lib import logs
 from osc_lib import utils
 
@@ -165,7 +165,7 @@ class WatcherShell(app.App):
                                  "Service Catalog.")
         parser.epilog = ('See "watcher help COMMAND" for help '
                          'on a specific command.')
-        session.Session.register_cli_options(parser)
+        loading.register_session_argparse_arguments(parser)
         return parser
 
     def configure_logging(self):

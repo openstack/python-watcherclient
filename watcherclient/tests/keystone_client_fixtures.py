@@ -13,8 +13,8 @@
 import json
 from oslo_utils import uuidutils
 
-from keystoneclient.fixture import v2 as ks_v2_fixture
-from keystoneclient.fixture import v3 as ks_v3_fixture
+from keystoneauth1.fixture import v2 as ks_v2_fixture
+from keystoneauth1.fixture import v3 as ks_v3_fixture
 
 # these are copied from python-keystoneclient tests
 BASE_HOST = 'http://keystone.example.com'
