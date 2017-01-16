@@ -167,13 +167,20 @@ class CreateAudit(command.ShowOne):
             dest='audit_template_uuid',
             metavar='<audit_template>',
             help=_('Audit template used for this audit (name or uuid).'))
+        parser.add_argument(
+            '--auto-trigger',
+            dest='auto_trigger',
+            action='store_true',
+            default=False,
+            help=_('Trigger automatically action plan '
+                   'once audit is succeeded.'))
         return parser
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
         field_list = ['audit_template_uuid', 'audit_type', 'parameters',
-                      'interval', 'goal', 'strategy']
+                      'interval', 'goal', 'strategy', 'auto_trigger']
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
