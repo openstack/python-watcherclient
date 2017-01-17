@@ -79,7 +79,7 @@ class ListGoal(command.Lister):
             dest='detail',
             action='store_true',
             default=False,
-            help=_("Show detailed information about metric collectors."))
+            help=_("Show detailed information about each goal."))
         parser.add_argument(
             '--limit',
             metavar='<limit>',
