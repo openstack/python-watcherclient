@@ -61,18 +61,18 @@ ACTION_PLAN_SHORT_LIST_FIELD_LABELS = ['UUID', 'Audit', 'State',
                                        'Updated At', 'Global efficacy']
 
 # Action
-ACTION_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at', 'next_uuid',
+ACTION_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at', 'parents',
                  'state', 'action_plan_uuid', 'action_type',
                  'input_parameters']
 
 ACTION_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
-                       'Next Action', 'State', 'Action Plan', 'Action',
+                       'Parents', 'State', 'Action Plan', 'Action',
                        'Parameters']
 
-ACTION_SHORT_LIST_FIELDS = ['uuid', 'next_uuid',
+ACTION_SHORT_LIST_FIELDS = ['uuid', 'parents',
                             'state', 'action_plan_uuid', 'action_type']
 
-ACTION_SHORT_LIST_FIELD_LABELS = ['UUID', 'Next Action', 'State',
+ACTION_SHORT_LIST_FIELD_LABELS = ['UUID', 'Parents', 'State',
                                   'Action Plan', 'Action']
 # Goals
 
