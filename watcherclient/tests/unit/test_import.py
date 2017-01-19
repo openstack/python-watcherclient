@@ -11,7 +11,7 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 
-from watcherclient.tests import utils
+from watcherclient.tests.unit import utils
 
 module_str = 'watcherclient'
 
