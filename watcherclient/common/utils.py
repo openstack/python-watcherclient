@@ -17,11 +17,11 @@
 from __future__ import print_function
 
 import argparse
-import json
 import os
 import uuid
 import yaml
 
+from oslo_serialization import jsonutils
 from oslo_utils import importutils
 
 from watcherclient._i18n import _
@@ -89,7 +89,7 @@ def split_and_deserialize(string):
         raise exc.CommandError(_('Attributes must be a list of '
                                  'PATH=VALUE not "%s"') % string)
     try:
-        value = json.loads(value)
+        value = jsonutils.loads(value)
     except ValueError:
         pass
 

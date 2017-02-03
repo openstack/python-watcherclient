@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
 import shlex
 
 import mock
 from osc_lib import utils as oscutils
+from oslo_serialization import jsonutils
 
 from watcherclient.common import httpclient
 from watcherclient.tests.unit import utils
@@ -55,7 +55,7 @@ class CommandTestCase(utils.BaseTestCase):
     def run_cmd(self, cmd, formatting='json'):
         if formatting:
             formatter_arg = " -f %s" % formatting
-            formatter = json.loads
+            formatter = jsonutils.loads
         else:
             formatter_arg = ''
             formatter = str
