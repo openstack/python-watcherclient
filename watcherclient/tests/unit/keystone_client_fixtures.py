@@ -10,7 +10,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import json
+from oslo_serialization import jsonutils
 from oslo_utils import uuidutils
 
 from keystoneauth1.fixture import v2 as ks_v2_fixture
@@ -53,11 +53,11 @@ TOKENID = uuidutils.generate_uuid(dashed=False)
 
 
 def _create_version_list(versions):
-    return json.dumps({'versions': {'values': versions}})
+    return jsonutils.dumps({'versions': {'values': versions}})
 
 
 def _create_single_version(version):
-    return json.dumps({'version': version})
+    return jsonutils.dumps({'version': version})
 
 
 V3_VERSION_LIST = _create_version_list([V3_VERSION, V2_VERSION])
@@ -74,8 +74,8 @@ def keystone_request_callback(request, uri, headers):
         return (200, headers, V3_VERSION_LIST)
     elif uri == BASE_URL + "/v2.0":
         v2_token = ks_v2_fixture.Token(token_id)
-        return (200, response_headers, json.dumps(v2_token))
+        return (200, response_headers, jsonutils.dumps(v2_token))
     elif uri == BASE_URL + "/v3":
         v3_token = ks_v3_fixture.Token()
         response_headers["X-Subject-Token"] = token_id
-        return (201, response_headers, json.dumps(v3_token))
+        return (201, response_headers, jsonutils.dumps(v3_token))

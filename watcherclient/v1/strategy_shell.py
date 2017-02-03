@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
 from osc_lib import utils
+from oslo_serialization import jsonutils
 
 from watcherclient._i18n import _
 from watcherclient.common import command
@@ -38,7 +38,7 @@ class ShowStrategy(command.ShowOne):
     def _format_spec(self, strategy):
         parameters_spec = strategy.parameters_spec.get('properties')
         if parameters_spec:
-            return json.dumps(parameters_spec, indent=2)
+            return jsonutils.dumps(parameters_spec, indent=2)
 
         return {}
 
