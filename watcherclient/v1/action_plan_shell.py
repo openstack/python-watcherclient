@@ -181,13 +181,15 @@ class CreateActionPlan(command.ShowOne):
             required=True,
             dest='audit_template_uuid',
             metavar='<audit_template>',
-            help=_('ActionPlan template used for this audit (name or uuid).'))
+            help=_('Audit template used for this audit (name or uuid).'))
         parser.add_argument(
             '-t', '--audit_type',
             dest='audit_type',
             metavar='<audit_type>',
             default='ONESHOT',
-            help=_("ActionPlan type."))
+            choices=['ONESHOT', 'CONTINUOUS'],
+            help=_("Audit type. It must be ONESHOT or CONTINUOUS. "
+                   "Default is ONESHOT."))
 
         return parser
 
