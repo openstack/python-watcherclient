@@ -18,7 +18,7 @@ import re
 
 from oslo_utils import strutils
 
-from watcherclient._i18n import _, _LW
+from watcherclient._i18n import _
 from watcherclient import exceptions
 
 LOG = logging.getLogger(__name__)
@@ -202,8 +202,8 @@ def get_api_version(version_string):
     version_string = str(version_string)
     if version_string in DEPRECATED_VERSIONS:
         LOG.warning(
-            _LW("Version %(deprecated_version)s is deprecated, using "
-                "alternative version %(alternative)s instead."),
+            "Version %(deprecated_version)s is deprecated, using "
+            "alternative version %(alternative)s instead.",
             {"deprecated_version": version_string,
              "alternative": DEPRECATED_VERSIONS[version_string]})
         version_string = DEPRECATED_VERSIONS[version_string]

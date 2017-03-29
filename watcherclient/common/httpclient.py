@@ -33,7 +33,7 @@ import six
 from six.moves import http_client
 import six.moves.urllib.parse as urlparse
 
-from watcherclient._i18n import _, _LE, _LW
+from watcherclient._i18n import _
 from watcherclient import exceptions
 
 
@@ -185,8 +185,8 @@ def with_retries(func):
             try:
                 return func(self, url, method, **kwargs)
             except _RETRY_EXCEPTIONS as error:
-                msg = (_LE("Error contacting Watcher server: %(error)s. "
-                           "Attempt %(attempt)d of %(total)d") %
+                msg = ("Error contacting Watcher server: %(error)s. "
+                       "Attempt %(attempt)d of %(total)d" %
                        {'attempt': attempt,
                         'total': num_attempts,
                         'error': error})
@@ -397,7 +397,7 @@ class HTTPClient(VersionNegotiationMixin):
             try:
                 body = jsonutils.loads(body)
             except ValueError:
-                LOG.error(_LE('Could not decode response body as JSON'))
+                LOG.error('Could not decode response body as JSON')
         else:
             body = None
 
@@ -558,7 +558,7 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
             try:
                 body = resp.json()
             except ValueError:
-                LOG.error(_LE('Could not decode response body as JSON'))
+                LOG.error('Could not decode response body as JSON')
         else:
             body = None
 
@@ -602,8 +602,8 @@ def _construct_http_client(endpoint=None,
         dvars = [k for k, v in ignored.items() if v]
 
         if dvars:
-            LOG.warning(_LW('The following arguments are ignored when using '
-                            'the session to construct a client: %s'),
+            LOG.warning('The following arguments are ignored when using '
+                        'the session to construct a client: %s',
                         ', '.join(dvars))
 
         return SessionClient(session=session,
@@ -615,8 +615,8 @@ def _construct_http_client(endpoint=None,
                              **kwargs)
     else:
         if kwargs:
-            LOG.warning(_LW('The following arguments are being ignored when '
-                            'constructing the client: %s'), ', '.join(kwargs))
+            LOG.warning('The following arguments are being ignored when '
+                        'constructing the client: %s', ', '.join(kwargs))
 
         return HTTPClient(endpoint=endpoint,
                           token=token,
