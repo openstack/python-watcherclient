@@ -89,3 +89,12 @@ class ActionPlanManager(base.Manager):
     def start(self, action_plan_id):
         patch = [{'op': 'replace', 'value': 'PENDING', 'path': '/state'}]
         return self._update(self._path(action_plan_id), patch)
+
+    def cancel(self, action_plan_id):
+        action_plan = self.get(action_plan_id)
+        if action_plan.state == "ONGOING":
+            patch = [{'op': 'replace', 'value': 'CANCELLING',
+                      'path': '/state'}]
+        else:
+            patch = [{'op': 'replace', 'value': 'CANCELLED', 'path': '/state'}]
+        return self._update(self._path(action_plan_id), patch)
