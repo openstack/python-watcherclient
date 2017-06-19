@@ -68,7 +68,7 @@ Once you have an watcher `Client`_, you can perform various tasks::
 
    >>> watcher.action.list()  # list of actions
    >>> watcher.action_plan.list()  # list of action_plan
-   >>> watcher.audit.get(audit_uuid)  # information about a particular audit
+   >>> watcher.audit.get(audit_uuid_or_name)  # information about a particular audit
 
 When the `Client`_ needs to propagate an exception, it will usually
 raise an instance subclassed from

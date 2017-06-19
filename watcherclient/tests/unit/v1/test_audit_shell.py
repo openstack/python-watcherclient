@@ -17,7 +17,6 @@ import datetime
 import mock
 import six
 
-from watcherclient import exceptions
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
 from watcherclient import v1 as resource
@@ -69,6 +68,7 @@ AUDIT_1 = {
     'scope': '',
     'auto_trigger': False,
     'next_run_time': None,
+    'name': 'my_audit1',
 }
 
 AUDIT_2 = {
@@ -87,6 +87,7 @@ AUDIT_2 = {
     'scope': '',
     'auto_trigger': False,
     'next_run_time': None,
+    'name': 'my_audit2',
 }
 
 AUDIT_3 = {
@@ -105,6 +106,7 @@ AUDIT_3 = {
     'scope': '',
     'auto_trigger': True,
     'next_run_time': None,
+    'name': 'my_audit3',
 }
 
 
@@ -202,14 +204,19 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.get.assert_called_once_with(
             '5869da81-4876-4687-a1ed-12cd64cf53d9')
 
-    def test_do_audit_show_by_not_uuid(self):
-        self.m_audit_mgr.get.side_effect = exceptions.HTTPNotFound
+    def test_do_audit_show_by_name(self):
+        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        self.m_audit_mgr.get.return_value = audit
 
         exit_code, result = self.run_cmd(
-            'audit show not_uuid', formatting=None)
+            'audit show my_audit')
 
-        self.assertEqual(1, exit_code)
-        self.assertEqual('', result)
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.get.assert_called_once_with(
+            'my_audit')
 
     def test_do_audit_delete(self):
         self.m_audit_mgr.delete.return_value = ''
@@ -222,6 +229,18 @@ class AuditShellTest(base.CommandTestCase):
         self.assertEqual('', result)
         self.m_audit_mgr.delete.assert_called_once_with(
             '5869da81-4876-4687-a1ed-12cd64cf53d9')
+
+    def test_do_audit_delete_by_name(self):
+        self.m_audit_mgr.delete.return_value = ''
+
+        exit_code, result = self.run_cmd(
+            'audit delete my_audit',
+            formatting=None)
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual('', result)
+        self.m_audit_mgr.delete.assert_called_once_with(
+            'my_audit')
 
     def test_do_audit_delete_multiple(self):
         self.m_audit_mgr.delete.return_value = ''
@@ -237,16 +256,6 @@ class AuditShellTest(base.CommandTestCase):
             '5869da81-4876-4687-a1ed-12cd64cf53d9')
         self.m_audit_mgr.delete.assert_any_call(
             '5b157edd-5a7e-4aaa-b511-f7b33ec86e9f')
-
-    def test_do_audit_delete_with_not_uuid(self):
-        self.m_audit_mgr.delete.return_value = ''
-
-        exit_code, result = self.run_cmd(
-            'audit delete not_uuid',
-            formatting=None)
-
-        self.assertEqual(1, exit_code)
-        self.assertEqual('', result)
 
     def test_do_audit_update(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -264,14 +273,20 @@ class AuditShellTest(base.CommandTestCase):
             '5869da81-4876-4687-a1ed-12cd64cf53d9',
             [{'op': 'replace', 'path': '/state', 'value': 'PENDING'}])
 
-    def test_do_audit_update_with_not_uuid(self):
-        self.m_audit_mgr.update.return_value = ''
+    def test_do_audit_update_by_name(self):
+        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        self.m_audit_mgr.update.return_value = audit
 
         exit_code, result = self.run_cmd(
-            'audit update not_uuid replace state=PENDING', formatting=None)
+            'audit update my_audit replace state=PENDING')
 
-        self.assertEqual(1, exit_code)
-        self.assertEqual('', result)
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.update.assert_called_once_with(
+            'my_audit',
+            [{'op': 'replace', 'path': '/state', 'value': 'PENDING'}])
 
     def test_do_audit_create_with_audit_template_uuid(self):
         audit = resource.Audit(mock.Mock(), AUDIT_3)
@@ -288,7 +303,9 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
-            audit_type='ONESHOT', auto_trigger=False)
+            audit_type='ONESHOT',
+            auto_trigger=False
+        )
 
     def test_do_audit_create_with_audit_template_name(self):
         audit = resource.Audit(mock.Mock(), AUDIT_3)
@@ -305,7 +322,8 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.create.assert_called_once_with(
             audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
             auto_trigger=False,
-            audit_type='ONESHOT')
+            audit_type='ONESHOT'
+        )
 
     def test_do_audit_create_with_goal(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -356,7 +374,9 @@ class AuditShellTest(base.CommandTestCase):
             result)
         self.m_audit_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
-            auto_trigger=False, audit_type='ONESHOT')
+            auto_trigger=False,
+            audit_type='ONESHOT'
+        )
 
     def test_do_audit_create_with_parameter(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -374,7 +394,8 @@ class AuditShellTest(base.CommandTestCase):
             goal='fc087747-61be-4aad-8126-b701731ae836',
             audit_type='ONESHOT',
             auto_trigger=False,
-            parameters={'para1': 10, 'para2': 20})
+            parameters={'para1': 10, 'para2': 20}
+        )
 
     def test_do_audit_create_with_type_continuous(self):
         audit = resource.Audit(mock.Mock(), AUDIT_1)
@@ -392,4 +413,25 @@ class AuditShellTest(base.CommandTestCase):
             goal='fc087747-61be-4aad-8126-b701731ae836',
             audit_type='CONTINUOUS',
             auto_trigger=False,
-            interval='3600')
+            interval='3600'
+        )
+
+    def test_do_audit_create_with_name(self):
+        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 '
+            '-t CONTINUOUS -i 3600 --name my_audit')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            audit_type='CONTINUOUS',
+            auto_trigger=False,
+            interval='3600',
+            name='my_audit'
+        )

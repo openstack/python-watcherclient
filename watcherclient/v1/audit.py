@@ -19,7 +19,8 @@ from watcherclient import exceptions as exc
 
 
 CREATION_ATTRIBUTES = ['audit_template_uuid', 'audit_type', 'interval',
-                       'parameters', 'goal', 'strategy', 'auto_trigger']
+                       'parameters', 'goal', 'strategy', 'auto_trigger',
+                       'name']
 
 
 class Audit(base.Resource):
@@ -38,8 +39,7 @@ class AuditManager(base.Manager):
              sort_dir=None, detail=False, goal=None, strategy=None):
         """Retrieve a list of audit.
 
-        :param audit_template: Name of the audit
-        :param name: Name of the audit
+        :param audit_template: Name of the audit template
         :param limit: The maximum number of results to return per
                       request, if:
 
@@ -92,14 +92,14 @@ class AuditManager(base.Manager):
                 raise exc.InvalidAttribute()
         return self._create(self._path(), new)
 
-    def get(self, audit_id):
+    def get(self, audit):
         try:
-            return self._list(self._path(audit_id))[0]
+            return self._list(self._path(audit))[0]
         except IndexError:
             return None
 
-    def delete(self, audit_id):
-        return self._delete(self._path(audit_id))
+    def delete(self, audit):
+        return self._delete(self._path(audit))
 
-    def update(self, audit_id, patch):
-        return self._update(self._path(audit_id), patch)
+    def update(self, audit, patch):
+        return self._update(self._path(audit), patch)

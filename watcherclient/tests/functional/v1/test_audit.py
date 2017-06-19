@@ -22,7 +22,7 @@ class AuditTests(base.TestCase):
     """Functional tests for audit."""
 
     dummy_name = 'dummy'
-    list_fields = ['UUID', 'Audit Type', 'State', 'Goal', 'Strategy']
+    list_fields = ['UUID', 'Name', 'Audit Type', 'State', 'Goal', 'Strategy']
     detailed_list_fields = list_fields + ['Created At', 'Updated At',
                                           'Deleted At', 'Parameters',
                                           'Interval', 'Audit Scope',
@@ -71,7 +71,7 @@ class AuditTests(base.TestCase):
 
 class AuditActiveTests(base.TestCase):
 
-    list_fields = ['UUID', 'Audit Type', 'State', 'Goal', 'Strategy']
+    list_fields = ['UUID', 'Name', 'Audit Type', 'State', 'Goal', 'Strategy']
     detailed_list_fields = list_fields + ['Created At', 'Updated At',
                                           'Deleted At', 'Parameters',
                                           'Interval', 'Audit Scope']

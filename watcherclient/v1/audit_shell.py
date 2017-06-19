@@ -31,7 +31,7 @@ class ShowAudit(command.ShowOne):
         parser.add_argument(
             'audit',
             metavar='<audit>',
-            help=_('UUID of the audit'),
+            help=_('UUID or name of the audit'),
         )
         return parser
 
@@ -175,13 +175,19 @@ class CreateAudit(command.ShowOne):
             default=False,
             help=_('Trigger automatically action plan '
                    'once audit is succeeded.'))
+        parser.add_argument(
+            '--name',
+            dest='name',
+            metavar='<name>',
+            help=_('Name for this audit.'))
+
         return parser
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
         field_list = ['audit_template_uuid', 'audit_type', 'parameters',
-                      'interval', 'goal', 'strategy', 'auto_trigger']
+                      'interval', 'goal', 'strategy', 'auto_trigger', 'name']
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
@@ -219,7 +225,7 @@ class UpdateAudit(command.ShowOne):
         parser.add_argument(
             'audit',
             metavar='<audit>',
-            help=_("UUID of the audit."))
+            help=_("UUID or name of the audit."))
         parser.add_argument(
             'op',
             metavar='<op>',
@@ -238,9 +244,6 @@ class UpdateAudit(command.ShowOne):
 
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
-
-        if not uuidutils.is_uuid_like(parsed_args.audit):
-            raise exceptions.ValidationError()
 
         patch = common_utils.args_array_to_patch(
             parsed_args.op, parsed_args.attributes[0],
@@ -263,7 +266,7 @@ class DeleteAudit(command.Command):
             'audits',
             metavar='<audit>',
             nargs='+',
-            help=_('UUID of the audit'),
+            help=_('UUID or name of the audit'),
         )
         return parser
 
@@ -271,7 +274,4 @@ class DeleteAudit(command.Command):
         client = getattr(self.app.client_manager, "infra-optim")
 
         for audit in parsed_args.audits:
-            if not uuidutils.is_uuid_like(audit):
-                raise exceptions.ValidationError()
-
             client.audit.delete(audit)
