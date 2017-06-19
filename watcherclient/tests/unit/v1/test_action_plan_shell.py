@@ -257,3 +257,25 @@ class ActionPlanShellTest(base.CommandTestCase):
 
         self.assertEqual(1, exit_code)
         self.assertEqual('', result)
+
+    def test_do_action_plan_cancel(self):
+        action_plan = resource.ActionPlan(mock.Mock(), ACTION_PLAN_1)
+        self.m_action_plan_mgr.cancel.return_value = action_plan
+
+        exit_code, result = self.run_cmd(
+            'actionplan cancel 5869da81-4876-4687-a1ed-12cd64cf53d9')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(action_plan, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_action_plan_mgr.cancel.assert_called_once_with(
+            '5869da81-4876-4687-a1ed-12cd64cf53d9')
+
+    def test_do_action_plan_cancel_not_uuid(self):
+        exit_code, result = self.run_cmd(
+            'actionplan cancel not_uuid',
+            formatting=None)
+
+        self.assertEqual(1, exit_code)
+        self.assertEqual('', result)

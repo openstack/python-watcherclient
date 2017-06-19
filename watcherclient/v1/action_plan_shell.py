@@ -301,3 +301,29 @@ class DeleteActionPlan(command.Command):
                 raise exceptions.ValidationError()
 
             client.action_plan.delete(action_plan)
+
+
+class CancelActionPlan(command.ShowOne):
+    """Cancel action plan command."""
+
+    def get_parser(self, prog_name):
+        parser = super(CancelActionPlan, self).get_parser(prog_name)
+        parser.add_argument(
+            'action_plan',
+            metavar='<action-plan>',
+            help=_("UUID of the action_plan."))
+
+        return parser
+
+    def take_action(self, parsed_args):
+        client = getattr(self.app.client_manager, "infra-optim")
+
+        if not uuidutils.is_uuid_like(parsed_args.action_plan):
+            raise exceptions.ValidationError()
+
+        action_plan = client.action_plan.cancel(parsed_args.action_plan)
+
+        columns = res_fields.ACTION_PLAN_FIELDS
+        column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
+
+        return column_headers, utils.get_item_properties(action_plan, columns)
