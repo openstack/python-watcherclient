@@ -1,8 +1,8 @@
 .. _contributing:
 
-===================================
+====================================
 Contributing to python-watcherclient
-===================================
+====================================
 
 If you're interested in contributing to the python-watcherclient project,
 the following will help get you started.
