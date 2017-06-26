@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from watcherclient import version as watcherclient_version
 
 # -- General configuration ----------------------------------------------------
@@ -19,9 +20,8 @@ from watcherclient import version as watcherclient_version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
-              'oslosphinx',
-              ]
-
+              'openstackdocstheme',
+             ]
 # autodoc generation is a bit aggressive and a nuisance when doing heavy
 # text edit cycles.
 # execute "export SPHINX_DEBUG=1" in your terminal to disable
@@ -69,7 +69,8 @@ pygments_style = 'sphinx'
 # html_theme_path = ["."]
 # html_theme = '_theme'
 # html_static_path = ['_static']
-html_theme_options = {'incubating': True}
+html_theme = 'openstackdocs'
+# html_theme_path = [openstackdocstheme.get_html_theme_path()]
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = '%sdoc' % project
@@ -86,3 +87,13 @@ latex_documents = [
         u'OpenStack Foundation', 'manual'
     ),
 ]
+
+# openstackdocstheme options
+repository_name = 'openstack/python-watcherclient'
+bug_project = 'python-watcherclient'
+bug_tag = ''
+
+# Must set this variable to include year, month, day, hours, and minutes.
+html_last_updated_fmt = '%Y-%m-%d %H:%M'
+
+#html_theme_options = {"show_other_versions": "True"}
