@@ -80,12 +80,6 @@ Refer to the modules themselves, for more details.
 watcherclient Modules
 =====================
 
-.. toctree::
-    :maxdepth: 1
-
-    modules <api/autoindex>
-
-
 .. _watcherclient.v1.audit: api/watcherclient.v1.audit.html#watcherclient.v1.audit.Audit
 .. _watcherclient.v1.client.Client: api/watcherclient.v1.client.html#watcherclient.v1.client.Client
 .. _Client: api/watcherclient.v1.client.html#watcherclient.v1.client.Client
