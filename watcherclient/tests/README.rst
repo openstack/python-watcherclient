@@ -52,7 +52,7 @@ variables.
 To run functional tests you need to go to python-watcherclient folder, install
 all requirements and execute ``tempest run`` command::
 
-    $ pip install -r requirements.txt test-requirements.txt
+    $ pip install -r requirements.txt -r test-requirements.txt
     $ pip install .
     $ tempest run --regex watcherclient.tests.functional
 
