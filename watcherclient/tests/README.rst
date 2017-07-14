@@ -16,7 +16,7 @@ Functional tests
 The following procedure gets you started with Tempest testing but you can also
 refer to the `Tempest documentation`_ for more details.
 
-.. _Tempest documentation: http://docs.openstack.org/developer/tempest/
+.. _Tempest documentation: https://docs.openstack.org/tempest/latest/
 
 
 Tempest installation
