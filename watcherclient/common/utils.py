@@ -75,7 +75,7 @@ def import_versioned_module(version, submodule=None):
     return importutils.import_module(module)
 
 
-def split_and_deserialize(string):
+def split_and_deserialize(string, exclude_fields=[]):
     """Split and try to JSON deserialize a string.
 
     Gets a string with the KEY=VALUE format, split it (using '=' as the
@@ -88,10 +88,11 @@ def split_and_deserialize(string):
     except ValueError:
         raise exc.CommandError(_('Attributes must be a list of '
                                  'PATH=VALUE not "%s"') % string)
-    try:
-        value = jsonutils.loads(value)
-    except ValueError:
-        pass
+    if key not in exclude_fields:
+        try:
+            value = jsonutils.loads(value)
+        except ValueError:
+            pass
 
     return (key, value)
 
@@ -104,7 +105,7 @@ def args_array_to_dict(kwargs, key_to_convert):
     return kwargs
 
 
-def args_array_to_patch(op, attributes):
+def args_array_to_patch(op, attributes, exclude_fields=[]):
     patch = []
     for attr in attributes:
         # Sanitize
@@ -112,7 +113,8 @@ def args_array_to_patch(op, attributes):
             attr = '/' + attr
 
         if op in ['add', 'replace']:
-            path, value = split_and_deserialize(attr)
+            path, value = split_and_deserialize(attr,
+                                                exclude_fields=exclude_fields)
             patch.append({'op': op, 'path': path, 'value': value})
 
         elif op == "remove":
