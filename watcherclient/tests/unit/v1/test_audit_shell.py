@@ -68,6 +68,7 @@ AUDIT_1 = {
     'interval': None,
     'scope': '',
     'auto_trigger': False,
+    'next_run_time': None,
 }
 
 AUDIT_2 = {
@@ -85,6 +86,7 @@ AUDIT_2 = {
     'interval': None,
     'scope': '',
     'auto_trigger': False,
+    'next_run_time': None,
 }
 
 AUDIT_3 = {
@@ -102,6 +104,7 @@ AUDIT_3 = {
     'interval': 3600,
     'scope': '',
     'auto_trigger': True,
+    'next_run_time': None,
 }
 
 
