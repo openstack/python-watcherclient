@@ -23,9 +23,9 @@ operating costs, increased system performance via intelligent virtual machine
 migration, increased energy efficiency-and more!
 
 * Free software: Apache license
-* Wiki: http://wiki.openstack.org/wiki/Watcher
-* Source: http://git.openstack.org/cgit/openstack/python-watcher
-* Bugs: http://bugs.launchpad.net/watcher
+* Wiki: https://wiki.openstack.org/wiki/Watcher
+* Source: https://git.openstack.org/cgit/openstack/python-watcher
+* Bugs: https://bugs.launchpad.net/watcher
 
 Installation
 ============
@@ -61,7 +61,7 @@ You can install the Watcher CLI with the following command:
    sudo pip install python-watcherclient
 
 
-You can also use the `OpenStack client <http://docs.openstack.org/cli-reference/overview.html>`_
+You can also use the `OpenStack client <https://docs.openstack.org/python-openstackclient/latest/>`_
 with Watcher (our watcher plugin for OpenStack client is included in the
 python-watcherclient package). To install it, you have just to run this command:
 

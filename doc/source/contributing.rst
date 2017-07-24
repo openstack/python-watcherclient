@@ -19,8 +19,8 @@ signed OpenStack's contributor's agreement.
 
 .. seealso::
 
-   * http://docs.openstack.org/infra/manual/developers.html
-   * http://wiki.openstack.org/CLA
+   * https://docs.openstack.org/infra/manual/developers.html
+   * https://wiki.openstack.org/CLA
 
 LaunchPad Project
 -----------------
@@ -41,7 +41,7 @@ Project Hosting Details
 -------------------------
 
 Bug tracker
-    http://launchpad.net/python-watcherclient
+    https://launchpad.net/python-watcherclient
 
 Mailing list (prefix subjects with ``[watcher]`` for faster responses)
     http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-dev
