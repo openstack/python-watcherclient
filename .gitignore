@@ -6,6 +6,7 @@
 # Packages
 *.egg
 *.egg-info
+.eggs
 dist
 build
 eggs
@@ -42,7 +43,7 @@ output/*/index.html
 
 # Sphinx
 doc/build
-doc/source/api
+doc/source/reference/api
 
 # pbr generates these
 AUTHORS
@@ -55,3 +56,6 @@ ChangeLog
 
 sftp-config.json
 /.idea/
+
+# Desktop Service Store
+*.DS_Store
