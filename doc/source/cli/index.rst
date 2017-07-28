@@ -29,3 +29,4 @@ Once you've configured your authentication parameters, you can run
 
    watcher
    openstack_cli
+   details
