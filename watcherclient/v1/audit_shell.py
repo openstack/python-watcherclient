@@ -243,7 +243,8 @@ class UpdateAudit(command.ShowOne):
             raise exceptions.ValidationError()
 
         patch = common_utils.args_array_to_patch(
-            parsed_args.op, parsed_args.attributes[0])
+            parsed_args.op, parsed_args.attributes[0],
+            exclude_fields=['/interval'])
 
         audit = client.audit.update(parsed_args.audit, patch)
 
