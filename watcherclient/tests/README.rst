@@ -26,7 +26,7 @@ You need to install virtualenv, create a virtual environment and activate it::
 
     $ pip install virtualenv
     $ virtualenv watcher-env
-    $ source watcher-env/bin/activate
+    $ . watcher-env/bin/activate
 
 Then, to install Tempest you can issue the following commands::
 
