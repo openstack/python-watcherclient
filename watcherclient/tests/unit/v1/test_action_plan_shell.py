@@ -33,12 +33,16 @@ ACTION_PLAN_1 = {
                              'unit': '%'}],
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
-    'global_efficacy': {
-        "value": 99,
-        "unit": "%",
-        "name": "dummy_global_efficacy",
-        "description": "Dummy Global Efficacy",
-    },
+    'global_efficacy': [
+        {"value": 99,
+         "unit": "%",
+         "name": "dummy_global_efficacy",
+         "description": "Dummy Global Efficacy"},
+        {"value": 75,
+         "unit": "%",
+         "name": "dummy_global_efficacy2",
+         "description": "Dummy Global Efficacy2"}
+        ],
     'deleted_at': None,
 }
 
@@ -52,12 +56,12 @@ ACTION_PLAN_2 = {
                              'name': 'indicator2',
                              'unit': '%'}],
     'updated_at': None,
-    'global_efficacy': {
+    'global_efficacy': [{
         "value": 87,
         "unit": "%",
         "name": "dummy_global_efficacy",
         "description": "Dummy Global Efficacy",
-    },
+    }],
     'deleted_at': None,
 }
 
@@ -69,6 +73,7 @@ class ActionPlanShellTest(base.CommandTestCase):
         resource_fields.ACTION_PLAN_SHORT_LIST_FIELD_LABELS)
     FIELDS = resource_fields.ACTION_PLAN_FIELDS
     FIELD_LABELS = resource_fields.ACTION_PLAN_FIELD_LABELS
+    GLOBAL_EFFICACY_FIELDS = resource_fields.GLOBAL_EFFICACY_FIELDS
 
     def setUp(self):
         super(self.__class__, self).setUp()
@@ -114,6 +119,11 @@ class ActionPlanShellTest(base.CommandTestCase):
                                    self.SHORT_LIST_FIELD_LABELS)],
             results)
 
+        self.assertEqual(action_plan1.global_efficacy,
+                         results[0]['Global efficacy'])
+        self.assertEqual(action_plan2.global_efficacy,
+                         results[1]['Global efficacy'])
+
         self.m_action_plan_mgr.list.assert_called_once_with(detail=False)
 
     def test_do_action_plan_list_detail(self):
@@ -131,6 +141,10 @@ class ActionPlanShellTest(base.CommandTestCase):
              self.resource_as_dict(action_plan2, self.FIELDS,
                                    self.FIELD_LABELS)],
             results)
+        self.assertEqual(action_plan1.global_efficacy,
+                         results[0]['Global efficacy'])
+        self.assertEqual(action_plan2.global_efficacy,
+                         results[1]['Global efficacy'])
 
         self.m_action_plan_mgr.list.assert_called_once_with(detail=True)
 
@@ -165,6 +179,8 @@ class ActionPlanShellTest(base.CommandTestCase):
             self.resource_as_dict(
                 action_plan, self.FIELDS, self.FIELD_LABELS),
             result)
+        self.assertEqual(action_plan.global_efficacy,
+                         result['Global efficacy'])
         self.m_action_plan_mgr.get.assert_called_once_with(
             'd9d9978e-6db5-4a05-8eab-1531795d7004')
 
