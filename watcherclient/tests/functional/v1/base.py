@@ -10,6 +10,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import os
+
 import re
 import shlex
 import subprocess
@@ -20,9 +22,24 @@ from tempest.lib.cli import output_parser
 from tempest.lib import exceptions
 
 
+def credentials():
+    creds = {
+        '--os-username': os.environ.get('OS_USERNAME', 'admin'),
+        '--os-password': os.environ.get('OS_PASSWORD', 'secretadmin'),
+        '--os-project-name': os.environ.get('OS_PROJECT_NAME', 'admin'),
+        '--os-auth-url': os.environ.get('OS_AUTH_URL',
+                                        'http://10.0.1.94/identity'),
+        '--os-project-domain-id': os.environ.get('OS_PROJECT_DOMAIN_ID',
+                                                 'default'),
+        '--os-user-domain-id': os.environ.get('OS_USER_DOMAIN_ID', 'default'),
+    }
+    return [x for sub in creds.items() for x in sub]
+
+
 def execute(cmd, fail_ok=False, merge_stderr=False):
     """Executes specified command for the given action."""
     cmdlist = shlex.split(cmd)
+    cmdlist.extend(credentials())
     stdout = subprocess.PIPE
     stderr = subprocess.STDOUT if merge_stderr else subprocess.PIPE
     proc = subprocess.Popen(cmdlist, stdout=stdout, stderr=stderr)
