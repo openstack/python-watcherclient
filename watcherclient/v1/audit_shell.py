@@ -88,6 +88,13 @@ class ListAudit(command.Lister):
             metavar='<direction>',
             choices=['asc', 'desc'],
             help=_('Sort direction: "asc" (the default) or "desc".'))
+        parser.add_argument(
+            '--marker',
+            dest='marker',
+            metavar='<marker>',
+            default=None,
+            help=_('UUID of the last audit in the previous page; '
+                   'displays list of audits after "marker".'))
 
         return parser
 
