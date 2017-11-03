@@ -132,6 +132,27 @@ class ActionShellTest(base.CommandTestCase):
 
         self.m_action_mgr.list.assert_called_once_with(detail=True)
 
+    def test_do_action_list_marker(self):
+        action2 = resource.Action(mock.Mock(), ACTION_2)
+        action3 = resource.Action(mock.Mock(), ACTION_3)
+        self.m_action_mgr.list.return_value = [
+            action2, action3]
+
+        exit_code, results = self.run_cmd(
+            'action list --marker 770ef053-ecb3-48b0-85b5-d55a2dbc6588')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(action2, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS),
+             self.resource_as_dict(action3, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_action_mgr.list.assert_called_once_with(
+            detail=False,
+            marker='770ef053-ecb3-48b0-85b5-d55a2dbc6588')
+
     def test_do_action_show_by_uuid(self):
         action = resource.Action(mock.Mock(), ACTION_1)
         self.m_action_mgr.get.return_value = action

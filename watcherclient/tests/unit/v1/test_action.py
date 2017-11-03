@@ -144,6 +144,16 @@ fake_responses_sorting = {
     },
 }
 
+fake_responses_marker = {
+    '/v1/actions/?marker=770ef053-ecb3-48b0-85b5-d55a2dbc6588':
+    {
+        'GET': (
+            {},
+            {"actions": [ACTION2, ACTION3]}
+        ),
+    },
+}
+
 
 class ActionManagerTest(testtools.TestCase):
 
@@ -230,6 +240,20 @@ class ActionManagerTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(3, len(actions))
+
+    def test_actions_list_marker(self):
+        self.api = utils.FakeAPI(fake_responses_marker)
+        self.mgr = watcherclient.v1.action.ActionManager(self.api)
+        actions = self.mgr.list(
+            marker='770ef053-ecb3-48b0-85b5-d55a2dbc6588')
+        expect = [
+            ('GET',
+             '/v1/actions/?marker=770ef053-ecb3-48b0-85b5-d55a2dbc6588',
+             {},
+             None)
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(2, len(actions))
 
     def test_actions_show(self):
         action = self.mgr.get(ACTION1['uuid'])
