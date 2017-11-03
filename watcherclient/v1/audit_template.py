@@ -33,7 +33,7 @@ class AuditTemplateManager(base.Manager):
         return '/v1/audit_templates/%s' % id_ if id_ else '/v1/audit_templates'
 
     def list(self, name=None, goal=None, strategy=None, limit=None,
-             sort_key=None, sort_dir=None, detail=False):
+             sort_key=None, sort_dir=None, detail=False, marker=None):
         """Retrieve a list of audit template.
 
         :param name: Name of the audit template
@@ -54,13 +54,16 @@ class AuditTemplateManager(base.Manager):
         :param detail: Optional, boolean whether to return detailed information
                        about audit_templates.
 
+        :param marker: Optional, UUID of the last audit template of
+                       the previous page.
+
         :returns: A list of audit templates.
 
         """
         if limit is not None:
             limit = int(limit)
 
-        filters = utils.common_filters(limit, sort_key, sort_dir)
+        filters = utils.common_filters(limit, sort_key, sort_dir, marker)
         if name is not None:
             filters.append('name=%s' % name)
         if goal is not None:

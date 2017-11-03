@@ -178,6 +178,16 @@ fake_responses_sorting = {
     },
 }
 
+fake_responses_marker = {
+    '/v1/audit_templates/?marker=f8e47706-efcf-49a4-a5c4-af604eb492f2':
+    {
+        'GET': (
+            {},
+            {"audit_templates": [AUDIT_TMPL2, AUDIT_TMPL3]}
+        ),
+    },
+}
+
 fake_responses_filter_by_goal_uuid = {
     '/v1/audit_templates/?goal=e75ee410-b32b-465f-88b5-4397705f9473':
     {
@@ -388,6 +398,18 @@ class AuditTemplateManagerTest(utils.BaseTestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(3, len(audit_templates))
+
+    def test_audit_templates_list_marker(self):
+        self.api = utils.FakeAPI(fake_responses_marker)
+        self.mgr = watcherclient.v1.audit_template.AuditTemplateManager(
+            self.api)
+        audit_templates = self.mgr.list(marker=AUDIT_TMPL1['uuid'])
+        expect_url = '/v1/audit_templates/?marker=%s' % AUDIT_TMPL1['uuid']
+        expect = [
+            ('GET', expect_url, {}, None)
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(2, len(audit_templates))
 
     def test_audit_templates_show(self):
         audit_template = self.mgr.get(AUDIT_TMPL1['uuid'])
