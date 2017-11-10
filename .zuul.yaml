@@ -1,0 +1,8 @@
+- project:
+    name: openstack/python-watcherclient
+    check:
+      jobs:
+        - watcherclient-tempest-functional
+    gate:
+      jobs:
+        - watcherclient-tempest-functional
