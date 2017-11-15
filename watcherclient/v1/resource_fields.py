@@ -61,6 +61,8 @@ ACTION_PLAN_SHORT_LIST_FIELDS = ['uuid', 'audit_uuid', 'state',
 ACTION_PLAN_SHORT_LIST_FIELD_LABELS = ['UUID', 'Audit', 'State',
                                        'Updated At', 'Global efficacy']
 
+GLOBAL_EFFICACY_FIELDS = ['value', 'unit', 'name', 'description']
+
 # Action
 ACTION_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at', 'parents',
                  'state', 'action_plan_uuid', 'action_type',

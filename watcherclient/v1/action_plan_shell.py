@@ -26,16 +26,16 @@ from watcherclient.v1 import resource_fields as res_fields
 
 
 def format_global_efficacy(global_efficacy):
-    formatted_global_efficacy = None
-    if (global_efficacy.get('value') is not None and
-            global_efficacy.get('unit')):
-        formatted_global_efficacy = "%(value).2f %(unit)s" % dict(
-            unit=global_efficacy.get('unit'),
-            value=global_efficacy.get('value'))
-    elif global_efficacy.get('value') is not None:
-        formatted_global_efficacy = global_efficacy.get('value')
-
-    return formatted_global_efficacy
+    formatted_global_eff = {}
+    for eff in global_efficacy:
+        if (eff.get('value') is not None and eff.get('unit')):
+            eff_name = eff.get('name')
+            formatted_global_eff[eff_name] = "%(value).2f %(unit)s" % dict(
+                unit=eff.get('unit'),
+                value=eff.get('value'))
+        elif eff.get('value') is not None:
+            formatted_global_eff[eff_name] = eff.get('value')
+    return formatted_global_eff
 
 
 class ShowActionPlan(command.ShowOne):
@@ -64,6 +64,18 @@ class ShowActionPlan(command.ShowOne):
             )
         return out.getvalue() or ''
 
+    def _format_global_efficacy(self, global_efficacy, parsed_args):
+        formatted_global_efficacy = format_global_efficacy(global_efficacy)
+        out = six.StringIO()
+        yaml_format.YAMLFormatter().emit_one(
+            column_names=list(resource.capitalize()
+                              for resource in formatted_global_efficacy),
+            data=[value for value in formatted_global_efficacy.itervalues()],
+            stdout=out,
+            parsed_args=parsed_args,
+            )
+        return out.getvalue() or ''
+
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
@@ -83,8 +95,8 @@ class ShowActionPlan(command.ShowOne):
                 self._format_indicators(action_plan, parsed_args))
 
             # Update the raw global efficacy with the formatted one
-            action_plan.global_efficacy = format_global_efficacy(
-                action_plan.global_efficacy)
+            action_plan.global_efficacy = self._format_global_efficacy(
+                action_plan.global_efficacy, parsed_args)
 
         columns = res_fields.ACTION_PLAN_FIELDS
         column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
@@ -139,6 +151,18 @@ class ListActionPlan(command.Lister):
             )
         return out.getvalue() or ''
 
+    def _format_global_efficacy(self, global_efficacy, parsed_args):
+        formatted_global_efficacy = format_global_efficacy(global_efficacy)
+        out = six.StringIO()
+        yaml_format.YAMLFormatter().emit_one(
+            column_names=list(resource.capitalize()
+                              for resource in formatted_global_efficacy),
+            data=[value for value in formatted_global_efficacy.itervalues()],
+            stdout=out,
+            parsed_args=parsed_args,
+            )
+        return out.getvalue() or ''
+
     def take_action(self, parsed_args):
         client = getattr(self.app.client_manager, "infra-optim")
 
@@ -164,8 +188,8 @@ class ListActionPlan(command.Lister):
                     self._format_indicators(action_plan, parsed_args))
 
                 # Update the raw global efficacy with the formatted one
-                action_plan.global_efficacy = format_global_efficacy(
-                    action_plan.global_efficacy)
+                action_plan.global_efficacy = self._format_global_efficacy(
+                    action_plan.global_efficacy, parsed_args)
 
         return (field_labels,
                 (utils.get_item_properties(item, fields) for item in data))
