@@ -114,6 +114,11 @@ class ListActionPlan(command.Lister):
                    '0 for no limit. Default is the maximum number used '
                    'by the Watcher API Service.'))
         parser.add_argument(
+            '--marker',
+            metavar='<actionplan>',
+            help=_('The last actionplan UUID of the previous page; '
+                   'displays list of actionplans after "marker".'))
+        parser.add_argument(
             '--sort-key',
             metavar='<field>',
             help=_('Action Plan field that will be used for sorting.'))

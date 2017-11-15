@@ -97,7 +97,8 @@ class UtilsTest(test_utils.BaseTestCase):
 class CommonParamsForListTest(test_utils.BaseTestCase):
     def setUp(self):
         super(CommonParamsForListTest, self).setUp()
-        self.args = mock.Mock(limit=None, sort_key=None, sort_dir=None)
+        self.args = mock.Mock(limit=None, marker=None,
+                              sort_key=None, sort_dir=None)
         self.args.detail = False
         self.expected_params = {'detail': False}
 
@@ -116,6 +117,13 @@ class CommonParamsForListTest(test_utils.BaseTestCase):
         self.assertRaises(exc.CommandError,
                           utils.common_params_for_list,
                           self.args, [], [])
+
+    def test_marker(self):
+        self.args.marker = 'e420a881-d7df-4de2-bbf3-378cc13d9b3a'
+        self.expected_params.update(
+            {'marker': 'e420a881-d7df-4de2-bbf3-378cc13d9b3a'})
+        self.assertEqual(self.expected_params,
+                         utils.common_params_for_list(self.args, [], []))
 
     def test_sort_key_and_sort_dir(self):
         self.args.sort_key = 'field'

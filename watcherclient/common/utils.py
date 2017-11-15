@@ -161,17 +161,21 @@ def common_params_for_list(args, fields, field_labels):
                 args.sort_dir)
         params['sort_dir'] = args.sort_dir
 
+    marker = getattr(args, 'marker', None)
+    if marker is not None:
+        params['marker'] = marker
     params['detail'] = args.detail
 
     return params
 
 
-def common_filters(limit=None, sort_key=None, sort_dir=None):
+def common_filters(limit=None, sort_key=None, sort_dir=None, marker=None):
     """Generate common filters for any list request.
 
     :param limit: maximum number of entities to return.
     :param sort_key: field to use for sorting.
     :param sort_dir: direction of sorting: 'asc' or 'desc'.
+    :param marker: The last actionplan UUID of the previous page.
     :returns: list of string filters.
     """
     filters = []
@@ -181,6 +185,8 @@ def common_filters(limit=None, sort_key=None, sort_dir=None):
         filters.append('sort_key=%s' % sort_key)
     if sort_dir is not None:
         filters.append('sort_dir=%s' % sort_dir)
+    if marker is not None:
+        filters.append('marker=%s' % marker)
     return filters
 
 
