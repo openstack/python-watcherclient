@@ -17,6 +17,8 @@ import datetime
 import mock
 import six
 
+from oslo_serialization import jsonutils
+
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
 from watcherclient import v1 as resource
@@ -54,6 +56,8 @@ class StrategyShellTest(base.CommandTestCase):
         resource_fields.STRATEGY_SHORT_LIST_FIELD_LABELS)
     FIELDS = resource_fields.STRATEGY_FIELDS
     FIELD_LABELS = resource_fields.STRATEGY_FIELD_LABELS
+    STATE_FIELDS = resource_fields.STRATEGY_STATE_FIELDS
+    STATE_FIELD_LABELS = resource_fields.STRATEGY_STATE_FIELD_LABELS
 
     def setUp(self):
         super(self.__class__, self).setUp()
@@ -155,3 +159,33 @@ class StrategyShellTest(base.CommandTestCase):
             result)
         self.m_strategy_mgr.get.assert_called_once_with(
             'f8e47706-efcf-49a4-a5c4-af604eb492f2')
+
+    def test_do_strategy_state(self):
+        strategy1 = resource.Strategy(mock.Mock(), STRATEGY_1)
+        strategy_req = [
+            {'type': 'Datasource', 'mandatory': True,
+             'comment': '', 'state': 'gnocchi: True'},
+            {'type': 'Metrics', 'mandatory': False,
+             'comment': '', 'state': jsonutils.dumps([
+                 {'compute.node.cpu.percent': 'available'},
+                 {'cpu_util': 'available'},
+                 {'memory.resident': 'available'},
+                 {'hardware.memory.used': 'not available'}])},
+            {'type': 'CDM', 'mandatory': True,
+             'comment': '',
+             'state': jsonutils.dumps([{'compute_model': 'available'},
+                                      {'storage_model': 'not available'}])},
+            {'type': 'Name', 'mandatory': '', 'comment': '',
+             'state': strategy1.name}]
+        requirements = [resource.Strategy(mock.Mock(), req)
+                        for req in strategy_req]
+        self.m_strategy_mgr.state.return_value = requirements
+
+        exit_code, results = self.run_cmd('strategy state basic')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(req, self.STATE_FIELDS,
+                                   self.STATE_FIELD_LABELS)
+             for req in requirements],
+            results)

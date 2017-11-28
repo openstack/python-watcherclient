@@ -63,6 +63,13 @@ fake_responses = {
             STRATEGY1,
         ),
     },
+    '/v1/strategies/%s/state' % STRATEGY1['name']:
+    {
+        'GET': (
+            {},
+            STRATEGY1,
+        ),
+    },
 }
 
 fake_responses_pagination = {
@@ -180,3 +187,10 @@ class StrategyManagerTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(STRATEGY1['name'], strategy.name)
+
+    def test_strategies_state(self):
+        self.mgr.state(STRATEGY1['name'])
+        expect = [
+            ('GET', '/v1/strategies/%s/state' % STRATEGY1['name'], {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)

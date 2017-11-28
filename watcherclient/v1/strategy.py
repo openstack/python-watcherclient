@@ -28,9 +28,14 @@ class StrategyManager(base.Manager):
     resource_class = Strategy
 
     @staticmethod
-    def _path(strategy=None):
-        return ('/v1/strategies/%s' % strategy
-                if strategy else '/v1/strategies')
+    def _path(strategy=None, state=False):
+        if strategy:
+            path = '/v1/strategies/%s' % strategy
+            if state:
+                path = '/v1/strategies/%s/state' % strategy
+        else:
+            path = '/v1/strategies'
+        return path
 
     def list(self, goal=None, limit=None, sort_key=None,
              sort_dir=None, detail=False):
@@ -82,3 +87,6 @@ class StrategyManager(base.Manager):
             return self._list(self._path(strategy))[0]
         except IndexError:
             return None
+
+    def state(self, strategy):
+        return self._list(self._path(strategy, state=True))

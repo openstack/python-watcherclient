@@ -57,6 +57,40 @@ class ShowStrategy(command.ShowOne):
         return column_headers, utils.get_item_properties(strategy, columns)
 
 
+class StateStrategy(command.Lister):
+    """Retrieve information about strategy requirements."""
+
+    def get_parser(self, prog_name):
+        parser = super(StateStrategy, self).get_parser(prog_name)
+        parser.add_argument(
+            'strategy',
+            metavar='<strategy>',
+            help=_('Name of the strategy'),
+        )
+        return parser
+
+    def _format_spec(self, requirements):
+        for req in requirements:
+            if type(req.state) == list:
+                req.state = jsonutils.dumps(req.state, indent=2)
+        return requirements
+
+    def take_action(self, parsed_args):
+        client = getattr(self.app.client_manager, "infra-optim")
+
+        try:
+            requirements = client.strategy.state(parsed_args.strategy)
+        except exceptions.HTTPNotFound as exc:
+            raise exceptions.CommandError(str(exc))
+        requirements = self._format_spec(requirements)
+        columns = res_fields.STRATEGY_STATE_FIELDS
+        column_headers = res_fields.STRATEGY_STATE_FIELD_LABELS
+
+        return (column_headers,
+                (utils.get_item_properties(item, columns)
+                    for item in requirements))
+
+
 class ListStrategy(command.Lister):
     """List information on retrieved strategies."""
 
