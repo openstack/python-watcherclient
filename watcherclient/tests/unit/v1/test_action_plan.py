@@ -94,6 +94,13 @@ fake_responses_pagination = {
             {"action_plans": [ACTION_PLAN2]}
         ),
     },
+    '/v1/action_plans/?marker=f8e47706-efcf-49a4-a5c4-af604eb492f2':
+    {
+        'GET': (
+            {},
+            {"action_plans": [ACTION_PLAN2]}
+        ),
+    },
 }
 
 fake_responses_sorting = {
@@ -157,6 +164,19 @@ class ActionPlanManagerTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertThat(action_plans, matchers.HasLength(2))
+
+    def test_action_plans_list_marker(self):
+        self.api = utils.FakeAPI(fake_responses_pagination)
+        self.mgr = watcherclient.v1.action_plan.ActionPlanManager(self.api)
+        action_plans = self.mgr.list(
+            marker='f8e47706-efcf-49a4-a5c4-af604eb492f2')
+        expect = [
+            ('GET', '/v1/action_plans/?'
+             'marker=f8e47706-efcf-49a4-a5c4-af604eb492f2',
+             {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertThat(action_plans, matchers.HasLength(1))
 
     def test_action_plans_list_sort_key(self):
         self.api = utils.FakeAPI(fake_responses_sorting)
