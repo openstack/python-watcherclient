@@ -91,6 +91,13 @@ class ListAuditTemplate(command.Lister):
             metavar='<direction>',
             choices=['asc', 'desc'],
             help=_('Sort direction: "asc" (the default) or "desc".'))
+        parser.add_argument(
+            '--marker',
+            dest='marker',
+            metavar='<marker>',
+            default=None,
+            help=_('UUID of the last audit template of the previous page; '
+                   'displays list of audit templates after "marker".'))
 
         return parser
 

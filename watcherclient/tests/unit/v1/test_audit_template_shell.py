@@ -128,6 +128,24 @@ class AuditTemplateShellTest(base.CommandTestCase):
 
         self.m_audit_template_mgr.list.assert_called_once_with(detail=False)
 
+    def test_do_audit_template_list_marker(self):
+        audit_template2 = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_2)
+        self.m_audit_template_mgr.list.return_value = [audit_template2]
+
+        exit_code, results = self.run_cmd(
+            'audittemplate list --marker '
+            'f8e47706-efcf-49a4-a5c4-af604eb492f2')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(audit_template2, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_audit_template_mgr.list.assert_called_once_with(
+            detail=False,
+            marker='f8e47706-efcf-49a4-a5c4-af604eb492f2')
+
     def test_do_audit_template_list_detail(self):
         audit_template1 = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
         audit_template2 = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_2)
