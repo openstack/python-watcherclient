@@ -165,8 +165,7 @@ class VersionNegotiationMixin(object):
         raise NotImplementedError()
 
 
-_RETRY_EXCEPTIONS = (exceptions.Conflict,
-                     exceptions.ServiceUnavailable,
+_RETRY_EXCEPTIONS = (exceptions.ServiceUnavailable,
                      exceptions.ConnectionRefused,
                      kexceptions.RetriableConnectionFailure)
 
