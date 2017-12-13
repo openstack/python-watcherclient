@@ -30,7 +30,7 @@ class ActionManager(base.Manager):
         return '/v1/actions/%s' % id if id else '/v1/actions'
 
     def list(self, action_plan=None, audit=None, limit=None, sort_key=None,
-             sort_dir=None, detail=False):
+             sort_dir=None, detail=False, marker=None):
         """Retrieve a list of action.
 
         :param action_plan: UUID of the action plan
@@ -52,13 +52,15 @@ class ActionManager(base.Manager):
         :param detail: Optional, boolean whether to return detailed information
                        about actions.
 
+        :param marker: Optional, UUID of the last action in the previous page.
+
         :returns: A list of actions.
 
         """
         if limit is not None:
             limit = int(limit)
 
-        filters = utils.common_filters(limit, sort_key, sort_dir)
+        filters = utils.common_filters(limit, sort_key, sort_dir, marker)
         if action_plan is not None:
             filters.append('action_plan_uuid=%s' % action_plan)
         if audit is not None:

@@ -83,6 +83,13 @@ class ListAction(command.Lister):
             metavar='<direction>',
             choices=['asc', 'desc'],
             help=_('Sort direction: "asc" (the default) or "desc".'))
+        parser.add_argument(
+            '--marker',
+            dest='marker',
+            metavar='<marker>',
+            default=None,
+            help=_('UUID of the last action in the previous page; '
+                   'displays list of actions after "marker".'))
 
         return parser
 
