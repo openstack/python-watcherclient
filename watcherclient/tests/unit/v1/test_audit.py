@@ -145,6 +145,16 @@ fake_responses_strategy = {
     },
 }
 
+fake_responses_marker = {
+    '/v1/audits/?marker=5869da81-4876-4687-a1ed-12cd64cf53d9':
+    {
+        'GET': (
+            {},
+            {"audits": [AUDIT2]}
+        ),
+    },
+}
+
 
 class AuditManagerTest(testtools.TestCase):
     def setUp(self):
@@ -225,6 +235,17 @@ class AuditManagerTest(testtools.TestCase):
         audits = self.mgr.list(strategy='dummy')
         expect = [
             ('GET', '/v1/audits/?strategy=dummy', {}, None)
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(audits))
+
+    def test_audits_list_marker(self):
+        self.api = utils.FakeAPI(fake_responses_marker)
+        self.mgr = watcherclient.v1.audit.AuditManager(self.api)
+        audits = self.mgr.list(marker=AUDIT1['uuid'])
+        expect = [
+            ('GET', '/v1/audits/?marker=5869da81-4876-4687-a1ed-12cd64cf53d9',
+             {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(1, len(audits))

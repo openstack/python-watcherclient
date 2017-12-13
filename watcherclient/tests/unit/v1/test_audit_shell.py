@@ -172,6 +172,23 @@ class AuditShellTest(base.CommandTestCase):
 
         self.m_audit_mgr.list.assert_called_once_with(detail=False)
 
+    def test_do_audit_list_marker(self):
+        audit2 = resource.Audit(mock.Mock(), AUDIT_2)
+        self.m_audit_mgr.list.return_value = [audit2]
+
+        exit_code, results = self.run_cmd(
+            'audit list --marker 5869da81-4876-4687-a1ed-12cd64cf53d9')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(audit2, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_audit_mgr.list.assert_called_once_with(
+            detail=False,
+            marker='5869da81-4876-4687-a1ed-12cd64cf53d9')
+
     def test_do_audit_list_detail(self):
         audit1 = resource.Audit(mock.Mock(), AUDIT_1)
         audit2 = resource.Audit(mock.Mock(), AUDIT_2)
