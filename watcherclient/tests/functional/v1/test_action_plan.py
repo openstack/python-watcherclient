@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
 from oslo_utils import uuidutils
 
 from watcherclient.tests.functional.v1 import base
@@ -44,6 +46,15 @@ class ActionPlanTests(base.TestCase):
         output = cls.parse_show(
             cls.watcher('actionplan list --audit %s' % cls.audit_uuid))
         action_plan_uuid = output[0].keys()[0]
+        retry = 10
+        while retry > 0:
+            output = cls.parse_show(
+                cls.watcher('actionplan show %s' % action_plan_uuid))
+            state = [x for x in output if x.keys()[0] == 'State'][0]['State']
+            if state == 'SUCCEEDED':
+                break
+            time.sleep(1)
+            retry -= 1
         raw_output = cls.watcher('actionplan delete %s' % action_plan_uuid)
         cls.assertOutput('', raw_output)
         # Delete audit
