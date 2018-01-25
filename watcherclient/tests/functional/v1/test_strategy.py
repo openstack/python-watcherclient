@@ -20,7 +20,9 @@ class StrategyTests(base.TestCase):
     """Functional tests for strategy."""
 
     dummy_name = 'dummy'
+    basic_strategy = 'basic'
     list_fields = ['UUID', 'Name', 'Display name', 'Goal']
+    state_fields = ['Datasource', 'Metrics', 'CDM', 'Name']
 
     def test_strategy_list(self):
         raw_output = self.watcher('strategy list')
@@ -39,3 +41,8 @@ class StrategyTests(base.TestCase):
         self.assert_table_structure([raw_output],
                                     self.list_fields + ['Parameters spec'])
         self.assertNotIn('basic', raw_output)
+
+    def test_strategy_state(self):
+        raw_output = self.watcher('strategy state %s' % self.basic_strategy)
+        self.assertIn(self.basic_strategy, raw_output)
+        self.assert_table_structure([raw_output], self.state_fields)

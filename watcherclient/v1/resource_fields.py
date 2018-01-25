@@ -99,6 +99,10 @@ STRATEGY_SHORT_LIST_FIELDS = ['uuid', 'name', 'display_name', 'goal_name']
 
 STRATEGY_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Display name', 'Goal']
 
+STRATEGY_STATE_FIELDS = ['type', 'state', 'mandatory', 'comment']
+
+STRATEGY_STATE_FIELD_LABELS = ['Type', 'State', 'Mandatory', 'Comment']
+
 # Metric Collector
 METRIC_COLLECTOR_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
                            'endpoint', 'category']
