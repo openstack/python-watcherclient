@@ -1,5 +1,4 @@
 - project:
-    name: openstack/python-watcherclient
     check:
       jobs:
         - watcherclient-tempest-functional
