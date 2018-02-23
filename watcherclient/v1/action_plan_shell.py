@@ -28,8 +28,8 @@ from watcherclient.v1 import resource_fields as res_fields
 def format_global_efficacy(global_efficacy):
     formatted_global_eff = {}
     for eff in global_efficacy:
+        eff_name = eff.get('name')
         if (eff.get('value') is not None and eff.get('unit')):
-            eff_name = eff.get('name')
             formatted_global_eff[eff_name] = "%(value).2f %(unit)s" % dict(
                 unit=eff.get('unit'),
                 value=eff.get('value'))
