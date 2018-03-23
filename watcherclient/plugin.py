@@ -15,14 +15,14 @@ import os
 
 from tempest.test_discover import plugins
 
-from watcherclient.tests.functional import config as watcher_config
+from watcherclient import config as watcher_config
 
 
 class WatcherClientTempestPlugin(plugins.TempestPlugin):
     def load_tests(self):
         base_path = os.path.split(os.path.dirname(
             os.path.abspath(__file__)))[0]
-        test_dir = "watcherclient/tests/functional"
+        test_dir = "watcherclient/tests/functional/v1"
         full_test_dir = os.path.join(base_path, test_dir)
         return full_test_dir, base_path
 

@@ -18,22 +18,31 @@ import subprocess
 import testtools
 
 import six
+from tempest import clients
+from tempest.common import credentials_factory as creds_factory
 from tempest.lib.cli import output_parser
 from tempest.lib import exceptions
 
 
 def credentials():
-    creds = {
-        '--os-username': os.environ.get('OS_USERNAME', 'admin'),
-        '--os-password': os.environ.get('OS_PASSWORD', 'secretadmin'),
-        '--os-project-name': os.environ.get('OS_PROJECT_NAME', 'admin'),
+    # You can get credentials either from tempest.conf file or
+    # from OS environment.
+    tempest_creds = clients.get_auth_provider(
+        creds_factory.get_configured_admin_credentials())
+    creds = tempest_creds.credentials
+    creds_dict = {
+        '--os-username': os.environ.get('OS_USERNAME', creds.username),
+        '--os-password': os.environ.get('OS_PASSWORD', creds.password),
+        '--os-project-name': os.environ.get('OS_PROJECT_NAME',
+                                            creds.project_name),
         '--os-auth-url': os.environ.get('OS_AUTH_URL',
-                                        'http://10.0.1.94/identity'),
-        '--os-project-domain-id': os.environ.get('OS_PROJECT_DOMAIN_ID',
-                                                 'default'),
-        '--os-user-domain-id': os.environ.get('OS_USER_DOMAIN_ID', 'default'),
+                                        tempest_creds.auth_url),
+        '--os-project-domain-name': os.environ.get('OS_PROJECT_DOMAIN_ID',
+                                                   creds.project_domain_name),
+        '--os-user-domain-name': os.environ.get('OS_USER_DOMAIN_ID',
+                                                creds.user_domain_name),
     }
-    return [x for sub in creds.items() for x in sub]
+    return [x for sub in creds_dict.items() for x in sub]
 
 
 def execute(cmd, fail_ok=False, merge_stderr=False):
@@ -123,3 +132,13 @@ class TestCase(testtools.TestCase):
     def parse_listing(self, raw_output):
         """Return list of dicts with basic item parsed from cli output."""
         return output_parser.listing(raw_output)
+
+    def has_actionplan_succeeded(self, ap_uuid):
+        return self.parse_show_as_object(
+            self.watcher('actionplan show %s' % ap_uuid)
+        )['State'] == 'SUCCEEDED'
+
+    @classmethod
+    def has_audit_created(cls, audit_uuid):
+        return cls.parse_show_as_object(
+            cls.watcher('audit show %s' % audit_uuid))['State'] == 'SUCCEEDED'

@@ -13,9 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-
 from oslo_utils import uuidutils
+
+import functools
+
+from tempest.lib.common.utils import test_utils
 
 from watcherclient.tests.functional.v1 import base
 
@@ -39,22 +41,19 @@ class ActionPlanTests(base.TestCase):
                                        % template_output['Name'])
         audit_output = cls.parse_show_as_object(audit_raw_output)
         cls.audit_uuid = audit_output['UUID']
+        audit_created = test_utils.call_until_true(
+            func=functools.partial(cls.has_audit_created, cls.audit_uuid),
+            duration=600,
+            sleep_for=2)
+        if not audit_created:
+            raise Exception('Audit has not been succeeded')
 
     @classmethod
     def tearDownClass(cls):
         # Delete action plan
         output = cls.parse_show(
             cls.watcher('actionplan list --audit %s' % cls.audit_uuid))
-        action_plan_uuid = output[0].keys()[0]
-        retry = 10
-        while retry > 0:
-            output = cls.parse_show(
-                cls.watcher('actionplan show %s' % action_plan_uuid))
-            state = [x for x in output if x.keys()[0] == 'State'][0]['State']
-            if state == 'SUCCEEDED':
-                break
-            time.sleep(1)
-            retry -= 1
+        action_plan_uuid = list(output[0])[0]
         raw_output = cls.watcher('actionplan delete %s' % action_plan_uuid)
         cls.assertOutput('', raw_output)
         # Delete audit
@@ -75,7 +74,7 @@ class ActionPlanTests(base.TestCase):
 
     def test_action_plan_show(self):
         action_plan_list = self.parse_show(self.watcher('actionplan list'))
-        action_plan_uuid = action_plan_list[0].keys()[0]
+        action_plan_uuid = list(action_plan_list[0])[0]
         actionplan = self.watcher('actionplan show %s' % action_plan_uuid)
         self.assertIn(action_plan_uuid, actionplan)
         self.assert_table_structure([actionplan],
@@ -84,10 +83,17 @@ class ActionPlanTests(base.TestCase):
     def test_action_plan_start(self):
         output = self.parse_show(self.watcher('actionplan list --audit %s'
                                               % self.audit_uuid))
-        action_plan_uuid = output[0].keys()[0]
+        action_plan_uuid = list(output[0])[0]
         self.watcher('actionplan start %s' % action_plan_uuid)
         raw_output = self.watcher('actionplan show %s' % action_plan_uuid)
         self.assert_table_structure([raw_output], self.detailed_list_fields)
+
+        self.assertTrue(test_utils.call_until_true(
+            func=functools.partial(
+                self.has_actionplan_succeeded, action_plan_uuid),
+            duration=600,
+            sleep_for=2
+        ))
 
 
 class ActionPlanActiveTests(base.TestCase):
@@ -100,9 +106,15 @@ class ActionPlanActiveTests(base.TestCase):
                                           'Strategy', 'Efficacy indicators']
 
     def _delete_action_plan(self):
+        self.assertTrue(test_utils.call_until_true(
+            func=functools.partial(
+                self.has_audit_created, self.audit_uuid),
+            duration=600,
+            sleep_for=2
+        ))
         output = self.parse_show(
             self.watcher('actionplan list --audit %s' % self.audit_uuid))
-        action_plan_uuid = output[0].keys()[0]
+        action_plan_uuid = list(output[0])[0]
         raw_output = self.watcher('actionplan delete %s' % action_plan_uuid)
         self.assertOutput('', raw_output)
 

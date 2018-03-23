@@ -37,6 +37,8 @@ class ServiceTests(base.TestCase):
                                     self.list_fields + ['Last seen up'])
 
     def test_service_show(self):
+        # TODO(alexchadin): this method should be refactored since Watcher will
+        # get HA support soon.
         raw_output = self.watcher('service show %s'
                                   % self.decision_engine_name)
         self.assertIn(self.decision_engine_name, raw_output)
