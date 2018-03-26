@@ -20,7 +20,7 @@ metrics receiver, complex event processor and profiler, optimization processor
 and an action plan applier. This provides a robust framework to realize a wide
 range of cloud optimization goals, including the reduction of data center
 operating costs, increased system performance via intelligent virtual machine
-migration, increased energy efficiency-and more!
+migration, increased energy efficiency and more!
 
 * Free software: Apache license
 * Wiki: https://wiki.openstack.org/wiki/Watcher
