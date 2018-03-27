@@ -43,6 +43,12 @@ class AuditTests(base.TestCase):
             'audit create -a %s' % template_output['Name'])
         audit_output = cls.parse_show_as_object(audit_raw_output)
         cls.audit_uuid = audit_output['UUID']
+        audit_created = test_utils.call_until_true(
+            func=functools.partial(cls.has_audit_created, cls.audit_uuid),
+            duration=600,
+            sleep_for=2)
+        if not audit_created:
+            raise Exception('Audit has not been succeeded')
 
     @classmethod
     def tearDownClass(cls):
