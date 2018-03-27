@@ -15,6 +15,10 @@
 
 from oslo_utils import uuidutils
 
+import functools
+
+from tempest.lib.common.utils import test_utils
+
 from watcherclient.tests.functional.v1 import base
 
 
@@ -44,7 +48,7 @@ class AuditTests(base.TestCase):
     def tearDownClass(cls):
         output = cls.parse_show(
             cls.watcher('actionplan list --audit %s' % cls.audit_uuid))
-        action_plan_uuid = output[0].keys()[0]
+        action_plan_uuid = list(output[0])[0]
         cls.watcher('actionplan delete %s' % action_plan_uuid)
         cls.watcher('audit delete %s' % cls.audit_uuid)
         cls.watcher('audittemplate delete %s' % cls.audit_template_name)
@@ -76,39 +80,51 @@ class AuditActiveTests(base.TestCase):
                                           'Deleted At', 'Parameters',
                                           'Interval', 'Audit Scope']
     audit_template_name = 'a' + uuidutils.generate_uuid()
-    audit_uuid = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.watcher('audittemplate create %s dummy -s dummy'
+                    % cls.audit_template_name)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.watcher('audittemplate delete %s' % cls.audit_template_name)
 
     def _create_audit(self):
-        raw_output = self.watcher('audittemplate create %s dummy -s dummy'
-                                  % self.audit_template_name)
-        template_output = self.parse_show_as_object(raw_output)
-        self.audit_uuid = self.parse_show_as_object(
+        return self.parse_show_as_object(
             self.watcher('audit create -a %s'
-                         % template_output['Name']))['UUID']
+                         % self.audit_template_name))['UUID']
 
-    def _delete_audit(self):
+    def _delete_audit(self, audit_uuid):
+        self.assertTrue(test_utils.call_until_true(
+            func=functools.partial(
+                self.has_audit_created, audit_uuid),
+            duration=600,
+            sleep_for=2
+        ))
         output = self.parse_show(
-            self.watcher('actionplan list --audit %s' % self.audit_uuid))
-        action_plan_uuid = output[0].keys()[0]
+            self.watcher('actionplan list --audit %s' % audit_uuid))
+        action_plan_uuid = list(output[0])[0]
         self.watcher('actionplan delete %s' % action_plan_uuid)
-        self.watcher('audit delete %s' % self.audit_uuid)
-        self.watcher('audittemplate delete %s' % self.audit_template_name)
+        self.watcher('audit delete %s' % audit_uuid)
 
     def test_create_audit(self):
-        raw_output = self.watcher('audittemplate create %s dummy -s dummy'
-                                  % self.audit_template_name)
-        template_output = self.parse_show_as_object(raw_output)
-        audit = self.watcher('audit create -a %s' % template_output['Name'])
-        self.audit_uuid = self.parse_show_as_object(audit)['UUID']
+        audit = self.watcher('audit create -a %s' % self.audit_template_name)
+        audit_uuid = self.parse_show_as_object(audit)['UUID']
         self.assert_table_structure([audit], self.detailed_list_fields)
-        self._delete_audit()
+        self._delete_audit(audit_uuid)
 
     def test_delete_audit(self):
-        self._create_audit()
-        raw_output = self.watcher('audit delete %s' % self.audit_uuid)
+        audit_uuid = self._create_audit()
+        self.assertTrue(test_utils.call_until_true(
+            func=functools.partial(
+                self.has_audit_created, audit_uuid),
+            duration=600,
+            sleep_for=2
+        ))
+        raw_output = self.watcher('audit delete %s' % audit_uuid)
         self.assertOutput('', raw_output)
         output = self.parse_show(
-            self.watcher('actionplan list --audit %s' % self.audit_uuid))
-        action_plan_uuid = output[0].keys()[0]
+            self.watcher('actionplan list --audit %s' % audit_uuid))
+        action_plan_uuid = list(output[0])[0]
         self.watcher('actionplan delete %s' % action_plan_uuid)
-        self.watcher('audittemplate delete %s' % self.audit_template_name)
