@@ -15,6 +15,10 @@ import logging
 
 from osc_lib import utils
 
+import watcherclient
+from watcherclient.common import api_versioning
+from watcherclient import exceptions
+
 LOG = logging.getLogger(__name__)
 
 DEFAULT_API_VERSION = '1'
@@ -27,9 +31,12 @@ API_VERSIONS = {
 
 def make_client(instance):
     """Returns an infra-optim service client."""
+
+    version = api_versioning.APIVersion(instance._api_version[API_NAME])
+
     infraoptim_client_class = utils.get_client_class(
         API_NAME,
-        instance._api_version[API_NAME],
+        version.ver_major,
         API_VERSIONS)
     LOG.debug('Instantiating infraoptim client: %s', infraoptim_client_class)
 
@@ -53,3 +60,30 @@ def build_option_parser(parser):
                               DEFAULT_API_VERSION +
                               ' (Env: OS_INFRA_OPTIM_API_VERSION)'))
     return parser
+
+
+def check_api_version(check_version):
+    """Validate version supplied by user
+
+    Returns:
+    * True if version is OK
+    * False if the version has not been checked and the previous plugin
+    check should be performed
+    * throws an exception if the version is no good
+    """
+
+    infra_api_version = api_versioning.get_api_version(check_version)
+
+    # Bypass X.latest format microversion
+    if not infra_api_version.is_latest():
+        if infra_api_version > api_versioning.APIVersion("2.0"):
+            if not infra_api_version.matches(
+                watcherclient.API_MIN_VERSION,
+                watcherclient.API_MAX_VERSION,
+            ):
+                msg = "versions supported by client: %(min)s - %(max)s" % {
+                    "min": watcherclient.API_MIN_VERSION.get_string(),
+                    "max": watcherclient.API_MAX_VERSION.get_string(),
+                }
+                raise exceptions.CommandError(msg)
+    return True

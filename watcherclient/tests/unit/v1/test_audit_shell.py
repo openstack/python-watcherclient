@@ -20,7 +20,6 @@ import six
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
 from watcherclient import v1 as resource
-from watcherclient.v1 import resource_fields
 
 AUDIT_TEMPLATE_1 = {
     'uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
@@ -52,76 +51,86 @@ STRATEGY_1 = {
     'deleted_at': None,
 }
 
-AUDIT_1 = {
-    'uuid': '5869da81-4876-4687-a1ed-12cd64cf53d9',
-    'audit_type': 'ONESHOT',
-    'state': 'PENDING',
-    'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
-    'audit_template_name': 'at1',
-    'goal_name': 'SERVER_CONSOLIDATION',
-    'strategy_name': 'basic',
-    'created_at': datetime.datetime.now().isoformat(),
-    'updated_at': None,
-    'deleted_at': None,
-    'parameters': None,
-    'interval': None,
-    'scope': '',
-    'auto_trigger': False,
-    'next_run_time': None,
-    'name': 'my_audit1',
-    'hostname': '',
-}
-
-AUDIT_2 = {
-    'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
-    'audit_type': 'ONESHOT',
-    'state': 'PENDING',
-    'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
-    'audit_template_name': 'at1',
-    'goal_name': 'fc087747-61be-4aad-8126-b701731ae836',
-    'strategy_name': 'auto',
-    'created_at': datetime.datetime.now().isoformat(),
-    'updated_at': None,
-    'deleted_at': None,
-    'parameters': None,
-    'interval': None,
-    'scope': '',
-    'auto_trigger': False,
-    'next_run_time': None,
-    'name': 'my_audit2',
-    'hostname': '',
-}
-
-AUDIT_3 = {
-    'uuid': '43199d0e-0712-1213-9674-5ae2af8dhgte',
-    'audit_type': 'ONESHOT',
-    'state': 'PENDING',
-    'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
-    'audit_template_name': 'at1',
-    'goal_name': None,
-    'strategy_name': 'auto',
-    'created_at': datetime.datetime.now().isoformat(),
-    'updated_at': None,
-    'deleted_at': None,
-    'parameters': None,
-    'interval': 3600,
-    'scope': '',
-    'auto_trigger': True,
-    'next_run_time': None,
-    'name': 'my_audit3',
-    'hostname': '',
-}
-
 
 class AuditShellTest(base.CommandTestCase):
 
-    SHORT_LIST_FIELDS = resource_fields.AUDIT_SHORT_LIST_FIELDS
-    SHORT_LIST_FIELD_LABELS = resource_fields.AUDIT_SHORT_LIST_FIELD_LABELS
-    FIELDS = resource_fields.AUDIT_FIELDS
-    FIELD_LABELS = resource_fields.AUDIT_FIELD_LABELS
+    AUDIT_1 = {
+        'uuid': '5869da81-4876-4687-a1ed-12cd64cf53d9',
+        'audit_type': 'ONESHOT',
+        'state': 'PENDING',
+        'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
+        'audit_template_name': 'at1',
+        'goal_name': 'SERVER_CONSOLIDATION',
+        'strategy_name': 'basic',
+        'created_at': datetime.datetime.now().isoformat(),
+        'updated_at': None,
+        'deleted_at': None,
+        'parameters': None,
+        'interval': None,
+        'scope': '',
+        'auto_trigger': False,
+        'next_run_time': None,
+        'name': 'my_audit1',
+        'hostname': '',
+    }
 
-    def setUp(self):
-        super(self.__class__, self).setUp()
+    AUDIT_2 = {
+        'uuid': 'a5199d0e-0702-4613-9234-5ae2af8dafea',
+        'audit_type': 'ONESHOT',
+        'state': 'PENDING',
+        'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
+        'audit_template_name': 'at1',
+        'goal_name': 'fc087747-61be-4aad-8126-b701731ae836',
+        'strategy_name': 'auto',
+        'created_at': datetime.datetime.now().isoformat(),
+        'updated_at': None,
+        'deleted_at': None,
+        'parameters': None,
+        'interval': None,
+        'scope': '',
+        'auto_trigger': False,
+        'next_run_time': None,
+        'name': 'my_audit2',
+        'hostname': '',
+    }
+
+    AUDIT_3 = {
+        'uuid': '43199d0e-0712-1213-9674-5ae2af8dhgte',
+        'audit_type': 'ONESHOT',
+        'state': 'PENDING',
+        'audit_template_uuid': 'f8e47706-efcf-49a4-a5c4-af604eb492f2',
+        'audit_template_name': 'at1',
+        'goal_name': None,
+        'strategy_name': 'auto',
+        'created_at': datetime.datetime.now().isoformat(),
+        'updated_at': None,
+        'deleted_at': None,
+        'parameters': None,
+        'interval': 3600,
+        'scope': '',
+        'auto_trigger': True,
+        'next_run_time': None,
+        'name': 'my_audit3',
+        'hostname': '',
+    }
+
+    SHORT_LIST_FIELDS = ['uuid', 'name', 'audit_type',
+                         'state', 'goal_name', 'strategy_name',
+                         'auto_trigger']
+    SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Audit Type', 'State', 'Goal',
+                               'Strategy', 'Auto Trigger']
+    FIELDS = ['uuid', 'name', 'created_at', 'updated_at', 'deleted_at',
+              'state', 'audit_type', 'parameters', 'interval', 'goal_name',
+              'strategy_name', 'scope', 'auto_trigger', 'next_run_time',
+              'hostname']
+    FIELD_LABELS = ['UUID', 'Name', 'Created At', 'Updated At', 'Deleted At',
+                    'State', 'Audit Type', 'Parameters', 'Interval', 'Goal',
+                    'Strategy', 'Audit Scope', 'Auto Trigger',
+                    'Next Run Time', 'Hostname']
+
+    def setUp(self, os_watcher_api_version='1.0'):
+        super(AuditShellTest, self).setUp(
+            os_watcher_api_version=os_watcher_api_version)
 
         # goal mock
         p_goal_manager = mock.patch.object(resource, 'GoalManager')
@@ -158,8 +167,8 @@ class AuditShellTest(base.CommandTestCase):
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_audit_list(self):
-        audit1 = resource.Audit(mock.Mock(), AUDIT_1)
-        audit2 = resource.Audit(mock.Mock(), AUDIT_2)
+        audit1 = resource.Audit(mock.Mock(), self.AUDIT_1)
+        audit2 = resource.Audit(mock.Mock(), self.AUDIT_2)
         self.m_audit_mgr.list.return_value = [
             audit1, audit2]
 
@@ -176,7 +185,7 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.list.assert_called_once_with(detail=False)
 
     def test_do_audit_list_marker(self):
-        audit2 = resource.Audit(mock.Mock(), AUDIT_2)
+        audit2 = resource.Audit(mock.Mock(), self.AUDIT_2)
         self.m_audit_mgr.list.return_value = [audit2]
 
         exit_code, results = self.run_cmd(
@@ -193,8 +202,8 @@ class AuditShellTest(base.CommandTestCase):
             marker='5869da81-4876-4687-a1ed-12cd64cf53d9')
 
     def test_do_audit_list_detail(self):
-        audit1 = resource.Audit(mock.Mock(), AUDIT_1)
-        audit2 = resource.Audit(mock.Mock(), AUDIT_2)
+        audit1 = resource.Audit(mock.Mock(), self.AUDIT_1)
+        audit2 = resource.Audit(mock.Mock(), self.AUDIT_2)
         self.m_audit_mgr.list.return_value = [
             audit1, audit2]
 
@@ -211,7 +220,7 @@ class AuditShellTest(base.CommandTestCase):
         self.m_audit_mgr.list.assert_called_once_with(detail=True)
 
     def test_do_audit_show_by_uuid(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.get.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -225,7 +234,7 @@ class AuditShellTest(base.CommandTestCase):
             '5869da81-4876-4687-a1ed-12cd64cf53d9')
 
     def test_do_audit_show_by_name(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.get.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -278,7 +287,7 @@ class AuditShellTest(base.CommandTestCase):
             '5b157edd-5a7e-4aaa-b511-f7b33ec86e9f')
 
     def test_do_audit_update(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.update.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -294,7 +303,7 @@ class AuditShellTest(base.CommandTestCase):
             [{'op': 'replace', 'path': '/state', 'value': 'PENDING'}])
 
     def test_do_audit_update_by_name(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.update.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -309,7 +318,7 @@ class AuditShellTest(base.CommandTestCase):
             [{'op': 'replace', 'path': '/state', 'value': 'PENDING'}])
 
     def test_do_audit_create_with_audit_template_uuid(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_3)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_3)
         audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
         self.m_audit_template_mgr.get.return_value = audit_template
         self.m_audit_mgr.create.return_value = audit
@@ -328,7 +337,7 @@ class AuditShellTest(base.CommandTestCase):
         )
 
     def test_do_audit_create_with_audit_template_name(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_3)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_3)
         audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
         self.m_audit_template_mgr.get.return_value = audit_template
         self.m_audit_mgr.create.return_value = audit
@@ -346,7 +355,7 @@ class AuditShellTest(base.CommandTestCase):
         )
 
     def test_do_audit_create_with_goal(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.create.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -363,7 +372,7 @@ class AuditShellTest(base.CommandTestCase):
         )
 
     def test_do_audit_create_with_goal_and_strategy(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.create.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -382,7 +391,7 @@ class AuditShellTest(base.CommandTestCase):
         )
 
     def test_do_audit_create_with_type(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.create.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -399,7 +408,7 @@ class AuditShellTest(base.CommandTestCase):
         )
 
     def test_do_audit_create_with_parameter(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.create.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -418,7 +427,7 @@ class AuditShellTest(base.CommandTestCase):
         )
 
     def test_do_audit_create_with_type_continuous(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.create.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -437,7 +446,7 @@ class AuditShellTest(base.CommandTestCase):
         )
 
     def test_do_audit_create_with_name(self):
-        audit = resource.Audit(mock.Mock(), AUDIT_1)
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.create.return_value = audit
 
         exit_code, result = self.run_cmd(
@@ -455,3 +464,13 @@ class AuditShellTest(base.CommandTestCase):
             interval='3600',
             name='my_audit'
         )
+
+
+class AuditShellTestv11(AuditShellTest):
+    def setUp(self):
+        super(AuditShellTestv11, self).setUp(os_watcher_api_version='1.1')
+        v11 = dict(start_time=None, end_time=None)
+        for audit in (self.AUDIT_1, self.AUDIT_2, self.AUDIT_3):
+            audit.update(v11)
+        self.FIELDS.extend(['start_time', 'end_time'])
+        self.FIELD_LABELS.extend(['Start Time', 'End Time'])

@@ -25,7 +25,7 @@ from watcherclient.tests.unit import utils
 
 class CommandTestCase(utils.BaseTestCase):
 
-    def setUp(self):
+    def setUp(self, os_watcher_api_version='1.0'):
         super(CommandTestCase, self).setUp()
 
         self.fake_env = {
@@ -38,7 +38,7 @@ class CommandTestCase(utils.BaseTestCase):
             'os_username': 'test',
             'os_password': 'test',
             'timeout': 600,
-            'os_watcher_api_version': '1'}
+            'os_watcher_api_version': os_watcher_api_version}
         self.m_env = mock.Mock(
             name='m_env',
             side_effect=lambda x, *args, **kwargs: self.fake_env.get(

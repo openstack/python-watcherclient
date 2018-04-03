@@ -43,7 +43,9 @@ from watcherclient import exceptions
 #             http://specs.openstack.org/openstack/watcher-specs/specs/kilo/api-microversions.html # noqa
 #             for full details.
 DEFAULT_VER = 'latest'
-
+MINOR_1_START_END_TIMING = '1.1'
+LAST_KNOWN_API_VERSION = 1
+LATEST_VERSION = '1.{}'.format(LAST_KNOWN_API_VERSION)
 
 LOG = logging.getLogger(__name__)
 USER_AGENT = 'python-watcherclient'
@@ -138,9 +140,9 @@ class VersionNegotiationMixin(object):
         return negotiated_ver
 
     def _generic_parse_version_headers(self, accessor_func):
-        min_ver = accessor_func('X-OpenStack-Watcher-API-Minimum-Version',
+        min_ver = accessor_func('OpenStack-API-Minimum-Version',
                                 None)
-        max_ver = accessor_func('X-OpenStack-Watcher-API-Maximum-Version',
+        max_ver = accessor_func('OpenStack-API-Maximum-Version',
                                 None)
         return min_ver, max_ver
 
@@ -296,8 +298,9 @@ class HTTPClient(VersionNegotiationMixin):
         kwargs['headers'] = copy.deepcopy(kwargs.get('headers', {}))
         kwargs['headers'].setdefault('User-Agent', USER_AGENT)
         if self.os_watcher_api_version:
-            kwargs['headers'].setdefault('X-OpenStack-Watcher-API-Version',
-                                         self.os_watcher_api_version)
+            kwargs['headers'].setdefault(
+                'OpenStack-API-Version',
+                ' '.join(['infra-optim', self.os_watcher_api_version]))
         if self.auth_token:
             kwargs['headers'].setdefault('X-Auth-Token', self.auth_token)
 
@@ -322,8 +325,8 @@ class HTTPClient(VersionNegotiationMixin):
 
             if resp.status_code == http_client.NOT_ACCEPTABLE:
                 negotiated_ver = self.negotiate_version(self.session, resp)
-                kwargs['headers']['X-OpenStack-Watcher-API-Version'] = (
-                    negotiated_ver)
+                kwargs['headers']['OpenStack-API-Version'] = (
+                    ' '.join(['infra-optim', negotiated_ver]))
                 return self._http_request(url, method, **kwargs)
 
         except requests.exceptions.RequestException as e:
@@ -505,8 +508,10 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
             )
 
         if getattr(self, 'os_watcher_api_version', None):
-            kwargs['headers'].setdefault('X-OpenStack-Watcher-API-Version',
-                                         self.os_watcher_api_version)
+            kwargs['headers'].setdefault(
+                'OpenStack-API-Version',
+                ' '.join(['infra-optim',
+                          self.os_watcher_api_version]))
 
         endpoint_filter = kwargs.setdefault('endpoint_filter', {})
         endpoint_filter.setdefault('interface', self.interface)
@@ -517,8 +522,8 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
                                     raise_exc=False, **kwargs)
         if resp.status_code == http_client.NOT_ACCEPTABLE:
             negotiated_ver = self.negotiate_version(self.session, resp)
-            kwargs['headers']['X-OpenStack-Watcher-API-Version'] = (
-                negotiated_ver)
+            kwargs['headers']['OpenStack-API-Version'] = (
+                ' '.join(['infra-optim', negotiated_ver]))
             return self._http_request(url, method, **kwargs)
         if resp.status_code >= http_client.BAD_REQUEST:
             error_json = _extract_error_json(resp.content)

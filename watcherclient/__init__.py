@@ -17,6 +17,7 @@
 import pbr.version
 
 from watcherclient import client
+from watcherclient.common import api_versioning
 from watcherclient import exceptions
 
 
@@ -24,3 +25,11 @@ __version__ = pbr.version.VersionInfo(
     'python-watcherclient').version_string()
 
 __all__ = ['client', 'exceptions', ]
+
+API_MIN_VERSION = api_versioning.APIVersion("1.0")
+# The max version should be the latest version that is supported in the client,
+# not necessarily the latest that the server can provide. This is only bumped
+# when client supported the max version, and bumped sequentially, otherwise
+# the client may break due to server side new version may include some
+# backward incompatible change.
+API_MAX_VERSION = api_versioning.APIVersion("1.1")

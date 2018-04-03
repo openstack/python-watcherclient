@@ -13,14 +13,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
+
 from osc_lib import utils
 from oslo_utils import uuidutils
 
 from watcherclient._i18n import _
+from watcherclient.common import api_versioning
 from watcherclient.common import command
 from watcherclient.common import utils as common_utils
 from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
+
+
+def drop_start_end_field(app_args, fields, field_labels):
+    fields = copy.copy(fields)
+    field_labels = copy.copy(field_labels)
+    api_ver = app_args.os_watcher_api_version
+    if not api_versioning.allow_start_end_audit_time(api_ver):
+        for field, label in zip(('start_time', 'end_time'),
+                                ('Start Time', 'End Time')):
+            fields.remove(field)
+            field_labels.remove(label)
+    return fields, field_labels
 
 
 class ShowAudit(command.ShowOne):
@@ -47,6 +62,8 @@ class ShowAudit(command.ShowOne):
 
         columns = res_fields.AUDIT_FIELDS
         column_headers = res_fields.AUDIT_FIELD_LABELS
+        columns, column_headers = drop_start_end_field(self.app_args, columns,
+                                                       column_headers)
 
         return column_headers, utils.get_item_properties(audit, columns)
 
@@ -118,6 +135,10 @@ class ListAudit(command.Lister):
             fields = res_fields.AUDIT_SHORT_LIST_FIELDS
             field_labels = res_fields.AUDIT_SHORT_LIST_FIELD_LABELS
 
+        if parsed_args.detail:
+            fields, field_labels = drop_start_end_field(self.app_args, fields,
+                                                        field_labels)
+
         params.update(common_utils.common_params_for_list(
             parsed_args, fields, field_labels))
 
@@ -187,6 +208,18 @@ class CreateAudit(command.ShowOne):
             dest='name',
             metavar='<name>',
             help=_('Name for this audit.'))
+        parser.add_argument(
+            '--start-time',
+            dest='start_time',
+            metavar='<start_time>',
+            help=_('CONTINUOUS audit start time. '
+                   'Format: YYYY-MM-DD hh:mm:ss'))
+        parser.add_argument(
+            '--end-time',
+            dest='end_time',
+            metavar='<end_time>',
+            help=_('CONTINUOUS audit end time. '
+                   'Format: YYYY-MM-DD hh:mm:ss'))
 
         return parser
 
@@ -194,7 +227,15 @@ class CreateAudit(command.ShowOne):
         client = getattr(self.app.client_manager, "infra-optim")
 
         field_list = ['audit_template_uuid', 'audit_type', 'parameters',
-                      'interval', 'goal', 'strategy', 'auto_trigger', 'name']
+                      'interval', 'goal', 'strategy', 'auto_trigger',
+                      'name']
+
+        api_ver = self.app_args.os_watcher_api_version
+        if api_versioning.allow_start_end_audit_time(api_ver):
+            if parsed_args.start_time is not None:
+                field_list.append('start_time')
+            if parsed_args.end_time is not None:
+                field_list.append('end_time')
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
@@ -211,6 +252,8 @@ class CreateAudit(command.ShowOne):
 
         columns = res_fields.AUDIT_FIELDS
         column_headers = res_fields.AUDIT_FIELD_LABELS
+        columns, column_headers = drop_start_end_field(self.app_args, columns,
+                                                       column_headers)
 
         return column_headers, utils.get_item_properties(audit, columns)
 
@@ -251,6 +294,9 @@ class UpdateAudit(command.ShowOne):
 
         columns = res_fields.AUDIT_FIELDS
         column_headers = res_fields.AUDIT_FIELD_LABELS
+
+        columns, column_headers = drop_start_end_field(self.app_args, columns,
+                                                       column_headers)
 
         return column_headers, utils.get_item_properties(audit, columns)
 

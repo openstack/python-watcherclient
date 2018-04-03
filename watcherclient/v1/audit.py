@@ -20,7 +20,7 @@ from watcherclient import exceptions as exc
 
 CREATION_ATTRIBUTES = ['audit_template_uuid', 'audit_type', 'interval',
                        'parameters', 'goal', 'strategy', 'auto_trigger',
-                       'name']
+                       'name', 'start_time', 'end_time']
 
 
 class Audit(base.Resource):

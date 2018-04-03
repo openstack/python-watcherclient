@@ -33,12 +33,12 @@ AUDIT_TEMPLATE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Goal', 'Strategy']
 AUDIT_FIELDS = ['uuid', 'name', 'created_at', 'updated_at', 'deleted_at',
                 'state', 'audit_type', 'parameters', 'interval', 'goal_name',
                 'strategy_name', 'scope', 'auto_trigger', 'next_run_time',
-                'hostname']
+                'hostname', 'start_time', 'end_time']
 
 AUDIT_FIELD_LABELS = ['UUID', 'Name', 'Created At', 'Updated At', 'Deleted At',
                       'State', 'Audit Type', 'Parameters', 'Interval', 'Goal',
                       'Strategy', 'Audit Scope', 'Auto Trigger',
-                      'Next Run Time', 'Hostname']
+                      'Next Run Time', 'Hostname', 'Start Time', 'End Time']
 
 AUDIT_SHORT_LIST_FIELDS = ['uuid', 'name', 'audit_type',
                            'state', 'goal_name', 'strategy_name',

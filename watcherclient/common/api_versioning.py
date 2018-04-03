@@ -19,6 +19,7 @@ import re
 from oslo_utils import strutils
 
 from watcherclient._i18n import _
+from watcherclient.common import httpclient
 from watcherclient import exceptions
 
 LOG = logging.getLogger(__name__)
@@ -27,11 +28,20 @@ if not LOG.handlers:
 
 
 HEADER_NAME = "OpenStack-API-Version"
-SERVICE_TYPE = "infra-optim"
 # key is a deprecated version and value is an alternative version.
 DEPRECATED_VERSIONS = {}
 
 _type_error_msg = _("'%(other)s' should be an instance of '%(cls)s'")
+
+
+def allow_start_end_audit_time(requested_version):
+    """Check if we should support optional start/end attributes for Audit.
+
+    Version 1.1 of the API added support for start and end time of continuous
+    audits.
+    """
+    return (APIVersion(requested_version) >=
+            APIVersion(httpclient.MINOR_1_START_END_TIMING))
 
 
 class APIVersion(object):
