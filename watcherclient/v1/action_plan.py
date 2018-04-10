@@ -27,8 +27,13 @@ class ActionPlanManager(base.Manager):
     resource_class = ActionPlan
 
     @staticmethod
-    def _path(id=None):
-        return '/v1/action_plans/%s' % id if id else '/v1/action_plans'
+    def _path(id=None, q_param=None):
+        if id and q_param:
+            return '/v1/action_plans/%s/%s' % (id, q_param)
+        elif id:
+            return '/v1/action_plans/%s' % id
+        else:
+            return '/v1/action_plans'
 
     def list(self, audit=None, limit=None, sort_key=None,
              sort_dir=None, detail=False, marker=None):
@@ -90,8 +95,7 @@ class ActionPlanManager(base.Manager):
         return self._update(self._path(action_plan_id), patch)
 
     def start(self, action_plan_id):
-        patch = [{'op': 'replace', 'value': 'PENDING', 'path': '/state'}]
-        return self._update(self._path(action_plan_id), patch)
+        return self._start(self._path(action_plan_id, 'start'))
 
     def cancel(self, action_plan_id):
         action_plan = self.get(action_plan_id)
