@@ -200,47 +200,6 @@ class ListActionPlan(command.Lister):
                 (utils.get_item_properties(item, fields) for item in data))
 
 
-class CreateActionPlan(command.ShowOne):
-    """Create new audit."""
-
-    def get_parser(self, prog_name):
-        parser = super(CreateActionPlan, self).get_parser(prog_name)
-        parser.add_argument(
-            '-a', '--audit-template',
-            required=True,
-            dest='audit_template_uuid',
-            metavar='<audit_template>',
-            help=_('Audit template used for this audit (name or uuid).'))
-        parser.add_argument(
-            '-t', '--audit_type',
-            dest='audit_type',
-            metavar='<audit_type>',
-            default='ONESHOT',
-            choices=['ONESHOT', 'CONTINUOUS'],
-            help=_("Audit type. It must be ONESHOT or CONTINUOUS. "
-                   "Default is ONESHOT."))
-
-        return parser
-
-    def take_action(self, parsed_args):
-        client = getattr(self.app.client_manager, "infra-optim")
-
-        field_list = ['audit_template_uuid', 'audit_type']
-        fields = dict((k, v) for (k, v) in vars(parsed_args).items()
-                      if k in field_list and v is not None)
-        if fields.get('audit_template_uuid'):
-            if not uuidutils.is_uuid_like(fields['audit_template_uuid']):
-                fields['audit_template_uuid'] = client.audit_template.get(
-                    fields['audit_template_uuid']).uuid
-
-        audit = client.audit.create(**fields)
-
-        columns = res_fields.ACTION_PLAN_FIELDS
-        column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
-
-        return column_headers, utils.get_item_properties(audit, columns)
-
-
 class UpdateActionPlan(command.ShowOne):
     """Update action plan command."""
 
