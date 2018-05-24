@@ -38,6 +38,8 @@ ACTION_PLAN2 = {
 UPDATED_ACTION_PLAN = copy.deepcopy(ACTION_PLAN1)
 NEW_STATE = 'PENDING'
 UPDATED_ACTION_PLAN['state'] = NEW_STATE
+START_ACTION_PLAN = copy.deepcopy(ACTION_PLAN1)
+START_ACTION_PLAN['state'] = NEW_STATE
 
 fake_responses = {
     '/v1/action_plans':
@@ -67,6 +69,13 @@ fake_responses = {
         'PATCH': (
             {},
             UPDATED_ACTION_PLAN,
+        ),
+    },
+    '/v1/action_plans/%s/start' % ACTION_PLAN1['uuid']:
+    {
+        'POST': (
+            {},
+            START_ACTION_PLAN,
         ),
     },
     '/v1/action_plans/detail?uuid=%s' % ACTION_PLAN1['uuid']:
@@ -218,5 +227,12 @@ class ActionPlanManagerTest(testtools.TestCase):
              {},
              patch),
         ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(NEW_STATE, action_plan.state)
+
+    def test_action_plan_start(self):
+        action_plan = self.mgr.start(ACTION_PLAN1['uuid'])
+        expect = [('POST', '/v1/action_plans/%s/start'
+                   % ACTION_PLAN1['uuid'], {}, {})]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(NEW_STATE, action_plan.state)

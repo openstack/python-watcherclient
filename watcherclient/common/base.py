@@ -134,6 +134,11 @@ class Manager(object):
     def _delete(self, url):
         self.api.raw_request('DELETE', url)
 
+    def _start(self, url, body=None, method='POST'):
+        resp, body = self.api.json_request(method, url, body={})
+        if body:
+            return self.resource_class(self, body)
+
 
 class Resource(base.Resource):
     """Represents a particular instance of an object (tenant, user, etc).
