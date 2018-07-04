@@ -1,9 +1,9 @@
 - project:
     check:
       jobs:
-        - watcherclient-tempest-functional
+        - watcherclient-tempest-functional:
+            voting: false
         - openstack-tox-lower-constraints
     gate:
       jobs:
-        - watcherclient-tempest-functional
         - openstack-tox-lower-constraints
