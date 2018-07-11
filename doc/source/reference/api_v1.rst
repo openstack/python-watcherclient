@@ -71,8 +71,7 @@ Once you have an watcher `Client`_, you can perform various tasks::
    >>> watcher.audit.get(audit_uuid_or_name)  # information about a particular audit
 
 When the `Client`_ needs to propagate an exception, it will usually
-raise an instance subclassed from
-`watcherclient.exc.BaseException`_ or `watcherclient.exc.ClientException`_.
+raise an instance listed in `watcherclient.exceptions`_.
 
 Refer to the modules themselves, for more details.
 
@@ -84,5 +83,4 @@ watcherclient Modules
 .. _watcherclient.v1.client.Client: api/watcherclient.v1.client.html#watcherclient.v1.client.Client
 .. _Client: api/watcherclient.v1.client.html#watcherclient.v1.client.Client
 .. _watcherclient.client.get_client(): api/watcherclient.client.html#watcherclient.client.get_client
-.. _watcherclient.exc.BaseException: api/watcherclient.exc.html#watcherclient.exc.BaseException
-.. _watcherclient.exc.ClientException: api/watcherclient.exc.html#watcherclient.exc.ClientException
+.. _watcherclient.exceptions: api/watcherclient.exceptions.html
