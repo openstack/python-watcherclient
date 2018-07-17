@@ -28,7 +28,8 @@ class ActionPlanTests(base.TestCase):
     dummy_name = 'dummy'
     list_fields = ['UUID', 'Audit', 'State', 'Updated At', 'Global efficacy']
     detailed_list_fields = list_fields + ['Created At', 'Deleted At',
-                                          'Strategy', 'Efficacy indicators']
+                                          'Strategy', 'Efficacy indicators',
+                                          'Hostname']
     audit_template_name = 'a' + uuidutils.generate_uuid()
     audit_uuid = None
 

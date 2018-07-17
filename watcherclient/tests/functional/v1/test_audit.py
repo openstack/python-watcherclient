@@ -30,7 +30,7 @@ class AuditTests(base.TestCase):
     detailed_list_fields = list_fields + ['Created At', 'Updated At',
                                           'Deleted At', 'Parameters',
                                           'Interval', 'Audit Scope',
-                                          'Next Run Time']
+                                          'Next Run Time', 'Hostname']
     audit_template_name = 'a' + uuidutils.generate_uuid()
     audit_uuid = None
 

@@ -32,12 +32,13 @@ AUDIT_TEMPLATE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Goal', 'Strategy']
 # Audit
 AUDIT_FIELDS = ['uuid', 'name', 'created_at', 'updated_at', 'deleted_at',
                 'state', 'audit_type', 'parameters', 'interval', 'goal_name',
-                'strategy_name', 'scope', 'auto_trigger', 'next_run_time']
+                'strategy_name', 'scope', 'auto_trigger', 'next_run_time',
+                'hostname']
 
 AUDIT_FIELD_LABELS = ['UUID', 'Name', 'Created At', 'Updated At', 'Deleted At',
                       'State', 'Audit Type', 'Parameters', 'Interval', 'Goal',
                       'Strategy', 'Audit Scope', 'Auto Trigger',
-                      'Next Run Time']
+                      'Next Run Time', 'Hostname']
 
 AUDIT_SHORT_LIST_FIELDS = ['uuid', 'name', 'audit_type',
                            'state', 'goal_name', 'strategy_name',
@@ -49,11 +50,12 @@ AUDIT_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Audit Type', 'State', 'Goal',
 # Action Plan
 ACTION_PLAN_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
                       'audit_uuid', 'strategy_name', 'state',
-                      'efficacy_indicators', 'global_efficacy']
+                      'efficacy_indicators', 'global_efficacy', 'hostname']
 
 ACTION_PLAN_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
                             'Audit', 'Strategy', 'State',
-                            'Efficacy indicators', 'Global efficacy']
+                            'Efficacy indicators', 'Global efficacy',
+                            'Hostname']
 
 ACTION_PLAN_SHORT_LIST_FIELDS = ['uuid', 'audit_uuid', 'state',
                                  'updated_at', 'global_efficacy']

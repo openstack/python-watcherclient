@@ -69,6 +69,7 @@ AUDIT_1 = {
     'auto_trigger': False,
     'next_run_time': None,
     'name': 'my_audit1',
+    'hostname': '',
 }
 
 AUDIT_2 = {
@@ -88,6 +89,7 @@ AUDIT_2 = {
     'auto_trigger': False,
     'next_run_time': None,
     'name': 'my_audit2',
+    'hostname': '',
 }
 
 AUDIT_3 = {
@@ -107,6 +109,7 @@ AUDIT_3 = {
     'auto_trigger': True,
     'next_run_time': None,
     'name': 'my_audit3',
+    'hostname': '',
 }
 
 
