@@ -44,6 +44,7 @@ ACTION_PLAN_1 = {
          "description": "Dummy Global Efficacy2"}
         ],
     'deleted_at': None,
+    'hostname': ''
 }
 
 ACTION_PLAN_2 = {
@@ -63,6 +64,7 @@ ACTION_PLAN_2 = {
         "description": "Dummy Global Efficacy",
     }],
     'deleted_at': None,
+    'hostname': ''
 }
 
 
