@@ -157,7 +157,7 @@ watcher action list
                               [--quote {all,minimal,none,nonnumeric}]
                               [--action-plan <action-plan>] [--audit <audit>]
                               [--detail] [--limit <limit>] [--sort-key <field>]
-                              [--sort-dir <direction>]
+                              [--sort-dir <direction>] [--marker <marker>]
 
 List information on retrieved actions.
 
@@ -185,6 +185,10 @@ List information on retrieved actions.
 
 ``--sort-dir <direction>``
   Sort direction: "asc" (the default) or "desc".
+
+``--marker <marker>``
+  UUID of the last action in the previous page; displays
+  list of actions after "marker".
 
 .. _watcher_action_show:
 
@@ -295,7 +299,8 @@ watcher actionplan list
                                   [--fit-width] [--print-empty] [--noindent]
                                   [--quote {all,minimal,none,nonnumeric}]
                                   [--audit <audit>] [--detail] [--limit <limit>]
-                                  [--sort-key <field>] [--sort-dir <direction>]
+                                  [--marker <actionplan>] [--sort-key <field>]
+                                  [--sort-dir <direction>]
 
 List information on retrieved action plans.
 
@@ -314,6 +319,10 @@ List information on retrieved action plans.
   Maximum number of action plans to return per request,
   0 for no limit. Default is the maximum number used by
   the Watcher API Service.
+
+``--marker <actionplan>``
+  The last actionplan UUID of the previous page;
+  displays list of actionplans after "marker".
 
 ``--sort-key <field>``
   Action Plan field that will be used for sorting.
