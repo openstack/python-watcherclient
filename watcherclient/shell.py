@@ -47,8 +47,6 @@ _IDENTITY_API_VERSION_3 = ['3']
 class WatcherShell(app.App):
     """Watcher command line interface."""
 
-    log = logging.getLogger(__name__)
-
     def __init__(self, **kwargs):
         self.client = None
 
@@ -194,12 +192,12 @@ class WatcherShell(app.App):
         except Exception as e:
             if not logging.getLogger('').handlers:
                 logging.basicConfig()
-            self.log.error('Exception raised: %s', str(e))
+            LOG.error('Exception raised: %s', str(e))
 
             return ret_val
 
         finally:
-            self.log.info("END return value: %s", ret_val)
+            LOG.info("END return value: %s", ret_val)
 
 
 def main(argv=sys.argv[1:]):
