@@ -689,7 +689,7 @@ watcher audittemplate list
                                      [--detail] [--goal <goal>]
                                      [--strategy <strategy>] [--limit <limit>]
                                      [--sort-key <field>]
-                                     [--sort-dir <direction>]
+                                     [--sort-dir <direction>][--marker <marker>]
 
 List information on retrieved audit templates.
 
@@ -717,6 +717,10 @@ List information on retrieved audit templates.
 
 ``--sort-dir <direction>``
   Sort direction: "asc" (the default) or "desc".
+
+``--marker <marker>``
+  UUID of the last audittemplate in the previous page; displays
+  list of audittemplates after "marker".
 
 .. _watcher_audittemplate_show:
 
@@ -790,7 +794,7 @@ watcher goal list
                             [--print-empty] [--noindent]
                             [--quote {all,minimal,none,nonnumeric}] [--detail]
                             [--limit <limit>] [--sort-key <field>]
-                            [--sort-dir <direction>]
+                            [--sort-dir <direction>][--marker <marker>]
 
 List information on retrieved goals.
 
@@ -812,6 +816,10 @@ List information on retrieved goals.
 
 ``--sort-dir <direction>``
   Sort direction: "asc" (the default) or "desc".
+
+``--marker <marker>``
+  UUID of the last goal in the previous page; displays
+  list of goals after "marker".
 
 .. _watcher_goal_show:
 
@@ -850,7 +858,7 @@ watcher scoringengine list
                                      [--quote {all,minimal,none,nonnumeric}]
                                      [--detail] [--limit <limit>]
                                      [--sort-key <field>]
-                                     [--sort-dir <direction>]
+                                     [--sort-dir <direction>][--marker <marker>]
 
 List information on retrieved scoring engines.
 
@@ -872,6 +880,10 @@ List information on retrieved scoring engines.
 
 ``--sort-dir <direction>``
   Sort direction: "asc" (the default) or "desc".
+
+``--marker <marker>``
+  UUID of the last scoringengine in the previous page; displays
+  list of scoringengines after "marker".
 
 .. _watcher_scoringengine_show:
 
@@ -970,6 +982,7 @@ watcher strategy list
                                 [--quote {all,minimal,none,nonnumeric}]
                                 [--goal <goal>] [--detail] [--limit <limit>]
                                 [--sort-key <field>] [--sort-dir <direction>]
+                                [--marker <marker>]
 
 List information on retrieved strategies.
 
@@ -994,6 +1007,10 @@ List information on retrieved strategies.
 
 ``--sort-dir <direction>``
   Sort direction: "asc" (the default) or "desc".
+
+``--marker <marker>``
+  UUID of the last strategy in the previous page; displays
+  list of strategies after "marker".
 
 .. _watcher_strategy_show:
 
