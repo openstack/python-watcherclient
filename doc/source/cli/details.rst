@@ -475,7 +475,7 @@ Delete audit command.
 **Positional arguments:**
 
 ``<audit>``
-  UUID of the audit
+  UUID or name of the audit
 
 **Optional arguments:**
 
@@ -541,7 +541,7 @@ Show detailed information about a given audit.
 **Positional arguments:**
 
 ``<audit>``
-  UUID of the audit
+  UUID or name of the audit
 
 **Optional arguments:**
 
@@ -565,7 +565,7 @@ Update audit command.
 **Positional arguments:**
 
 ``<audit>``
-  UUID of the audit.
+  UUID or name of the audit.
 
 ``<op>``
   Operation: 'add', 'replace', or 'remove'.
