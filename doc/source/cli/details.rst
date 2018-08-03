@@ -1019,3 +1019,28 @@ Show detailed information about a given strategy.
 ``-h, --help``
   show this help message and exit
 
+.. _watcher_strategy_state:
+
+watcher strategy state
+----------------------
+
+.. code-block:: console
+
+   usage: watcher strategy state [-h] [-f {csv,html,json,table,value,yaml}]
+                                 [-c COLUMN] [--max-width <integer>]
+                                 [--fit-width] [--print-empty] [--noindent]
+                                 [--quote {all,minimal,none,nonnumeric}]
+                                 [--sort-column SORT_COLUMN]
+                                 <strategy>
+
+Retrieve information about strategy requirements.
+
+**Positional arguments:**
+
+``<strategy>``
+  Name of the strategy
+
+**Optional arguments:**
+
+``-h, --help``
+  show this help message and exit
