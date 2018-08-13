@@ -70,7 +70,7 @@ class ShowActionPlan(command.ShowOne):
         yaml_format.YAMLFormatter().emit_one(
             column_names=list(resource.capitalize()
                               for resource in formatted_global_efficacy),
-            data=[value for value in formatted_global_efficacy.itervalues()],
+            data=[value for value in formatted_global_efficacy.values()],
             stdout=out,
             parsed_args=parsed_args,
             )
