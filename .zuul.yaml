@@ -1,8 +1,17 @@
 - project:
+    templates:
+      - openstack-python-jobs
+      - openstack-python35-jobs
+      - publish-openstack-sphinx-docs
+      - check-requirements
+      - openstackclient-plugin-jobs
     name: openstack/python-watcherclient
     check:
       jobs:
         - watcherclient-tempest-functional
+        - openstack-tox-cover:
+            voting: false
+
     gate:
       jobs:
         - watcherclient-tempest-functional
