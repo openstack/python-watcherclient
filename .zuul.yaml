@@ -1,9 +1,18 @@
 - project:
+    templates:
+      - openstack-python-jobs
+      - openstack-python35-jobs
+      - publish-openstack-sphinx-docs
+      - check-requirements
+      - openstackclient-plugin-jobs
     check:
       jobs:
         - watcherclient-tempest-functional:
             voting: false
         - openstack-tox-lower-constraints
+        - openstack-tox-cover:
+            voting: false
+
     gate:
       jobs:
         - openstack-tox-lower-constraints
