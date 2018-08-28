@@ -69,7 +69,6 @@ pyperclip==1.6.0
 python-dateutil==2.5.3
 python-mimeparse==1.6.0
 python-subunit==1.0.0
--e git://git.openstack.org/openstack/python-watcherclient@104894958882a4877dad6f469361d2adb41d0b59#egg=python_watcherclient
 pytz==2018.3
 PyYAML==3.12
 requests==2.18.4
@@ -80,10 +79,9 @@ six==1.11.0
 snowballstemmer==1.2.1
 Sphinx==1.6.5
 sphinxcontrib-websupport==1.0.1
-stestr==1.0.0
+stestr==2.0.0
 stevedore==1.28.0
 tempest==17.1.0
-testrepository==0.0.18
 testscenarios==0.4
 testtools==2.2.0
 traceback2==1.4.0
