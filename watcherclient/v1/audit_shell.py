@@ -200,19 +200,10 @@ class CreateAudit(command.ShowOne):
                       if k in field_list and v is not None)
         fields = common_utils.args_array_to_dict(fields, 'parameters')
 
-        if fields.get('goal'):
-            if not uuidutils.is_uuid_like(fields['goal']):
-                fields['goal'] = client.goal.get(fields['goal']).uuid
-
         if fields.get('audit_template_uuid'):
             if not uuidutils.is_uuid_like(fields['audit_template_uuid']):
                 fields['audit_template_uuid'] = client.audit_template.get(
                     fields['audit_template_uuid']).uuid
-        # optional
-        if fields.get('strategy'):
-            if not uuidutils.is_uuid_like(fields['strategy']):
-                fields['strategy'] = client.strategy.get(
-                    fields['strategy']).uuid
 
         audit = client.audit.create(**fields)
         if audit.strategy_name is None:
