@@ -59,3 +59,6 @@ sftp-config.json
 
 # Desktop Service Store
 *.DS_Store
+
+# Atom
+.remote-sync.json

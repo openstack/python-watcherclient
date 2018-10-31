@@ -42,7 +42,7 @@ from watcherclient import exceptions
 #             microversion support in the client properly! See
 #             http://specs.openstack.org/openstack/watcher-specs/specs/kilo/api-microversions.html # noqa
 #             for full details.
-DEFAULT_VER = '1.0'
+DEFAULT_VER = 'latest'
 
 
 LOG = logging.getLogger(__name__)
@@ -104,20 +104,8 @@ class VersionNegotiationMixin(object):
                 {'valid': ', '.join(API_VERSION_SELECTED_STATES),
                  'value': self.api_version_select_state})
         min_ver, max_ver = self._parse_version_headers(resp)
-        # NOTE: servers before commit 32fb6e99 did not return version headers
-        # on error, so we need to perform a GET to determine
-        # the supported version range
-        if not max_ver:
-            LOG.debug('No version header in response, requesting from server')
-            if self.os_watcher_api_version:
-                base_version = ("/v%s" %
-                                str(self.os_watcher_api_version).split('.')[0])
-            else:
-                base_version = API_VERSION
-            resp = self._make_simple_request(conn, 'GET', base_version)
-            min_ver, max_ver = self._parse_version_headers(resp)
         # If the user requested an explicit version or we have negotiated a
-        # version and still failing then error now.  The server could
+        # version and still failing then error now. The server could
         # support the version requested but the requested operation may not
         # be supported by the requested version.
         if self.api_version_select_state == 'user':
