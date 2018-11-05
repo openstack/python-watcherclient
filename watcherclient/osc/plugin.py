@@ -41,7 +41,7 @@ def make_client(instance):
     LOG.debug('Instantiating infraoptim client: %s', infraoptim_client_class)
 
     client = infraoptim_client_class(
-        os_watcher_api_version=instance._api_version[API_NAME],
+        os_infra_optim_api_version=instance._api_version[API_NAME],
         session=instance.session,
         region_name=instance._region_name,
     )

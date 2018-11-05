@@ -29,7 +29,7 @@ from watcherclient.v1 import resource_fields as res_fields
 def drop_start_end_field(app_args, fields, field_labels):
     fields = copy.copy(fields)
     field_labels = copy.copy(field_labels)
-    api_ver = app_args.os_watcher_api_version
+    api_ver = app_args.os_infra_optim_api_version
     if not api_versioning.allow_start_end_audit_time(api_ver):
         for field, label in zip(('start_time', 'end_time'),
                                 ('Start Time', 'End Time')):
@@ -230,7 +230,7 @@ class CreateAudit(command.ShowOne):
                       'interval', 'goal', 'strategy', 'auto_trigger',
                       'name']
 
-        api_ver = self.app_args.os_watcher_api_version
+        api_ver = self.app_args.os_infra_optim_api_version
         if api_versioning.allow_start_end_audit_time(api_ver):
             if parsed_args.start_time is not None:
                 field_list.append('start_time')

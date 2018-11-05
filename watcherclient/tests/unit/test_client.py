@@ -118,7 +118,7 @@ class ClientTest(utils.BaseTestCase):
             'os_password': 'PASSWORD',
             'os_auth_url': 'http://localhost:35357/v2.0',
             'os_auth_token': '',
-            'os_watcher_api_version': "latest",
+            'os_infra_optim_api_version': "latest",
         }
         self._test_get_client(**kwargs)
 
@@ -129,7 +129,7 @@ class ClientTest(utils.BaseTestCase):
             'os_password': 'PASSWORD',
             'os_auth_url': 'http://localhost:35357/v2.0',
             'os_auth_token': '',
-            'os_watcher_api_version': "1.4",
+            'os_infra_optim_api_version': "1.4",
         }
         self._test_get_client(**kwargs)
 
@@ -267,7 +267,7 @@ class ClientTest(utils.BaseTestCase):
         kwargs = {
             'watcher_url': 'http://watcher.example.org:9322/',
             'os_auth_token': 'USER_AUTH_TOKEN',
-            'os_watcher_api_version': 'latest',
+            'os_infra_optim_api_version': 'latest',
             'insecure': True,
             'max_retries': 10,
             'retry_interval': 10,
@@ -277,7 +277,7 @@ class ClientTest(utils.BaseTestCase):
         mock_client.assert_called_once_with(
             '1', 'http://watcher.example.org:9322/',
             **{
-                'os_watcher_api_version': 'latest',
+                'os_infra_optim_api_version': 'latest',
                 'max_retries': 10,
                 'retry_interval': 10,
                 'token': 'USER_AUTH_TOKEN',
@@ -309,7 +309,7 @@ class ClientTest(utils.BaseTestCase):
         mock_client.assert_called_once_with(
             '1', session.get_endpoint.return_value,
             **{
-                'os_watcher_api_version': None,
+                'os_infra_optim_api_version': None,
                 'max_retries': None,
                 'retry_interval': None,
                 'session': session,
@@ -328,7 +328,7 @@ class ClientTest(utils.BaseTestCase):
         mock_client.assert_called_once_with(
             '1', session.get_endpoint.return_value,
             **{
-                'os_watcher_api_version': None,
+                'os_infra_optim_api_version': None,
                 'max_retries': None,
                 'retry_interval': None,
                 'session': session,

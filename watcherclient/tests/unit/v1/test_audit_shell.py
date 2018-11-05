@@ -128,9 +128,9 @@ class AuditShellTest(base.CommandTestCase):
                     'Strategy', 'Audit Scope', 'Auto Trigger',
                     'Next Run Time', 'Hostname']
 
-    def setUp(self, os_watcher_api_version='1.0'):
+    def setUp(self, os_infra_optim_api_version='1.0'):
         super(AuditShellTest, self).setUp(
-            os_watcher_api_version=os_watcher_api_version)
+            os_infra_optim_api_version=os_infra_optim_api_version)
 
         # goal mock
         p_goal_manager = mock.patch.object(resource, 'GoalManager')
@@ -468,7 +468,7 @@ class AuditShellTest(base.CommandTestCase):
 
 class AuditShellTestv11(AuditShellTest):
     def setUp(self):
-        super(AuditShellTestv11, self).setUp(os_watcher_api_version='1.1')
+        super(AuditShellTestv11, self).setUp(os_infra_optim_api_version='1.1')
         v11 = dict(start_time=None, end_time=None)
         for audit in (self.AUDIT_1, self.AUDIT_2, self.AUDIT_3):
             audit.update(v11)

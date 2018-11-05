@@ -31,19 +31,19 @@ class Client(object):
 
     def __init__(self, endpoint=None, *args, **kwargs):
         """Initialize a new client for the Watcher v1 API."""
-        if kwargs.get('os_watcher_api_version'):
+        if kwargs.get('os_infra_optim_api_version'):
             kwargs['api_version_select_state'] = "user"
         else:
             if not endpoint:
                 raise exceptions.EndpointException(
-                    _("Must provide 'endpoint' if os_watcher_api_version "
+                    _("Must provide 'endpoint' if os_infra_optim_api_version "
                       "isn't specified"))
 
             # If the user didn't specify a version, use a cached version if
             # one has been stored
             host, netport = httpclient.get_server(endpoint)
             kwargs['api_version_select_state'] = "default"
-            kwargs['os_watcher_api_version'] = httpclient.DEFAULT_VER
+            kwargs['os_infra_optim_api_version'] = httpclient.DEFAULT_VER
 
         self.http_client = httpclient._construct_http_client(
             endpoint, *args, **kwargs)

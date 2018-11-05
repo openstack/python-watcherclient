@@ -116,25 +116,25 @@ class VersionNegotiationMixin(object):
                   "server or the requested operation is not supported by the "
                   "requested version.  Supported version range is %(min)s to "
                   "%(max)s")
-                % {'req': self.os_watcher_api_version,
+                % {'req': self.os_infra_optim_api_version,
                    'min': min_ver, 'max': max_ver}))
         if self.api_version_select_state == 'negotiated':
             raise exceptions.UnsupportedVersion(textwrap.fill(
                 _("No API version was specified and the requested operation "
                   "was not supported by the client's negotiated API version "
                   "%(req)s.  Supported version range is: %(min)s to %(max)s")
-                % {'req': self.os_watcher_api_version,
+                % {'req': self.os_infra_optim_api_version,
                    'min': min_ver, 'max': max_ver}))
 
         negotiated_ver = str(
-            min(version.StrictVersion(self.os_watcher_api_version),
+            min(version.StrictVersion(self.os_infra_optim_api_version),
                 version.StrictVersion(max_ver)))
         if negotiated_ver < min_ver:
             negotiated_ver = min_ver
         # server handles microversions, but doesn't support
         # the requested version, so try a negotiated version
         self.api_version_select_state = 'negotiated'
-        self.os_watcher_api_version = negotiated_ver
+        self.os_infra_optim_api_version = negotiated_ver
         LOG.debug('Negotiated API version is %s', negotiated_ver)
 
         return negotiated_ver
@@ -196,8 +196,8 @@ class HTTPClient(VersionNegotiationMixin):
         self.endpoint_trimmed = _trim_endpoint_api_version(endpoint)
         self.auth_token = kwargs.get('token')
         self.auth_ref = kwargs.get('auth_ref')
-        self.os_watcher_api_version = kwargs.get('os_watcher_api_version',
-                                                 DEFAULT_VER)
+        self.os_infra_optim_api_version = kwargs.get(
+            'os_infra_optim_api_version', DEFAULT_VER)
         self.api_version_select_state = kwargs.get(
             'api_version_select_state', 'default')
         self.conflict_max_retries = kwargs.pop('max_retries',
@@ -297,10 +297,10 @@ class HTTPClient(VersionNegotiationMixin):
         # Copy the kwargs so we can reuse the original in case of redirects
         kwargs['headers'] = copy.deepcopy(kwargs.get('headers', {}))
         kwargs['headers'].setdefault('User-Agent', USER_AGENT)
-        if self.os_watcher_api_version:
+        if self.os_infra_optim_api_version:
             kwargs['headers'].setdefault(
                 'OpenStack-API-Version',
-                ' '.join(['infra-optim', self.os_watcher_api_version]))
+                ' '.join(['infra-optim', self.os_infra_optim_api_version]))
         if self.auth_token:
             kwargs['headers'].setdefault('X-Auth-Token', self.auth_token)
 
@@ -476,13 +476,13 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
     """HTTP client based on Keystone client session."""
 
     def __init__(self,
-                 os_watcher_api_version,
+                 os_infra_optim_api_version,
                  api_version_select_state,
                  max_retries,
                  retry_interval,
                  endpoint,
                  **kwargs):
-        self.os_watcher_api_version = os_watcher_api_version
+        self.os_infra_optim_api_version = os_infra_optim_api_version
         self.api_version_select_state = api_version_select_state
         self.conflict_max_retries = max_retries
         self.conflict_retry_interval = retry_interval
@@ -507,11 +507,11 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
                 _trim_endpoint_api_version(self.endpoint_override)
             )
 
-        if getattr(self, 'os_watcher_api_version', None):
+        if getattr(self, 'os_infra_optim_api_version', None):
             kwargs['headers'].setdefault(
                 'OpenStack-API-Version',
                 ' '.join(['infra-optim',
-                          self.os_watcher_api_version]))
+                          self.os_infra_optim_api_version]))
 
         endpoint_filter = kwargs.setdefault('endpoint_filter', {})
         endpoint_filter.setdefault('interface', self.interface)
@@ -575,7 +575,7 @@ def _construct_http_client(endpoint=None,
                            session=None,
                            token=None,
                            auth_ref=None,
-                           os_watcher_api_version=DEFAULT_VER,
+                           os_infra_optim_api_version=DEFAULT_VER,
                            api_version_select_state='default',
                            max_retries=DEFAULT_MAX_RETRIES,
                            retry_interval=DEFAULT_RETRY_INTERVAL,
@@ -606,27 +606,29 @@ def _construct_http_client(endpoint=None,
                         'the session to construct a client: %s',
                         ', '.join(dvars))
 
-        return SessionClient(session=session,
-                             os_watcher_api_version=os_watcher_api_version,
-                             api_version_select_state=api_version_select_state,
-                             max_retries=max_retries,
-                             retry_interval=retry_interval,
-                             endpoint=endpoint,
-                             **kwargs)
+        return SessionClient(
+            session=session,
+            os_infra_optim_api_version=os_infra_optim_api_version,
+            api_version_select_state=api_version_select_state,
+            max_retries=max_retries,
+            retry_interval=retry_interval,
+            endpoint=endpoint,
+            **kwargs)
     else:
         if kwargs:
             LOG.warning('The following arguments are being ignored when '
                         'constructing the client: %s', ', '.join(kwargs))
 
-        return HTTPClient(endpoint=endpoint,
-                          token=token,
-                          auth_ref=auth_ref,
-                          os_watcher_api_version=os_watcher_api_version,
-                          api_version_select_state=api_version_select_state,
-                          max_retries=max_retries,
-                          retry_interval=retry_interval,
-                          timeout=timeout,
-                          ca_file=ca_file,
-                          cert_file=cert_file,
-                          key_file=key_file,
-                          insecure=insecure)
+        return HTTPClient(
+            endpoint=endpoint,
+            token=token,
+            auth_ref=auth_ref,
+            os_infra_optim_api_version=os_infra_optim_api_version,
+            api_version_select_state=api_version_select_state,
+            max_retries=max_retries,
+            retry_interval=retry_interval,
+            timeout=timeout,
+            ca_file=ca_file,
+            cert_file=cert_file,
+            key_file=key_file,
+            insecure=insecure)

@@ -39,6 +39,7 @@ API_NAME = 'infra-optim'
 API_VERSIONS = {
     '1': 'watcherclient.v1.client.Client',
 }
+DEFAULT_OS_INFRA_OPTIM_API_VERSION = '1.latest'
 _DEFAULT_IDENTITY_API_VERSION = '3'
 _IDENTITY_API_VERSION_2 = ['2', '2.0']
 _IDENTITY_API_VERSION_3 = ['3']
@@ -147,11 +148,13 @@ class WatcherShell(app.App):
                             metavar='<auth-token>',
                             default=utils.env('OS_AUTH_TOKEN'),
                             help='Defaults to env[OS_AUTH_TOKEN].')
-        parser.add_argument('--os-watcher-api-version',
-                            metavar='<os-watcher-api-version>',
-                            default=utils.env('OS_WATCHER_API_VERSION',
-                                              default='1'),
-                            help='Defaults to env[OS_WATCHER_API_VERSION].')
+        parser.add_argument(
+            '--os-infra-optim-api-version',
+            metavar='<infra-optim-api-version>',
+            default=utils.env('OS_INFRA_OPTIM_API_VERSION',
+                              default=DEFAULT_OS_INFRA_OPTIM_API_VERSION),
+            help='Accepts X, X.Y (where X is major and Y is minor part) or '
+                 '"X.latest", defaults to env[OS_INFRA_OPTIM_API_VERSION].')
         parser.add_argument('--os-endpoint-type',
                             default=utils.env('OS_ENDPOINT_TYPE'),
                             help='Defaults to env[OS_ENDPOINT_TYPE] or '

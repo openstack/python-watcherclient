@@ -136,7 +136,7 @@ watcher optional arguments
   Defaults to ``env[OS_AUTH_TOKEN]``.
 
 ``--os-watcher-api-version <os-watcher-api-version>``
-  Defaults to ``env[OS_WATCHER_API_VERSION]``.
+  Defaults to ``env[OS_INFRA_OPTIM_API_VERSION]``.
 
 ``--os-endpoint-type OS_ENDPOINT_TYPE``
   Defaults to ``env[OS_ENDPOINT_TYPE]`` or "publicURL"

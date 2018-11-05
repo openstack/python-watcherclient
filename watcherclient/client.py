@@ -28,7 +28,7 @@ def get_client(api_version, os_auth_token=None, watcher_url=None,
                os_service_type=None, os_endpoint_type=None,
                insecure=None, timeout=None, os_cacert=None, ca_file=None,
                os_cert=None, cert_file=None, os_key=None, key_file=None,
-               os_watcher_api_version=None, max_retries=None,
+               os_infra_optim_api_version=None, max_retries=None,
                retry_interval=None, session=None, os_endpoint_override=None,
                **ignored_kwargs):
     """Get an authenticated client, based on the credentials.
@@ -61,7 +61,7 @@ def get_client(api_version, os_auth_token=None, watcher_url=None,
     :param cert_file: path to cert file, deprecated in favour of os_cert
     :param os_key: path to key file
     :param key_file: path to key file, deprecated in favour of os_key
-    :param os_watcher_api_version: watcher API version to use
+    :param os_infra_optim_api_version: watcher API version to use
     :param max_retries: Maximum number of retries in case of conflict error
     :param retry_interval: Amount of time (in seconds) between retries in case
         of conflict error
@@ -75,7 +75,7 @@ def get_client(api_version, os_auth_token=None, watcher_url=None,
     project_id = (os_project_id or os_tenant_id)
     project_name = (os_project_name or os_tenant_name)
     kwargs = {
-        'os_watcher_api_version': os_watcher_api_version,
+        'os_infra_optim_api_version': os_infra_optim_api_version,
         'max_retries': max_retries,
         'retry_interval': retry_interval,
     }
