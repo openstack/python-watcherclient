@@ -182,4 +182,5 @@ def Client(version, *args, **kwargs):
     python-watcherclient's doc.
     """
     api_version, client_class = _get_client_class_and_version(version)
+    kwargs['os_infra_optim_api_version'] = api_version.get_string()
     return client_class(*args, **kwargs)
