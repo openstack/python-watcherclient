@@ -19,7 +19,6 @@ import re
 from oslo_utils import strutils
 
 from watcherclient._i18n import _
-from watcherclient.common import httpclient
 from watcherclient import exceptions
 
 LOG = logging.getLogger(__name__)
@@ -27,6 +26,7 @@ if not LOG.handlers:
     LOG.addHandler(logging.StreamHandler())
 
 
+MINOR_1_START_END_TIMING = '1.1'
 HEADER_NAME = "OpenStack-API-Version"
 # key is a deprecated version and value is an alternative version.
 DEPRECATED_VERSIONS = {}
@@ -41,7 +41,7 @@ def allow_start_end_audit_time(requested_version):
     audits.
     """
     return (APIVersion(requested_version) >=
-            APIVersion(httpclient.MINOR_1_START_END_TIMING))
+            APIVersion(MINOR_1_START_END_TIMING))
 
 
 class APIVersion(object):

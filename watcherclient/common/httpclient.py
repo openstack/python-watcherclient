@@ -34,6 +34,7 @@ from six.moves import http_client
 import six.moves.urllib.parse as urlparse
 
 from watcherclient._i18n import _
+from watcherclient.common import api_versioning
 from watcherclient import exceptions
 
 
@@ -43,7 +44,6 @@ from watcherclient import exceptions
 #             http://specs.openstack.org/openstack/watcher-specs/specs/kilo/api-microversions.html # noqa
 #             for full details.
 DEFAULT_VER = 'latest'
-MINOR_1_START_END_TIMING = '1.1'
 LAST_KNOWN_API_VERSION = 1
 LATEST_VERSION = '1.{}'.format(LAST_KNOWN_API_VERSION)
 
@@ -298,9 +298,14 @@ class HTTPClient(VersionNegotiationMixin):
         kwargs['headers'] = copy.deepcopy(kwargs.get('headers', {}))
         kwargs['headers'].setdefault('User-Agent', USER_AGENT)
         if self.os_infra_optim_api_version:
+            api_version = api_versioning.get_api_version(
+                self.os_infra_optim_api_version)
+            if api_version.is_latest():
+                api_version = api_versioning.get_api_version(
+                    LATEST_VERSION)
             kwargs['headers'].setdefault(
                 'OpenStack-API-Version',
-                ' '.join(['infra-optim', self.os_infra_optim_api_version]))
+                ' '.join(['infra-optim', api_version.get_string()]))
         if self.auth_token:
             kwargs['headers'].setdefault('X-Auth-Token', self.auth_token)
 
@@ -508,10 +513,15 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
             )
 
         if getattr(self, 'os_infra_optim_api_version', None):
+            api_version = api_versioning.get_api_version(
+                self.os_infra_optim_api_version)
+            if api_version.is_latest():
+                api_version = api_versioning.get_api_version(
+                    LATEST_VERSION)
             kwargs['headers'].setdefault(
                 'OpenStack-API-Version',
                 ' '.join(['infra-optim',
-                          self.os_infra_optim_api_version]))
+                          api_version.get_string()]))
 
         endpoint_filter = kwargs.setdefault('endpoint_filter', {})
         endpoint_filter.setdefault('interface', self.interface)
