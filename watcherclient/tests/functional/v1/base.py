@@ -140,5 +140,9 @@ class TestCase(testtools.TestCase):
 
     @classmethod
     def has_audit_created(cls, audit_uuid):
-        return cls.parse_show_as_object(
-            cls.watcher('audit show %s' % audit_uuid))['State'] == 'SUCCEEDED'
+        audit = cls.parse_show_as_object(
+            cls.watcher('audit show %s' % audit_uuid))
+        if audit['Audit Type'] == 'ONESHOT':
+            return audit['State'] == 'SUCCEEDED'
+        else:
+            return audit['State'] == 'ONGOING'

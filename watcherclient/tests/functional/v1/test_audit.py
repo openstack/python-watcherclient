@@ -114,13 +114,13 @@ class AuditActiveTests(base.TestCase):
         self.watcher('actionplan delete %s' % action_plan_uuid)
         self.watcher('audit delete %s' % audit_uuid)
 
-    def test_create_audit(self):
+    def test_create_oneshot_audit(self):
         audit = self.watcher('audit create -a %s' % self.audit_template_name)
         audit_uuid = self.parse_show_as_object(audit)['UUID']
         self.assert_table_structure([audit], self.detailed_list_fields)
         self._delete_audit(audit_uuid)
 
-    def test_delete_audit(self):
+    def test_delete_oneshot_audit(self):
         audit_uuid = self._create_audit()
         self.assertTrue(test_utils.call_until_true(
             func=functools.partial(
@@ -134,3 +134,26 @@ class AuditActiveTests(base.TestCase):
             self.watcher('actionplan list --audit %s' % audit_uuid))
         action_plan_uuid = list(output[0])[0]
         self.watcher('actionplan delete %s' % action_plan_uuid)
+
+    def test_continuous_audit(self):
+        audit = self.watcher('audit create -a %s -t CONTINUOUS -i 600'
+                             % self.audit_template_name)
+        audit_uuid = self.parse_show_as_object(audit)['UUID']
+        self.assert_table_structure([audit], self.detailed_list_fields)
+        self.assertTrue(test_utils.call_until_true(
+            func=functools.partial(
+                self.has_audit_created, audit_uuid),
+            duration=600,
+            sleep_for=2
+        ))
+        audit_state = self.parse_show_as_object(
+            self.watcher('audit show %s' % audit_uuid))['State']
+        if audit_state == 'ONGOING':
+            self.watcher('audit update %s replace state=CANCELLED'
+                         % audit_uuid)
+        raw_output = self.watcher('audit delete %s' % audit_uuid)
+        self.assertOutput('', raw_output)
+        outputs = self.parse_listing(
+            self.watcher('actionplan list --audit %s' % audit_uuid))
+        for actionplan in outputs:
+            self.watcher('actionplan delete %s' % actionplan['UUID'])
