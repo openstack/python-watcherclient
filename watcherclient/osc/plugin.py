@@ -17,11 +17,12 @@ from osc_lib import utils
 
 import watcherclient
 from watcherclient.common import api_versioning
+from watcherclient.common import httpclient
 from watcherclient import exceptions
 
 LOG = logging.getLogger(__name__)
 
-DEFAULT_API_VERSION = '1'
+DEFAULT_API_VERSION = httpclient.LATEST_VERSION
 API_VERSION_OPTION = 'os_infra_optim_api_version'
 API_NAME = 'infra-optim'
 API_VERSIONS = {
