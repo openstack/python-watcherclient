@@ -212,13 +212,13 @@ class CreateAudit(command.ShowOne):
             '--start-time',
             dest='start_time',
             metavar='<start_time>',
-            help=_('CONTINUOUS audit start time. '
+            help=_('CONTINUOUS audit local start time. '
                    'Format: YYYY-MM-DD hh:mm:ss'))
         parser.add_argument(
             '--end-time',
             dest='end_time',
             metavar='<end_time>',
-            help=_('CONTINUOUS audit end time. '
+            help=_('CONTINUOUS audit local end time. '
                    'Format: YYYY-MM-DD hh:mm:ss'))
 
         return parser
