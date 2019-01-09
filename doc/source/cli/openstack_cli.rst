@@ -33,7 +33,7 @@ environment variables::
     $ export OS_PASSWORD=password
     $ export OS_TENANT_ID=b363706f891f48019483f8bd6503c54b   # or OS_TENANT_NAME
     $ export OS_TENANT_NAME=project                          # or OS_TENANT_ID
-    $ export OS_AUTH_URL=http://auth.example.com:5000/v2.0
+    $ export OS_AUTH_URL=http://auth.example.com:5000/v3/
 
 The command-line tool will attempt to reauthenticate using the provided
 credentials for every request. You can override this behavior by manually
