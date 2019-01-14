@@ -182,4 +182,11 @@ def Client(version, *args, **kwargs):
     python-watcherclient's doc.
     """
     api_version, client_class = _get_client_class_and_version(version)
+
+    kw_api = kwargs.get('os_infra_optim_api_version')
+    endpoint = kwargs.get('endpoint')
+    # If both os_infra_optim_api_version and endpoint are not provided, get
+    # API version from arg.
+    if not kw_api and not endpoint:
+        kwargs['os_infra_optim_api_version'] = api_version.get_string()
     return client_class(*args, **kwargs)

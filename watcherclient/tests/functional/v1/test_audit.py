@@ -13,10 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from oslo_utils import uuidutils
-
+from datetime import datetime
+from dateutil import tz
 import functools
 
+from oslo_utils import uuidutils
 from tempest.lib.common.utils import test_utils
 
 from watcherclient.tests.functional.v1 import base
@@ -77,6 +78,36 @@ class AuditTests(base.TestCase):
                                         % self.audit_uuid)
         audit_output = self.parse_show_as_object(audit_raw_output)
         assert int(audit_output['Interval']) == 2
+
+
+class AuditTestsV11(AuditTests):
+    """This class tests v1.1 of Watcher API"""
+
+    api_version = 1.1
+
+    detailed_list_fields = AuditTests.list_fields + [
+        'Created At', 'Updated At', 'Deleted At', 'Parameters', 'Interval',
+        'Audit Scope', 'Next Run Time', 'Hostname', 'Start Time', 'End Time']
+
+    def test_audit_detailed_list(self):
+        raw_output = self.watcher('audit list --detail')
+        self.assert_table_structure([raw_output], self.detailed_list_fields)
+
+    def test_audit_show(self):
+        audit = self.watcher('audit show ' + self.audit_uuid)
+        self.assertIn(self.audit_uuid, audit)
+        self.assert_table_structure([audit], self.detailed_list_fields)
+
+    def test_audit_update(self):
+        local_time = datetime.now(tz.tzlocal())
+        local_time_str = local_time.strftime("%Y-%m-%dT%H:%M:%S")
+        utc_time = (local_time - local_time.utcoffset())
+        utc_time_str = utc_time.strftime("%Y-%m-%dT%H:%M:%S")
+        audit_raw_output = self.watcher(
+            'audit update {0} replace end_time="{1}"'.format(self.audit_uuid,
+                                                             local_time_str))
+        audit_output = self.parse_show_as_object(audit_raw_output)
+        assert audit_output['End Time'] == utc_time_str
 
 
 class AuditActiveTests(base.TestCase):
