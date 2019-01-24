@@ -69,8 +69,9 @@ class TestCase(testtools.TestCase):
     @classmethod
     def watcher(cls, cmd, fail_ok=False):
         """Executes watcherclient command for the given action."""
-        return execute('watcher --os-infra-optim-api-version {0} {1}'.format(
-            cls.api_version, cmd), fail_ok=fail_ok)
+        return execute(
+            'openstack optimize --os-infra-optim-api-version {0} {1}'.format(
+                cls.api_version, cmd), fail_ok=fail_ok)
 
     @classmethod
     def get_opts(cls, fields, format='value'):
