@@ -43,7 +43,7 @@ from watcherclient import exceptions
 #             microversion support in the client properly! See
 #             http://specs.openstack.org/openstack/watcher-specs/specs/kilo/api-microversions.html # noqa
 #             for full details.
-DEFAULT_VER = 'latest'
+DEFAULT_VER = '1.latest'
 LAST_KNOWN_API_VERSION = 1
 LATEST_VERSION = '1.{}'.format(LAST_KNOWN_API_VERSION)
 
