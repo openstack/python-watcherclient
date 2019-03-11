@@ -98,6 +98,16 @@ fake_responses_sorting = {
     },
 }
 
+fake_responses_marker = {
+    '/v1/goals/?marker=fc087747-61be-4aad-8126-b701731ae836':
+    {
+        'GET': (
+            {},
+            {"goals": [GOAL2]}
+        ),
+    },
+}
+
 
 class GoalManagerTest(testtools.TestCase):
 
@@ -131,6 +141,17 @@ class GoalManagerTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertThat(goals, matchers.HasLength(1))
+
+    def test_goals_list_marker(self):
+        self.api = utils.FakeAPI(fake_responses_marker)
+        self.mgr = watcherclient.v1.goal.GoalManager(self.api)
+        goals = self.mgr.list(marker=GOAL1['uuid'])
+        expect = [
+            ('GET', '/v1/goals/?marker=fc087747-61be-4aad-8126-b701731ae836',
+             {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(goals))
 
     def test_goals_list_pagination_no_limit(self):
         self.api = utils.FakeAPI(fake_responses_pagination)

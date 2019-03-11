@@ -93,6 +93,23 @@ class GoalShellTest(base.CommandTestCase):
 
         self.m_goal_mgr.list.assert_called_once_with(detail=False)
 
+    def test_do_goal_list_marker(self):
+        goal2 = resource.Goal(mock.Mock(), GOAL_2)
+        self.m_goal_mgr.list.return_value = [goal2]
+
+        exit_code, results = self.run_cmd(
+            'goal list --marker fc087747-61be-4aad-8126-b701731ae836')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(goal2, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_goal_mgr.list.assert_called_once_with(
+            detail=False,
+            marker='fc087747-61be-4aad-8126-b701731ae836')
+
     def test_do_goal_list_detail(self):
         goal1 = resource.Goal(mock.Mock(), GOAL_1)
         goal2 = resource.Goal(mock.Mock(), GOAL_2)
