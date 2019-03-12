@@ -1,0 +1,11 @@
+[run]
+branch = True
+source = watcherclient
+omit =
+    watcherclient/tests/*
+
+[report]
+ignore_errors = True
+exclude_lines =
+    @abc.abstract
+    raise NotImplementedError
