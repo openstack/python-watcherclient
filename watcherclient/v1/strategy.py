@@ -38,7 +38,7 @@ class StrategyManager(base.Manager):
         return path
 
     def list(self, goal=None, limit=None, sort_key=None,
-             sort_dir=None, detail=False):
+             sort_dir=None, detail=False, marker=None):
         """Retrieve a list of strategy.
 
         :param goal: The UUID of the goal to filter by
@@ -58,14 +58,15 @@ class StrategyManager(base.Manager):
 
         :param detail: Optional, boolean whether to return detailed information
                        about audits.
-
+        :param marker: Optional, UUID of the last strategy in the previous
+                       page.
         :returns: A list of audits.
 
         """
         if limit is not None:
             limit = int(limit)
 
-        filters = utils.common_filters(limit, sort_key, sort_dir)
+        filters = utils.common_filters(limit, sort_key, sort_dir, marker)
 
         if goal:
             filters.append(parse.urlencode(dict(goal=goal)))

@@ -90,6 +90,23 @@ class StrategyShellTest(base.CommandTestCase):
 
         self.m_strategy_mgr.list.assert_called_once_with(detail=False)
 
+    def test_do_strategy_list_marker(self):
+        strategy2 = resource.Strategy(mock.Mock(), STRATEGY_2)
+        self.m_strategy_mgr.list.return_value = [strategy2]
+
+        exit_code, results = self.run_cmd(
+            'strategy list --marker 2cf86250-d309-4b81-818e-1537f3dba6e5')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            [self.resource_as_dict(strategy2, self.SHORT_LIST_FIELDS,
+                                   self.SHORT_LIST_FIELD_LABELS)],
+            results)
+
+        self.m_strategy_mgr.list.assert_called_once_with(
+            detail=False,
+            marker='2cf86250-d309-4b81-818e-1537f3dba6e5')
+
     def test_do_strategy_list_detail(self):
         strategy1 = resource.Strategy(mock.Mock(), STRATEGY_1)
         strategy2 = resource.Strategy(mock.Mock(), STRATEGY_2)

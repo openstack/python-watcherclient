@@ -107,6 +107,16 @@ fake_responses_sorting = {
     },
 }
 
+fake_responses_marker = {
+    '/v1/strategies/?marker=2cf86250-d309-4b81-818e-1537f3dba6e5':
+    {
+        'GET': (
+            {},
+            {"strategies": [STRATEGY2]}
+        ),
+    },
+}
+
 
 class StrategyManagerTest(testtools.TestCase):
 
@@ -127,6 +137,19 @@ class StrategyManagerTest(testtools.TestCase):
         strategies = self.mgr.list(detail=True)
         expect = [
             ('GET', '/v1/strategies/detail', {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(1, len(strategies))
+
+    def test_strategies_list_marker(self):
+        self.api = utils.FakeAPI(fake_responses_marker)
+        self.mgr = watcherclient.v1.strategy.StrategyManager(self.api)
+        strategies = self.mgr.list(marker=STRATEGY1['uuid'])
+        expect = [
+            ('GET',
+             '/v1/strategies/?marker=2cf86250-d309-4b81-818e-1537f3dba6e5',
+             {},
+             None),
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(1, len(strategies))
