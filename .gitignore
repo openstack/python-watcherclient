@@ -23,11 +23,12 @@ lib64
 pip-log.txt
 
 # Unit test / coverage reports
-.coverage
+.coverage*
 .tox
 nosetests.xml
 .stestr/
 .venv
+.testrepository/
 
 # Translations
 *.mo
@@ -56,6 +57,7 @@ ChangeLog
 
 sftp-config.json
 /.idea/
+/cover/
 
 # Desktop Service Store
 *.DS_Store
