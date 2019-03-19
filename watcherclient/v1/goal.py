@@ -29,7 +29,8 @@ class GoalManager(base.Manager):
     def _path(goal=None):
         return '/v1/goals/%s' % goal if goal else '/v1/goals'
 
-    def list(self, limit=None, sort_key=None, sort_dir=None, detail=False):
+    def list(self, limit=None, sort_key=None, sort_dir=None, detail=False,
+             marker=None):
         """Retrieve a list of goal.
 
         :param limit: The maximum number of results to return per
@@ -49,13 +50,15 @@ class GoalManager(base.Manager):
         :param detail: Optional, boolean whether to return detailed information
                        about audits.
 
-        :returns: A list of audits.
+        :param marker: Optional, UUID of the last goal in the previous page.
+
+        :returns: A list of goals.
 
         """
         if limit is not None:
             limit = int(limit)
 
-        filters = utils.common_filters(limit, sort_key, sort_dir)
+        filters = utils.common_filters(limit, sort_key, sort_dir, marker)
         path = ''
         if detail:
             path += 'detail'

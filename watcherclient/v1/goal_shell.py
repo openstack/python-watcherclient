@@ -96,6 +96,13 @@ class ListGoal(command.Lister):
             metavar='<direction>',
             choices=['asc', 'desc'],
             help=_('Sort direction: "asc" (the default) or "desc".'))
+        parser.add_argument(
+            '--marker',
+            dest='marker',
+            metavar='<marker>',
+            default=None,
+            help=_('UUID of the last goal in the previous page; '
+                   'displays list of goals after "marker".'))
 
         return parser
 
