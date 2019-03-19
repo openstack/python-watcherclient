@@ -53,7 +53,7 @@ class CommandTestCase(utils.BaseTestCase):
         self.addCleanup(self.p_construct_http_client.stop)
 
     def run_cmd(self, cmd, formatting='json'):
-        if formatting:
+        if formatting and formatting != 'table':
             formatter_arg = " -f %s" % formatting
             formatter = jsonutils.loads
         else:
