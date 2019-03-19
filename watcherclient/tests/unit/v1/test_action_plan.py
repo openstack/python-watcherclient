@@ -14,10 +14,13 @@
 #    under the License.
 
 import copy
+import mock
 
 import testtools
 from testtools import matchers
 
+from oslo_utils.uuidutils import generate_uuid
+from watcherclient.common.apiclient.exceptions import HTTPClientError
 from watcherclient.tests.unit import utils
 import watcherclient.v1.action_plan
 
@@ -38,8 +41,18 @@ ACTION_PLAN2 = {
 UPDATED_ACTION_PLAN = copy.deepcopy(ACTION_PLAN1)
 NEW_STATE = 'PENDING'
 UPDATED_ACTION_PLAN['state'] = NEW_STATE
+
 START_ACTION_PLAN = copy.deepcopy(ACTION_PLAN1)
 START_ACTION_PLAN['state'] = NEW_STATE
+
+ONGOING_ACTION_PLAN = copy.deepcopy(ACTION_PLAN1)
+ONGOING_ACTION_PLAN['state'] = 'ONGOING'
+
+CANCELLING_ACTION_PLAN = copy.deepcopy(ACTION_PLAN1)
+CANCELLING_ACTION_PLAN['state'] = 'CANCELLING'
+
+CANCELD_ACTION_PLAN = copy.deepcopy(ACTION_PLAN2)
+CANCELD_ACTION_PLAN['state'] = 'CANCELLED'
 
 fake_responses = {
     '/v1/action_plans':
@@ -129,6 +142,31 @@ fake_responses_sorting = {
     },
 }
 
+fake_responses_cancel = {
+    '/v1/action_plans/%s' % ACTION_PLAN1['uuid']:
+    {
+        'GET': (
+            {},
+            [ONGOING_ACTION_PLAN],
+        ),
+        'PATCH': (
+            {},
+            CANCELLING_ACTION_PLAN,
+        ),
+    },
+    '/v1/action_plans/%s' % ACTION_PLAN2['uuid']:
+    {
+        'GET': (
+            {},
+            [ACTION_PLAN2],
+        ),
+        'PATCH': (
+            {},
+            CANCELD_ACTION_PLAN,
+        ),
+    },
+}
+
 
 class ActionPlanManagerTest(testtools.TestCase):
 
@@ -214,6 +252,54 @@ class ActionPlanManagerTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(ACTION_PLAN1['uuid'], action_plan.uuid)
+
+    def test_action_plans_get_index_error(self):
+
+        # verify this method will return None when meet indexError
+        fake_uuid = generate_uuid()
+        self.api.json_request = mock.Mock(return_value=('404', []))
+        self.assertIsNone(self.mgr.get(fake_uuid))
+
+    def test_action_plans_delete(self):
+        # verity that action plan was successfully deleted
+        self.api.raw_request = mock.Mock(return_value=('204', []))
+        self.assertIsNone(self.mgr.delete(ACTION_PLAN1['uuid']))
+
+        # verity that delete a wrong action plan will raise Exception
+        fake_uuid = generate_uuid()
+        self.api.raw_request = mock.Mock(
+            side_effect=HTTPClientError('404 Not Found'))
+        self.assertRaises(HTTPClientError, self.mgr.delete, fake_uuid)
+
+    def test_action_plans_cancel(self):
+        # verity that the status of action plan can be converted from
+        # 'ONGOING' to 'CANCELLING'
+        self.api = utils.FakeAPI(fake_responses_cancel)
+        self.mgr = watcherclient.v1.action_plan.ActionPlanManager(self.api)
+        patch = {'op': 'replace',
+                 'value': 'CANCELLING',
+                 'path': '/state'}
+        action_plan = self.mgr.cancel(action_plan_id=ACTION_PLAN1['uuid'])
+        expect = [
+            ('GET', '/v1/action_plans/%s' % ACTION_PLAN1['uuid'], {}, None),
+            ('PATCH', '/v1/action_plans/%s' % ACTION_PLAN1['uuid'], {},
+             [patch])
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual('CANCELLING', action_plan.state)
+
+        # verity that the status of action plan can be converted from
+        # 'RECOMMENDED' to 'CANCELLED'
+        patch['value'] = 'CANCELLED'
+        self.api.calls = []
+        action_plan = self.mgr.cancel(action_plan_id=ACTION_PLAN2['uuid'])
+        expect = [
+            ('GET', '/v1/action_plans/%s' % ACTION_PLAN2['uuid'], {}, None),
+            ('PATCH', '/v1/action_plans/%s' % ACTION_PLAN2['uuid'], {},
+             [patch])
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual('CANCELLED', action_plan.state)
 
     def test_action_plan_update(self):
         patch = {'op': 'replace',
