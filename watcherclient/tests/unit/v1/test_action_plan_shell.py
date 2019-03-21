@@ -17,6 +17,7 @@ import datetime
 import mock
 import six
 
+from oslo_utils.uuidutils import generate_uuid
 from watcherclient import exceptions
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
@@ -126,6 +127,17 @@ class ActionPlanShellTest(base.CommandTestCase):
         self.assertEqual(action_plan2.global_efficacy,
                          results[1]['Global efficacy'])
 
+    def test_do_action_plan_list_by_table(self):
+        action_plan1 = resource.ActionPlan(mock.Mock(), ACTION_PLAN_1)
+        action_plan2 = resource.ActionPlan(mock.Mock(), ACTION_PLAN_2)
+        self.m_action_plan_mgr.list.return_value = [
+            action_plan1, action_plan2]
+
+        exit_code, results = self.run_cmd('actionplan list', 'table')
+        self.assertEqual(0, exit_code)
+        self.assertIn(ACTION_PLAN_1['uuid'], results)
+        self.assertIn(ACTION_PLAN_2['uuid'], results)
+
         self.m_action_plan_mgr.list.assert_called_once_with(detail=False)
 
     def test_do_action_plan_list_detail(self):
@@ -194,6 +206,32 @@ class ActionPlanShellTest(base.CommandTestCase):
 
         self.assertEqual(1, exit_code)
         self.assertEqual('', result)
+
+    def test_do_action_plan_show_by_random_uuid(self):
+        # verify that show a wrong actionplan will raise Exception
+        self.m_action_plan_mgr.get.side_effect = exceptions.HTTPNotFound
+        fake_uuid = generate_uuid()
+
+        exit_code, result = self.run_cmd(
+            'actionplan show {}'.format(fake_uuid), formatting=None)
+        self.assertEqual(1, exit_code)
+        self.assertEqual('', result)
+
+        self.m_action_plan_mgr.get.assert_called_once_with(fake_uuid)
+
+    def test_do_action_plan_show_uuid_by_table(self):
+        # verify that show an actionplan can be in a 'table' format
+        action_plan = resource.ActionPlan(mock.Mock(), ACTION_PLAN_1)
+        self.m_action_plan_mgr.get.return_value = action_plan
+
+        exit_code, result = self.run_cmd(
+            'actionplan show d9d9978e-6db5-4a05-8eab-1531795d7004',
+            formatting='table')
+        self.assertEqual(0, exit_code)
+        self.assertIn(ACTION_PLAN_1['uuid'], result)
+
+        self.m_action_plan_mgr.get.assert_called_once_with(
+            'd9d9978e-6db5-4a05-8eab-1531795d7004')
 
     def test_do_action_plan_delete(self):
         self.m_action_plan_mgr.delete.return_value = ''
