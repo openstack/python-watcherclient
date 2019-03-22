@@ -123,7 +123,13 @@ class ListStrategy(command.Lister):
             metavar='<direction>',
             choices=['asc', 'desc'],
             help='Sort direction: "asc" (the default) or "desc".')
-
+        parser.add_argument(
+            '--marker',
+            dest='marker',
+            metavar='<marker>',
+            default=None,
+            help=_('UUID of the last strategy in the previous page; '
+                   'displays list of strategies after "marker".'))
         return parser
 
     def take_action(self, parsed_args):
