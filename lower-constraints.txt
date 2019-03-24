@@ -69,7 +69,6 @@ pyperclip==1.6.0
 python-dateutil==2.5.3
 python-mimeparse==1.6.0
 python-subunit==1.0.0
--e git://git.openstack.org/openstack/python-watcherclient@104894958882a4877dad6f469361d2adb41d0b59#egg=python_watcherclient
 pytz==2018.3
 PyYAML==3.12
 requests==2.18.4
