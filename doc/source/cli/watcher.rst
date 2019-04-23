@@ -52,7 +52,7 @@ environment variable. (It defaults to the first in the list returned.)
 Watcher CLI supports bash completion. The command-line tool can automatically
 fill partially typed commands. To use this feature, source the below file
 (available at
-https://git.openstack.org/cgit/openstack/python-watcherclient/tree/tools/watcher.bash_completion)
+https://opendev.org/openstack/python-watcherclient/src/branch/master/tools/watcher.bash_completion)
 to your terminal and then bash completion should work::
 
     $ . watcher.bash_completion

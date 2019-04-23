@@ -24,7 +24,7 @@ migration, increased energy efficiency and more!
 
 * Free software: Apache license
 * Wiki: https://wiki.openstack.org/wiki/Watcher
-* Source: https://git.openstack.org/cgit/openstack/python-watcher
+* Source: https://opendev.org/openstack/python-watcherclient
 * Bugs: https://bugs.launchpad.net/watcher
 
 Installation

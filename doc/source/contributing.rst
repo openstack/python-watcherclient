@@ -47,8 +47,8 @@ Mailing list (prefix subjects with ``[watcher]`` for faster responses)
     http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-discuss
 
 Code Hosting
-    https://git.openstack.org/cgit/openstack/python-watcherclient
+    https://opendev.org/openstack/python-watcherclient
 
 Code Review
-    https://review.openstack.org/#/q/status:open+project:openstack/python-watcherclient,n,z
+    https://review.opendev.org/#/q/status:open+project:openstack/python-watcherclient,n,z
 
