@@ -11,5 +11,4 @@
       - openstackclient-plugin-jobs
     check:
       jobs:
-        - watcherclient-tempest-functional:
-            voting: false
+        - watcherclient-tempest-functional
