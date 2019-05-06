@@ -26,7 +26,7 @@ from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
 
 
-def drop_start_end_field(app_args, fields, field_labels):
+def drop_unsupported_field(app_args, fields, field_labels):
     fields = copy.copy(fields)
     field_labels = copy.copy(field_labels)
     api_ver = app_args.os_infra_optim_api_version
@@ -35,6 +35,9 @@ def drop_start_end_field(app_args, fields, field_labels):
                                 ('Start Time', 'End Time')):
             fields.remove(field)
             field_labels.remove(label)
+    if not api_versioning.launch_audit_forced(api_ver):
+        fields.remove('force')
+        field_labels.remove('Force')
     return fields, field_labels
 
 
@@ -62,8 +65,8 @@ class ShowAudit(command.ShowOne):
 
         columns = res_fields.AUDIT_FIELDS
         column_headers = res_fields.AUDIT_FIELD_LABELS
-        columns, column_headers = drop_start_end_field(self.app_args, columns,
-                                                       column_headers)
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
 
         return column_headers, utils.get_item_properties(audit, columns)
 
@@ -136,8 +139,8 @@ class ListAudit(command.Lister):
             field_labels = res_fields.AUDIT_SHORT_LIST_FIELD_LABELS
 
         if parsed_args.detail:
-            fields, field_labels = drop_start_end_field(self.app_args, fields,
-                                                        field_labels)
+            fields, field_labels = drop_unsupported_field(
+                self.app_args, fields, field_labels)
 
         params.update(common_utils.common_params_for_list(
             parsed_args, fields, field_labels))
@@ -220,6 +223,12 @@ class CreateAudit(command.ShowOne):
             metavar='<end_time>',
             help=_('CONTINUOUS audit local end time. '
                    'Format: YYYY-MM-DD hh:mm:ss'))
+        parser.add_argument(
+            '--force',
+            dest='force',
+            action='store_true',
+            help=_('Launch audit even if action plan '
+                   'is ongoing. default is False'))
 
         return parser
 
@@ -236,6 +245,9 @@ class CreateAudit(command.ShowOne):
                 field_list.append('start_time')
             if parsed_args.end_time is not None:
                 field_list.append('end_time')
+        if api_versioning.launch_audit_forced(api_ver):
+            if parsed_args.force is not None:
+                field_list.append('force')
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
@@ -252,8 +264,8 @@ class CreateAudit(command.ShowOne):
 
         columns = res_fields.AUDIT_FIELDS
         column_headers = res_fields.AUDIT_FIELD_LABELS
-        columns, column_headers = drop_start_end_field(self.app_args, columns,
-                                                       column_headers)
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
 
         return column_headers, utils.get_item_properties(audit, columns)
 
@@ -295,8 +307,8 @@ class UpdateAudit(command.ShowOne):
         columns = res_fields.AUDIT_FIELDS
         column_headers = res_fields.AUDIT_FIELD_LABELS
 
-        columns, column_headers = drop_start_end_field(self.app_args, columns,
-                                                       column_headers)
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
 
         return column_headers, utils.get_item_properties(audit, columns)
 

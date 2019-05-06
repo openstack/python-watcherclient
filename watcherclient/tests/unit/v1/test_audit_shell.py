@@ -474,3 +474,191 @@ class AuditShellTestv11(AuditShellTest):
             audit.update(v11)
         self.FIELDS.extend(['start_time', 'end_time'])
         self.FIELD_LABELS.extend(['Start Time', 'End Time'])
+
+
+class AuditShellTestv12(AuditShellTest):
+    def setUp(self):
+        super(AuditShellTestv12, self).setUp(os_infra_optim_api_version='1.2')
+        v11 = dict(start_time=None, end_time=None)
+        v12 = dict(force=False)
+        for audit in (self.AUDIT_1, self.AUDIT_2, self.AUDIT_3):
+            audit.update(v11)
+            audit.update(v12)
+        self.FIELDS.extend(['start_time', 'end_time', 'force'])
+        self.FIELD_LABELS.extend(['Start Time', 'End Time', 'Force'])
+
+    def test_do_audit_create_with_force(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_3)
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.get.return_value = audit_template
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -a f8e47706-efcf-49a4-a5c4-af604eb492f2 --force')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
+            audit_type='ONESHOT',
+            auto_trigger=False,
+            force=True
+        )
+
+    def test_do_audit_create_with_audit_template_uuid(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_3)
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.get.return_value = audit_template
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -a f8e47706-efcf-49a4-a5c4-af604eb492f2')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
+            audit_type='ONESHOT',
+            auto_trigger=False,
+            force=False
+        )
+
+    def test_do_audit_create_with_audit_template_name(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_3)
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.get.return_value = audit_template
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd('audit create -a at1')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            audit_template_uuid='f8e47706-efcf-49a4-a5c4-af604eb492f2',
+            auto_trigger=False,
+            audit_type='ONESHOT',
+            force=False
+        )
+
+    def test_do_audit_create_with_goal(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            auto_trigger=False,
+            audit_type='ONESHOT',
+            force=False
+        )
+
+    def test_do_audit_create_with_goal_and_strategy(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 -s '
+            '2cf86250-d309-4b81-818e-1537f3dba6e5')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            strategy='2cf86250-d309-4b81-818e-1537f3dba6e5',
+            auto_trigger=False,
+            audit_type='ONESHOT',
+            force=False
+        )
+
+    def test_do_audit_create_with_type(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 -t ONESHOT')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            auto_trigger=False,
+            audit_type='ONESHOT',
+            force=False
+        )
+
+    def test_do_audit_create_with_parameter(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 -p para1=10 '
+            '-p para2=20')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            audit_type='ONESHOT',
+            auto_trigger=False,
+            parameters={'para1': 10, 'para2': 20},
+            force=False
+        )
+
+    def test_do_audit_create_with_type_continuous(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 '
+            '-t CONTINUOUS -i 3600')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            audit_type='CONTINUOUS',
+            auto_trigger=False,
+            interval='3600',
+            force=False
+        )
+
+    def test_do_audit_create_with_name(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 '
+            '-t CONTINUOUS -i 3600 --name my_audit')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            audit_type='CONTINUOUS',
+            auto_trigger=False,
+            interval='3600',
+            name='my_audit',
+            force=False
+        )
