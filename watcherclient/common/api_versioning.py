@@ -27,6 +27,7 @@ if not LOG.handlers:
 
 
 MINOR_1_START_END_TIMING = '1.1'
+MINOR_2_FORCE_AUDIT = '1.2'
 HEADER_NAME = "OpenStack-API-Version"
 # key is a deprecated version and value is an alternative version.
 DEPRECATED_VERSIONS = {}
@@ -42,6 +43,15 @@ def allow_start_end_audit_time(requested_version):
     """
     return (APIVersion(requested_version) >=
             APIVersion(MINOR_1_START_END_TIMING))
+
+
+def launch_audit_forced(requested_version):
+    """Check if we should support force option for Audit.
+
+    Version 1.2 of the API added support for force option.
+    """
+    return (APIVersion(requested_version) >=
+            APIVersion(MINOR_2_FORCE_AUDIT))
 
 
 class APIVersion(object):
