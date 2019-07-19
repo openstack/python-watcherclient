@@ -276,7 +276,7 @@ class HTTPClient(VersionNegotiationMixin):
         LOG.debug('\n'.join(dump))
 
     def _make_connection_url(self, url):
-        return urlparse.urljoin(self.endpoint_trimmed, url)
+        return '%s/%s' % (self.endpoint_trimmed.rstrip('/'), url.lstrip('/'))
 
     def _parse_version_headers(self, resp):
         return self._generic_parse_version_headers(resp.headers.get)

@@ -350,3 +350,11 @@ class ClientTest(utils.BaseTestCase):
         client = httpclient.HTTPClient('http://localhost/')
         header_redact = client._process_header(name, value)
         self.assertEqual(header, header_redact)
+
+    def test_make_connection_url(self):
+        endpoint = 'http://localhost/infra-optim'
+        url = '/v1/goals'
+        expected_url = 'http://localhost/infra-optim/v1/goals'
+        client = httpclient.HTTPClient(endpoint)
+        conn_url = client._make_connection_url(url)
+        self.assertEqual(expected_url, conn_url)
