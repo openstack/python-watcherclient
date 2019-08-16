@@ -98,6 +98,28 @@ STRATEGY_FIELDS = ['uuid', 'name', 'display_name', 'goal_name',
 STRATEGY_FIELD_LABELS = ['UUID', 'Name', 'Display name', 'Goal',
                          'Parameters spec']
 
+# Data Model
+
+COMPUTE_MODEL_LIST_FIELDS = [
+    'server_uuid', 'server_name', 'server_vcpus',
+    'server_memory', 'server_disk', 'server_state', 'node_uuid',
+    'node_hostname', 'node_vcpus', 'node_vcpu_ratio', 'node_memory',
+    'node_memory_ratio', 'node_disk', 'node_disk_ratio', 'node_state']
+
+COMPUTE_MODEL_LIST_FIELD_LABELS = [
+    'Server_UUID', 'Server Name', 'Server Vcpus',
+    'Server Memory', 'Server Disk', 'Server State', 'Node UUID',
+    'Node Host Name', 'Node Vcpus', 'Node Vcpu Ratio', 'Node Memory',
+    'Node Memory Ratio', 'Node Disk', 'Node Disk Ratio', 'Node State']
+
+COMPUTE_MODEL_SHORT_LIST_FIELDS = [
+    'server_uuid', 'server_name',
+    'server_state', 'node_uuid', 'node_hostname']
+
+COMPUTE_MODEL_SHORT_LIST_FIELD_LABELS = [
+    'Server UUID', 'Server Name',
+    'Server State', 'Node UUID', 'Node Host Name']
+
 STRATEGY_SHORT_LIST_FIELDS = ['uuid', 'name', 'display_name', 'goal_name']
 
 STRATEGY_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Display name', 'Goal']
