@@ -969,6 +969,40 @@ Show detailed information about a given service.
 ``-h, --help``
   show this help message and exit
 
+.. _watcher_datamodel_list:
+
+watcher datamodel list
+----------------------
+
+.. code-block:: console
+
+   usage: watcher datamodel list [-h] [-f {csv,json,table,value,yaml}]
+                                 [-c COLUMN] [--max-width <integer>]
+                                 [--fit-width] [--print-empty] [--noindent]
+                                 [--quote {all,minimal,none,nonnumeric}]
+                                 [--sort-column SORT_COLUMN] [--type <type>]
+                                 [--audit <audit>] [--detail]
+
+
+List information on retrieved data model.
+
+**Optional arguments:**
+
+``-h, --help``
+  show this help message and exit
+
+``--type <type>``
+  Type of Datamodel user want to list. Supported values:
+  compute. Future support values: storage, baremetal.
+  Default type is compute.
+
+``--audit <audit>``
+  UUID of the audit. used to filter data model
+  by the scope in audit.
+
+``--detail``
+  Show detailed information about data model.
+
 .. _watcher_strategy_list:
 
 watcher strategy list
