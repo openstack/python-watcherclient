@@ -17,6 +17,7 @@ from watcherclient.v1 import action
 from watcherclient.v1 import action_plan
 from watcherclient.v1 import audit
 from watcherclient.v1 import audit_template
+from watcherclient.v1 import data_model
 from watcherclient.v1 import goal
 from watcherclient.v1 import scoring_engine
 from watcherclient.v1 import service
@@ -38,9 +39,12 @@ Service = service.Service
 ServiceManager = service.ServiceManager
 Strategy = strategy.Strategy
 StrategyManager = strategy.StrategyManager
+DataModel = data_model.DataModel
+DataModelManager = data_model.DataModelManager
 
 __all__ = (
     "Action", "ActionManager", "ActionPlan", "ActionPlanManager",
     "Audit", "AuditManager", "AuditTemplate", "AuditTemplateManager",
     "Goal", "GoalManager", "ScoringEngine", "ScoringEngineManager",
-    "Service", "ServiceManager", "Strategy", "StrategyManager")
+    "Service", "ServiceManager", "Strategy", "StrategyManager",
+    "DataModel", "DataModelManager")
