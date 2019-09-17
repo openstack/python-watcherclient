@@ -88,6 +88,17 @@ latex_documents = [
     ),
 ]
 
+# Disable usage of xindy https://bugzilla.redhat.com/show_bug.cgi?id=1643664
+latex_use_xindy = False
+
+latex_domain_indices = False
+
+latex_elements = {
+    'makeindex': '',
+    'printindex': '',
+    'preamble': r'\setcounter{tocdepth}{3}',
+}
+
 # openstackdocstheme options
 repository_name = 'openstack/python-watcherclient'
 bug_project = 'python-watcherclient'
