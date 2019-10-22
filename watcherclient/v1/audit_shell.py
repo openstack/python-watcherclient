@@ -182,7 +182,7 @@ class CreateAudit(command.ShowOne):
             dest='interval',
             metavar='<interval>',
             help=_('Audit interval (in seconds or cron format). '
-                   'Cron inteval can be used like: "*/5 * * * *". '
+                   'Cron interval can be used like: ``*/5 * * * *``. '
                    'Only used if the audit is CONTINUOUS.'))
         parser.add_argument(
             '-g', '--goal',
