@@ -620,38 +620,43 @@ Create new audit template.
 ``--scope <path>``
   Part of the cluster on which an audit will be done.
   Can be provided either in yaml or json file.
-  YAML example:
-  ---- host_aggregates:
-  - id: 1
-  - id: 2
-  - id: 3
+
+YAML example:
+::
+
+  ---
+  - host_aggregates:
+    - id: 1
+    - id: 2
+    - id: 3
   - availability_zones:
-  - name: AZ1
-  - name: AZ2
+    - name: AZ1
+    - name: AZ2
   - exclude:
-  - instances:
-  - uuid: UUID1
-  - uuid: UUID2
-  - compute_nodes:
-  - name: compute1
-  
-  JSON example:
-  [{'host_aggregates': [
-  {'id': 1},
-  {'id': 2},
-  {'id': 3}]},
-  {'availability_zones': [
-  {'name': 'AZ1'},
-  {'name': 'AZ2'}]},
-  {'exclude': [
-  {'instances': [
-  {'uuid': 'UUID1'},
-  {'uuid': 'UUID2'}
-  ]},
-  {'compute_nodes': [
-  {'name': 'compute1'}
-  ]}
-  ]}]
+    - instances:
+      - uuid: UUID1
+      - uuid: UUID2
+    - compute_nodes:
+      - name: compute1
+
+JSON example:
+::
+
+    [
+        {'host_aggregates': [
+            {'id': 1},
+            {'id': 2},
+            {'id': 3}]},
+        {'availability_zones': [
+            {'name': 'AZ1'},
+            {'name': 'AZ2'}]},
+        {'exclude': [
+            {'instances': [
+                {'uuid': 'UUID1'},
+                {'uuid': 'UUID2'}]},
+            {'compute_nodes': [
+                {'name': 'compute1'}]}]}
+    ]
 
 .. _watcher_audittemplate_delete:
 
