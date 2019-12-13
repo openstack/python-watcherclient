@@ -40,8 +40,8 @@ from watcherclient import exceptions
 
 # Record the latest version that this client was tested with.
 DEFAULT_VER = '1.latest'
-# Minor version 3 for adding list data model API
-LAST_KNOWN_API_VERSION = 3
+# Minor version 4 for adding webhook API
+LAST_KNOWN_API_VERSION = 4
 LATEST_VERSION = '1.{}'.format(LAST_KNOWN_API_VERSION)
 
 LOG = logging.getLogger(__name__)

@@ -167,8 +167,8 @@ class CreateAudit(command.ShowOne):
             dest='audit_type',
             metavar='<audit_type>',
             default='ONESHOT',
-            choices=['ONESHOT', 'CONTINUOUS'],
-            help=_("Audit type. It must be ONESHOT or CONTINUOUS. "
+            choices=['ONESHOT', 'CONTINUOUS', 'EVENT'],
+            help=_("Audit type. It must be ONESHOT, CONTINUOUS or EVENT. "
                    "Default is ONESHOT."))
         parser.add_argument(
             '-p', '--parameter',
