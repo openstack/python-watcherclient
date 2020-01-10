@@ -426,6 +426,23 @@ class AuditShellTest(base.CommandTestCase):
             parameters={'para1': 10, 'para2': 20}
         )
 
+    def test_do_audit_create_with_type_event(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 -t EVENT')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            auto_trigger=False,
+            audit_type='EVENT'
+        )
+
     def test_do_audit_create_with_type_continuous(self):
         audit = resource.Audit(mock.Mock(), self.AUDIT_1)
         self.m_audit_mgr.create.return_value = audit
@@ -639,6 +656,24 @@ class AuditShellTestv12(AuditShellTest):
             audit_type='CONTINUOUS',
             auto_trigger=False,
             interval='3600',
+            force=False
+        )
+
+    def test_do_audit_create_with_type_event(self):
+        audit = resource.Audit(mock.Mock(), self.AUDIT_1)
+        self.m_audit_mgr.create.return_value = audit
+
+        exit_code, result = self.run_cmd(
+            'audit create -g fc087747-61be-4aad-8126-b701731ae836 -t EVENT')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(audit, self.FIELDS, self.FIELD_LABELS),
+            result)
+        self.m_audit_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            auto_trigger=False,
+            audit_type='EVENT',
             force=False
         )
 
