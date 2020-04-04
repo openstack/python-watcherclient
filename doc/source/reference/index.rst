@@ -10,5 +10,5 @@ done so, you can use the API like so.
 .. toctree::
    :maxdepth: 2
 
-   api/index
+   api/modules
    api_v1

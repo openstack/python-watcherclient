@@ -20,11 +20,19 @@ from watcherclient import version as watcherclient_version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
+              'sphinxcontrib.apidoc',
               'openstackdocstheme',
              ]
 # autodoc generation is a bit aggressive and a nuisance when doing heavy
 # text edit cycles.
 # execute "export SPHINX_DEBUG=1" in your terminal to disable
+
+# sphinxcontrib.apidoc options
+apidoc_module_dir = '../../watcherclient'
+apidoc_output_dir = 'reference/api'
+apidoc_excluded_paths = [
+    'tests/*']
+apidoc_separate_modules = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -104,7 +112,5 @@ repository_name = 'openstack/python-watcherclient'
 bug_project = 'python-watcherclient'
 bug_tag = ''
 
-# Must set this variable to include year, month, day, hours, and minutes.
-html_last_updated_fmt = '%Y-%m-%d %H:%M'
 
 #html_theme_options = {"show_other_versions": "True"}
