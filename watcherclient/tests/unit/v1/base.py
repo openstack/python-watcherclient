@@ -14,8 +14,8 @@
 # limitations under the License.
 
 import shlex
+from unittest import mock
 
-import mock
 from osc_lib import utils as oscutils
 from oslo_serialization import jsonutils
 

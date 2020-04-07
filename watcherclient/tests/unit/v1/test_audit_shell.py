@@ -14,7 +14,8 @@
 #   under the License.
 
 import datetime
-import mock
+from unittest import mock
+
 import six
 
 from watcherclient import shell

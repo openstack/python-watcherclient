@@ -14,10 +14,10 @@
 # limitations under the License.
 
 import datetime
-import mock
-import six
+from unittest import mock
 
 from oslo_serialization import jsonutils
+import six
 
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
