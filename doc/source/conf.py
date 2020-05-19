@@ -12,8 +12,6 @@
 # limitations under the License.
 
 
-from watcherclient import version as watcherclient_version
-
 # -- General configuration ----------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -47,16 +45,6 @@ master_doc = 'index'
 project = u'python-watcherclient'
 copyright = u'OpenStack Foundation'
 
-# The version info for the project you're documenting, acts as replacement for
-# |version| and |release|, also used in various other places throughout the
-# built documents.
-#
-# The short X.Y version.
-# The full version, including alpha/beta/rc tags.
-release = watcherclient_version.version_info.release_string()
-# The short X.Y version.
-version = watcherclient_version.version_info.version_string()
-
 # A list of ignored prefixes for module index sorting.
 modindex_common_prefix = ['watcherclient.']
 
@@ -68,7 +56,7 @@ add_function_parentheses = True
 add_module_names = True
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'native'
 
 # -- Options for HTML output --------------------------------------------------
 
@@ -108,9 +96,10 @@ latex_elements = {
 }
 
 # openstackdocstheme options
-repository_name = 'openstack/python-watcherclient'
-bug_project = 'python-watcherclient'
-bug_tag = ''
+openstackdocs_repo_name = 'openstack/python-watcherclient'
+openstackdocs_pdf_link = True
+openstackdocs_bug_project = 'python-watcherclient'
+openstackdocs_bug_tag = ''
 
 
 #html_theme_options = {"show_other_versions": "True"}
