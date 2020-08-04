@@ -2,12 +2,12 @@ alabaster==0.7.10
 appdirs==1.4.3
 asn1crypto==0.23.0
 certifi==2018.1.18
-cffi==1.7.0
+cffi==1.14.0
 chardet==3.0.4
 cliff==2.11.0
 cmd2==0.8.2
 coverage==4.0
-cryptography==2.1
+cryptography==2.7
 debtcollector==1.19.0
 decorator==4.2.1
 deprecation==2.0
@@ -64,7 +64,7 @@ python-dateutil==2.5.3
 python-mimeparse==1.6.0
 python-subunit==1.0.0
 pytz==2018.3
-PyYAML==3.12
+PyYAML==3.13
 requests==2.18.4
 requestsexceptions==1.4.0
 rfc3986==0.3.1
