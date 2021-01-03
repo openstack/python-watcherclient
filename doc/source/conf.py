@@ -42,8 +42,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'python-watcherclient'
-copyright = u'OpenStack Foundation'
+project = 'python-watcherclient'
+copyright = 'OpenStack Foundation'
 
 # A list of ignored prefixes for module index sorting.
 modindex_common_prefix = ['watcherclient.']
@@ -79,8 +79,8 @@ latex_documents = [
     (
         'index',
         '%s.tex' % project,
-        u'%s Documentation' % project,
-        u'OpenStack Foundation', 'manual'
+        '%s Documentation' % project,
+        'OpenStack Foundation', 'manual'
     ),
 ]
 
