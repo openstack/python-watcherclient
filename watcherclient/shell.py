@@ -203,7 +203,9 @@ class WatcherShell(app.App):
             LOG.info("END return value: %s", ret_val)
 
 
-def main(argv=sys.argv[1:]):
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
     watcher_app = WatcherShell()
     return watcher_app.run(argv)
 
