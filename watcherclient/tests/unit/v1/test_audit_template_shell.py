@@ -14,9 +14,8 @@
 #   under the License.
 
 import datetime
+import io
 from unittest import mock
-
-import six
 
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
@@ -108,7 +107,7 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr_cls.return_value = self.m_audit_template_mgr
 
         # stdout mock
-        self.stdout = six.StringIO()
+        self.stdout = io.StringIO()
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_audit_template_list(self):

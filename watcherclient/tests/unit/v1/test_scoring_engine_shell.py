@@ -14,9 +14,8 @@
 # limitations under the License.
 
 import datetime
+import io
 from unittest import mock
-
-import six
 
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
@@ -63,7 +62,7 @@ class ScoringEngineShellTest(base.CommandTestCase):
         self.m_se_mgr = mock.Mock()
         self.m_se_mgr_cls.return_value = self.m_se_mgr
 
-        self.stdout = six.StringIO()
+        self.stdout = io.StringIO()
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_scoringengine_list(self):

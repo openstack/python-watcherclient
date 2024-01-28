@@ -17,21 +17,21 @@ import copy
 from distutils import version
 import functools
 import hashlib
+import http.client
+import io
 import logging
 import os
 import socket
 import ssl
 import textwrap
 import time
+from urllib import parse as urlparse
 
 from keystoneauth1 import adapter
 from keystoneauth1 import exceptions as kexceptions
 from oslo_serialization import jsonutils
 from oslo_utils import strutils
 import requests
-import six
-from six.moves import http_client
-import six.moves.urllib.parse as urlparse
 
 from watcherclient._i18n import _
 from watcherclient.common import api_versioning
@@ -247,7 +247,7 @@ class HTTPClient(VersionNegotiationMixin):
 
         if not self.session.verify:
             curl.append('-k')
-        elif isinstance(self.session.verify, six.string_types):
+        elif isinstance(self.session.verify, str):
             curl.append('--cacert %s' % self.session.verify)
 
         if self.session.cert:
@@ -325,7 +325,7 @@ class HTTPClient(VersionNegotiationMixin):
             # to servers that did not support microversions. Details here:
             # http://specs.openstack.org/openstack/watcher-specs/specs/kilo/api-microversions.html#use-case-3b-new-client-communicating-with-a-old-watcher-user-specified  # noqa
 
-            if resp.status_code == http_client.NOT_ACCEPTABLE:
+            if resp.status_code == http.client.NOT_ACCEPTABLE:
                 negotiated_ver = self.negotiate_version(self.session, resp)
                 kwargs['headers']['OpenStack-API-Version'] = (
                     ' '.join(['infra-optim', negotiated_ver]))
@@ -357,21 +357,21 @@ class HTTPClient(VersionNegotiationMixin):
             ]
             body_str = ''.join(body_list)
             self.log_http_response(resp, body_str)
-            body_iter = six.StringIO(body_str)
+            body_iter = io.StringIO(body_str)
         else:
             self.log_http_response(resp)
 
-        if resp.status_code >= http_client.BAD_REQUEST:
+        if resp.status_code >= http.client.BAD_REQUEST:
             error_json = _extract_error_json(body_str)
             raise exceptions.from_response(
                 resp, error_json.get('faultstring'),
                 error_json.get('debuginfo'), method, url)
-        elif resp.status_code in (http_client.MOVED_PERMANENTLY,
-                                  http_client.FOUND,
-                                  http_client.USE_PROXY):
+        elif resp.status_code in (http.client.MOVED_PERMANENTLY,
+                                  http.client.FOUND,
+                                  http.client.USE_PROXY):
             # Redirected. Reissue the request to the new location.
             return self._http_request(resp['location'], method, **kwargs)
-        elif resp.status_code == http_client.MULTIPLE_CHOICES:
+        elif resp.status_code == http.client.MULTIPLE_CHOICES:
             raise exceptions.from_response(resp, method=method, url=url)
 
         return resp, body_iter
@@ -387,8 +387,8 @@ class HTTPClient(VersionNegotiationMixin):
         resp, body_iter = self._http_request(url, method, **kwargs)
         content_type = resp.headers.get('Content-Type')
 
-        if (resp.status_code in (http_client.NO_CONTENT,
-                                 http_client.RESET_CONTENT) or
+        if (resp.status_code in (http.client.NO_CONTENT,
+                                 http.client.RESET_CONTENT) or
                 content_type is None):
             return resp, list()
 
@@ -410,7 +410,7 @@ class HTTPClient(VersionNegotiationMixin):
         return self._http_request(url, method, **kwargs)
 
 
-class VerifiedHTTPSConnection(six.moves.http_client.HTTPSConnection):
+class VerifiedHTTPSConnection(http.client.HTTPSConnection):
     """httplib-compatible connection using client-side SSL authentication
 
     :see http://code.activestate.com/recipes/
@@ -419,9 +419,8 @@ class VerifiedHTTPSConnection(six.moves.http_client.HTTPSConnection):
 
     def __init__(self, host, port, key_file=None, cert_file=None,
                  ca_file=None, timeout=None, insecure=False):
-        six.moves.http_client.HTTPSConnection.__init__(self, host, port,
-                                                       key_file=key_file,
-                                                       cert_file=cert_file)
+        super(VerifiedHTTPSConnection, self).__init__(
+            self, host, port, key_file=key_file, cert_file=cert_file)
         self.key_file = key_file
         self.cert_file = cert_file
         if ca_file is not None:
@@ -503,7 +502,7 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
     def _http_request(self, url, method, **kwargs):
         kwargs.setdefault('user_agent', USER_AGENT)
         kwargs.setdefault('auth', self.auth)
-        if isinstance(self.endpoint_override, six.string_types):
+        if isinstance(self.endpoint_override, str):
             kwargs.setdefault(
                 'endpoint_override',
                 _trim_endpoint_api_version(self.endpoint_override)
@@ -527,22 +526,22 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
 
         resp = self.session.request(url, method,
                                     raise_exc=False, **kwargs)
-        if resp.status_code == http_client.NOT_ACCEPTABLE:
+        if resp.status_code == http.client.NOT_ACCEPTABLE:
             negotiated_ver = self.negotiate_version(self.session, resp)
             kwargs['headers']['OpenStack-API-Version'] = (
                 ' '.join(['infra-optim', negotiated_ver]))
             return self._http_request(url, method, **kwargs)
-        if resp.status_code >= http_client.BAD_REQUEST:
+        if resp.status_code >= http.client.BAD_REQUEST:
             error_json = _extract_error_json(resp.content)
             raise exceptions.from_response(
                 resp, error_json.get('faultstring'),
                 error_json.get('debuginfo'), method, url)
-        elif resp.status_code in (http_client.MOVED_PERMANENTLY,
-                                  http_client.FOUND, http_client.USE_PROXY):
+        elif resp.status_code in (http.client.MOVED_PERMANENTLY,
+                                  http.client.FOUND, http.client.USE_PROXY):
             # Redirected. Reissue the request to the new location.
             location = resp.headers.get('location')
             resp = self._http_request(location, method, **kwargs)
-        elif resp.status_code == http_client.MULTIPLE_CHOICES:
+        elif resp.status_code == http.client.MULTIPLE_CHOICES:
             raise exceptions.from_response(resp, method=method, url=url)
         return resp
 
@@ -558,7 +557,7 @@ class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
         body = resp.content
         content_type = resp.headers.get('content-type', None)
         status = resp.status_code
-        if (status in (http_client.NO_CONTENT, http_client.RESET_CONTENT) or
+        if (status in (http.client.NO_CONTENT, http.client.RESET_CONTENT) or
                 content_type is None):
             return resp, list()
         if 'application/json' in content_type:

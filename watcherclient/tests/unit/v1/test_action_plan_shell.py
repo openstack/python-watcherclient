@@ -14,10 +14,10 @@
 # limitations under the License.
 
 import datetime
+import io
 from unittest import mock
 
 from oslo_utils.uuidutils import generate_uuid
-import six
 
 from watcherclient import exceptions
 from watcherclient import shell
@@ -104,7 +104,7 @@ class ActionPlanShellTest(base.CommandTestCase):
         self.m_audit_template_mgr_cls.return_value = self.m_audit_template_mgr
         self.m_action_plan_mgr_cls.return_value = self.m_action_plan_mgr
 
-        self.stdout = six.StringIO()
+        self.stdout = io.StringIO()
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_action_plan_list(self):

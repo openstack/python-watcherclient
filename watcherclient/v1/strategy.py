@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import six.moves.urllib.parse as parse
+from urllib import parse
 
 from watcherclient.common import base
 from watcherclient.common import utils

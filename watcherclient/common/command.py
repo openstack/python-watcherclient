@@ -18,7 +18,6 @@ import logging
 from cliff import command
 from cliff import lister
 from cliff import show
-import six
 
 
 class CommandMeta(abc.ABCMeta):
@@ -30,8 +29,7 @@ class CommandMeta(abc.ABCMeta):
         return super(CommandMeta, mcs).__new__(mcs, name, bases, cls_dict)
 
 
-@six.add_metaclass(CommandMeta)
-class Command(command.Command):
+class Command(command.Command, metaclass=CommandMeta):
 
     def run(self, parsed_args):
         self.log.debug('run(%s)', parsed_args)

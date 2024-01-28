@@ -14,8 +14,8 @@
 #    under the License.
 
 import copy
+from urllib import parse as urlparse
 
-from six.moves.urllib import parse as urlparse
 from testtools import matchers
 
 from watcherclient.tests.unit import utils

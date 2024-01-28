@@ -14,10 +14,10 @@
 # limitations under the License.
 
 import datetime
+import io
 from unittest import mock
 
 from oslo_serialization import jsonutils
-import six
 
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
@@ -69,7 +69,7 @@ class StrategyShellTest(base.CommandTestCase):
         self.m_strategy_mgr = mock.Mock()
         self.m_strategy_mgr_cls.return_value = self.m_strategy_mgr
 
-        self.stdout = six.StringIO()
+        self.stdout = io.StringIO()
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_strategy_list(self):

@@ -13,10 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import io
+
 from cliff.formatters import yaml_format
 from osc_lib import utils
 from oslo_utils import uuidutils
-import six
 
 from watcherclient._i18n import _
 from watcherclient.common import command
@@ -51,7 +52,7 @@ class ShowActionPlan(command.ShowOne):
         return parser
 
     def _format_indicators(self, action_plan, parsed_args):
-        out = six.StringIO()
+        out = io.StringIO()
         efficacy_indicators = action_plan.efficacy_indicators
         fields = ['name', 'description', 'value', 'unit']
         yaml_format.YAMLFormatter().emit_list(
@@ -66,7 +67,7 @@ class ShowActionPlan(command.ShowOne):
 
     def _format_global_efficacy(self, global_efficacy, parsed_args):
         formatted_global_efficacy = format_global_efficacy(global_efficacy)
-        out = six.StringIO()
+        out = io.StringIO()
         yaml_format.YAMLFormatter().emit_one(
             column_names=list(resource.capitalize()
                               for resource in formatted_global_efficacy),
@@ -143,7 +144,7 @@ class ListActionPlan(command.Lister):
         return parser
 
     def _format_indicators(self, action_plan, parsed_args):
-        out = six.StringIO()
+        out = io.StringIO()
         efficacy_indicators = action_plan.efficacy_indicators
         fields = ['name', 'value', 'unit']
         yaml_format.YAMLFormatter().emit_list(
@@ -158,7 +159,7 @@ class ListActionPlan(command.Lister):
 
     def _format_global_efficacy(self, global_efficacy, parsed_args):
         formatted_global_efficacy = format_global_efficacy(global_efficacy)
-        out = six.StringIO()
+        out = io.StringIO()
         yaml_format.YAMLFormatter().emit_one(
             column_names=list(resource.capitalize()
                               for resource in formatted_global_efficacy),

@@ -14,8 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import io
+
 from osc_lib import utils
-import six
 
 from watcherclient._i18n import _
 from watcherclient.common import command
@@ -37,7 +38,7 @@ class ShowGoal(command.ShowOne):
         return parser
 
     def _format_indicator_spec_table(self, spec, parsed_args):
-        out = six.StringIO()
+        out = io.StringIO()
         self.formatter.emit_one(
             column_names=list(field.capitalize() for field in spec.keys()),
             data=utils.get_dict_properties(spec, spec.keys()),
@@ -107,7 +108,7 @@ class ListGoal(command.Lister):
         return parser
 
     def _format_indicator_spec_table(self, goal, parsed_args):
-        out = six.StringIO()
+        out = io.StringIO()
         efficacy_specification = goal.efficacy_specification
         fields = ['name', 'unit']
         self.formatter.emit_list(

@@ -14,9 +14,8 @@
 #   under the License.
 
 import datetime
+import io
 from unittest import mock
-
-import six
 
 from watcherclient import exceptions
 from watcherclient import shell
@@ -96,7 +95,7 @@ class ActionShellTest(base.CommandTestCase):
         self.m_action_mgr_cls.return_value = self.m_action_mgr
         self.m_action_plan_mgr_cls.return_value = self.m_action_plan_mgr
 
-        self.stdout = six.StringIO()
+        self.stdout = io.StringIO()
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_action_list(self):

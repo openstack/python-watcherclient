@@ -13,9 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import io
 from unittest import mock
-
-import six
 
 from watcherclient import shell
 from watcherclient.tests.unit.v1 import base
@@ -92,7 +91,7 @@ class DataModelShellTest(base.CommandTestCase):
 
         self.m_data_model_mgr_cls.return_value = self.m_data_model_mgr
 
-        self.stdout = six.StringIO()
+        self.stdout = io.StringIO()
         self.cmd = shell.WatcherShell(stdout=self.stdout)
 
     def test_do_data_model_list(self):

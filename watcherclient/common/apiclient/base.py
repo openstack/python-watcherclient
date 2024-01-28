@@ -39,10 +39,9 @@ Base utilities to build API operation managers and objects on top of.
 
 import abc
 import copy
+from urllib import parse
 
 from oslo_utils import strutils
-import six
-from six.moves.urllib import parse
 
 from watcherclient._i18n import _
 from watcherclient.common.apiclient import exceptions
@@ -224,8 +223,7 @@ class BaseManager(HookableMixin):
         return self.client.delete(url)
 
 
-@six.add_metaclass(abc.ABCMeta)
-class ManagerWithFind(BaseManager):
+class ManagerWithFind(BaseManager, metaclass=abc.ABCMeta):
     """Manager with additional `find()`/`findall()` methods."""
 
     @abc.abstractmethod
