@@ -358,3 +358,8 @@ class ClientTest(utils.BaseTestCase):
         client = httpclient.HTTPClient(endpoint)
         conn_url = client._make_connection_url(url)
         self.assertEqual(expected_url, conn_url)
+
+    def test_port_ends_with_one(self):
+        endpoint = "http://localhost:8081/"
+        http_client = httpclient.HTTPClient(endpoint)
+        self.assertEqual(endpoint, http_client._make_connection_url(""))
