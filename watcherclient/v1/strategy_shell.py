@@ -71,7 +71,7 @@ class StateStrategy(command.Lister):
 
     def _format_spec(self, requirements):
         for req in requirements:
-            if type(req.state) == list:
+            if isinstance(req.state, list):
                 req.state = jsonutils.dumps(req.state, indent=2)
         return requirements
 
