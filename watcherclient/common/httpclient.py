@@ -14,7 +14,6 @@
 #    under the License.
 
 import copy
-from distutils import version
 import functools
 import hashlib
 import http.client
@@ -123,16 +122,19 @@ class VersionNegotiationMixin(object):
                 % {'req': self.os_infra_optim_api_version,
                    'min': min_ver, 'max': max_ver}))
 
-        negotiated_ver = str(
-            min(version.StrictVersion(self.os_infra_optim_api_version),
-                version.StrictVersion(max_ver)))
+        negotiated_ver = api_versioning.APIVersion(
+            self.os_infra_optim_api_version)
+        min_ver = api_versioning.APIVersion(min_ver)
+        max_ver = api_versioning.APIVersion(max_ver)
+        if negotiated_ver > max_ver:
+            negotiated_ver = max_ver
         if negotiated_ver < min_ver:
             negotiated_ver = min_ver
         # server handles microversions, but doesn't support
         # the requested version, so try a negotiated version
         self.api_version_select_state = 'negotiated'
-        self.os_infra_optim_api_version = negotiated_ver
-        LOG.debug('Negotiated API version is %s', negotiated_ver)
+        self.os_infra_optim_api_version = negotiated_ver.get_string()
+        LOG.debug('Negotiated API version is %s', negotiated_ver.get_string())
 
         return negotiated_ver
 
