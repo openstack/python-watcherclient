@@ -437,11 +437,6 @@ class VerifiedHTTPSConnection(http.client.HTTPSConnection):
         """Connect to a host on a given (SSL) port.
 
         If ca_file is pointing somewhere, use it to check Server Certificate.
-
-        Redefined/copied and extended from httplib.py:1105 (Python 2.6.x).
-        This is needed to pass cert_reqs=ssl.CERT_REQUIRED as parameter to
-        ssl.wrap_socket(), which forces SSL to check server certificate against
-        our client certificate.
         """
         sock = socket.create_connection((self.host, self.port), self.timeout)
 
@@ -449,17 +444,21 @@ class VerifiedHTTPSConnection(http.client.HTTPSConnection):
             self.sock = sock
             self._tunnel()
 
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
         if self.insecure is True:
-            kwargs = {'cert_reqs': ssl.CERT_NONE}
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
         else:
-            kwargs = {'cert_reqs': ssl.CERT_REQUIRED, 'ca_certs': self.ca_file}
+            context.load_verify_locations(self.ca_file)
 
         if self.cert_file:
-            kwargs['certfile'] = self.cert_file
             if self.key_file:
-                kwargs['keyfile'] = self.key_file
+                context.load_cert_chain(self.cert_file, self.key_file)
+            else:
+                context.load_cert_chain(self.cert_file)
 
-        self.sock = ssl.wrap_socket(sock, **kwargs)
+        self.sock = context.wrap_socket(sock)
 
     @staticmethod
     def get_system_ca_file():
