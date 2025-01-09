@@ -20,6 +20,7 @@ import http.client
 import io
 import logging
 import os
+import re
 import socket
 import ssl
 import textwrap
@@ -61,7 +62,7 @@ SUPPORTED_ENDPOINT_SCHEME = ('http', 'https')
 
 def _trim_endpoint_api_version(url):
     """Trim API version and trailing slash from endpoint."""
-    return url.rstrip('/').rstrip(API_VERSION)
+    return re.sub(f'{API_VERSION}$', '', url.rstrip('/'))
 
 
 def _extract_error_json(body):
