@@ -1,3 +1,30 @@
+- job:
+    name: python-watcherclient-functional
+    parent: devstack-tox-functional
+    timeout: 7200
+    required-projects:
+      - openstack/watcher
+      - openstack/python-watcherclient
+    vars:
+      # Run cross-project watcherclient functional tests on watcher repo.
+      zuul_work_dir: src/opendev.org/openstack/python-watcherclient
+      openrc_enable_export: true
+      devstack_plugins:
+        watcher: https://opendev.org/openstack/watcher
+      devstack_services:
+        watcher-api: true
+        watcher-decision-engine: true
+        watcher-applier: true
+        s-account: false
+        s-container: false
+        s-object: false
+        s-proxy: false
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^releasenotes/.*$
+
+
 - project:
     templates:
       - openstack-cover-jobs
@@ -7,4 +34,4 @@
       - openstackclient-plugin-jobs
     check:
       jobs:
-        - watcherclient-tempest-functional
+        - python-watcherclient-functional
