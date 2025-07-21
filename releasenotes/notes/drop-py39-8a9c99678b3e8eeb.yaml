@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    watcher client now requires python 3.10 or newer.
+    The last release to support ``3.9`` was ``2025.1``.
+    Please ensure you have a supported python version before upgrading.
