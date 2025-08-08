@@ -34,7 +34,7 @@ def credentials():
     return [x for sub in creds_dict.items() for x in sub]
 
 
-def execute(cmd, fail_ok=False, merge_stderr=False):
+def execute(cmd, fail_ok=False, merge_stderr=True):
     """Executes specified command for the given action."""
     cmdlist = shlex.split(cmd)
     cmdlist.extend(credentials())

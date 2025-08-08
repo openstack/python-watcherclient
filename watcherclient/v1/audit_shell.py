@@ -38,6 +38,9 @@ def drop_unsupported_field(app_args, fields, field_labels):
     if not api_versioning.launch_audit_forced(api_ver):
         fields.remove('force')
         field_labels.remove('Force')
+    if not api_versioning.action_update_supported(api_ver):
+        fields.remove('status_message')
+        field_labels.remove('Status Message')
     return fields, field_labels
 
 

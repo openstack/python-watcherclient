@@ -33,13 +33,14 @@ AUDIT_TEMPLATE_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Goal', 'Strategy']
 AUDIT_FIELDS = ['uuid', 'name', 'created_at', 'updated_at', 'deleted_at',
                 'state', 'audit_type', 'parameters', 'interval', 'goal_name',
                 'strategy_name', 'scope', 'auto_trigger', 'next_run_time',
-                'hostname', 'start_time', 'end_time', 'force']
+                'hostname', 'start_time', 'end_time', 'force',
+                'status_message']
 
 AUDIT_FIELD_LABELS = ['UUID', 'Name', 'Created At', 'Updated At', 'Deleted At',
                       'State', 'Audit Type', 'Parameters', 'Interval', 'Goal',
                       'Strategy', 'Audit Scope', 'Auto Trigger',
                       'Next Run Time', 'Hostname', 'Start Time', 'End Time',
-                      'Force']
+                      'Force', 'Status Message']
 
 AUDIT_SHORT_LIST_FIELDS = ['uuid', 'name', 'audit_type',
                            'state', 'goal_name', 'strategy_name',
@@ -51,12 +52,13 @@ AUDIT_SHORT_LIST_FIELD_LABELS = ['UUID', 'Name', 'Audit Type', 'State', 'Goal',
 # Action Plan
 ACTION_PLAN_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at',
                       'audit_uuid', 'strategy_name', 'state',
-                      'efficacy_indicators', 'global_efficacy', 'hostname']
+                      'efficacy_indicators', 'global_efficacy', 'hostname',
+                      'status_message']
 
 ACTION_PLAN_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
                             'Audit', 'Strategy', 'State',
                             'Efficacy indicators', 'Global efficacy',
-                            'Hostname']
+                            'Hostname', 'Status Message']
 
 ACTION_PLAN_SHORT_LIST_FIELDS = ['uuid', 'audit_uuid', 'state',
                                  'updated_at', 'global_efficacy']
@@ -69,11 +71,11 @@ GLOBAL_EFFICACY_FIELDS = ['value', 'unit', 'name', 'description']
 # Action
 ACTION_FIELDS = ['uuid', 'created_at', 'updated_at', 'deleted_at', 'parents',
                  'state', 'action_plan_uuid', 'action_type',
-                 'input_parameters', 'description']
+                 'input_parameters', 'description', 'status_message']
 
 ACTION_FIELD_LABELS = ['UUID', 'Created At', 'Updated At', 'Deleted At',
                        'Parents', 'State', 'Action Plan', 'Action',
-                       'Parameters', 'Description']
+                       'Parameters', 'Description', 'Status Message']
 
 ACTION_SHORT_LIST_FIELDS = ['uuid', 'parents',
                             'state', 'action_plan_uuid', 'action_type']

@@ -13,13 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
+
 from osc_lib import utils
+from oslo_utils import uuidutils
 
 from watcherclient._i18n import _
+from watcherclient.common import api_versioning
 from watcherclient.common import command
 from watcherclient.common import utils as common_utils
 from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
+
+
+def drop_unsupported_field(app_args, fields, field_labels):
+    fields = copy.copy(fields)
+    field_labels = copy.copy(field_labels)
+    api_ver = app_args.os_infra_optim_api_version
+    if not api_versioning.action_update_supported(api_ver):
+        fields.remove('status_message')
+        field_labels.remove('Status Message')
+    return fields, field_labels
 
 
 class ShowAction(command.ShowOne):
@@ -44,6 +58,8 @@ class ShowAction(command.ShowOne):
 
         columns = res_fields.ACTION_FIELDS
         column_headers = res_fields.ACTION_FIELD_LABELS
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
 
         return column_headers, utils.get_item_properties(action, columns)
 
@@ -104,6 +120,8 @@ class ListAction(command.Lister):
         if parsed_args.detail:
             fields = res_fields.ACTION_FIELDS
             field_labels = res_fields.ACTION_FIELD_LABELS
+            fields, field_labels = drop_unsupported_field(
+                self.app_args, fields, field_labels)
         else:
             fields = res_fields.ACTION_SHORT_LIST_FIELDS
             field_labels = res_fields.ACTION_SHORT_LIST_FIELD_LABELS
@@ -119,3 +137,67 @@ class ListAction(command.Lister):
 
         return (field_labels,
                 (utils.get_item_properties(item, fields) for item in data))
+
+
+class UpdateAction(command.ShowOne):
+    """Update action command."""
+
+    def get_parser(self, prog_name):
+        parser = super(UpdateAction, self).get_parser(prog_name)
+        parser.add_argument(
+            'action',
+            metavar='<action>',
+            help=_('UUID of the action'))
+        parser.add_argument(
+            '--state',
+            metavar='<state>',
+            help=_('New state for the action (e.g., SKIPPED)'))
+        parser.add_argument(
+            '--reason',
+            metavar='<reason>',
+            help=_('Reason for the state change'))
+        return parser
+
+    def take_action(self, parsed_args):
+        client = getattr(self.app.client_manager, "infra-optim")
+
+        # Check if action update is supported in the requested API version
+        api_ver = self.app_args.os_infra_optim_api_version
+        if not api_versioning.action_update_supported(api_ver):
+            raise exceptions.CommandError(
+                _("Action update is not supported in API version %s. "
+                  "Minimum required version is 1.5.") % api_ver)
+
+        if not parsed_args.state and not parsed_args.reason:
+            raise exceptions.CommandError(
+                _("At least one field update is required for this operation"))
+
+        if not uuidutils.is_uuid_like(parsed_args.action):
+            raise exceptions.ValidationError()
+
+        patch = []
+        if parsed_args.state:
+            patch.append({
+                'op': 'replace',
+                'path': '/state',
+                'value': parsed_args.state
+            })
+
+        if parsed_args.reason:
+            patch.append({
+                'op': 'replace',
+                'path': '/status_message',
+                'value': parsed_args.reason
+            })
+
+        try:
+            action = client.action.update(parsed_args.action, patch)
+        except exceptions.HTTPNotFound as exc:
+            raise exceptions.CommandError(str(exc))
+
+        columns = res_fields.ACTION_FIELDS
+        column_headers = res_fields.ACTION_FIELD_LABELS
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
+
+        return column_headers, utils.get_item_properties(action, columns)

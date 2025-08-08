@@ -83,3 +83,6 @@ class ActionManager(base.Manager):
             return self._list(self._path(action_id))[0]
         except IndexError:
             return None
+
+    def update(self, action_id, patch):
+        return self._update(self._path(action_id), patch)

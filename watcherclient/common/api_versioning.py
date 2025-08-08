@@ -28,6 +28,7 @@ if not LOG.handlers:
 
 MINOR_1_START_END_TIMING = '1.1'
 MINOR_2_FORCE_AUDIT = '1.2'
+MINOR_5_ACTION_UPDATE = '1.5'
 HEADER_NAME = "OpenStack-API-Version"
 # key is a deprecated version and value is an alternative version.
 DEPRECATED_VERSIONS = {}
@@ -52,6 +53,15 @@ def launch_audit_forced(requested_version):
     """
     return (APIVersion(requested_version) >=
             APIVersion(MINOR_2_FORCE_AUDIT))
+
+
+def action_update_supported(requested_version):
+    """Check if we should support action update functionality.
+
+    Version 1.5 of the API added support for updating action state.
+    """
+    return (APIVersion(requested_version) >=
+            APIVersion(MINOR_5_ACTION_UPDATE))
 
 
 class APIVersion(object):

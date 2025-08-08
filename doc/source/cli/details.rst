@@ -24,7 +24,7 @@ The watcher client is the command-line interface (CLI) for the
 Infrastructure Optimization service (watcher) API
 and its extensions.
 
-This chapter documents :command:`watcher` version ``1.3.0``.
+This chapter documents watcherclient version ``4.9.0``.
 
 For help on a specific :command:`watcher` command, enter:
 
@@ -213,6 +213,37 @@ Show detailed information about a given action.
 
 ``-h, --help``
   show this help message and exit
+
+.. _watcher_action_update:
+
+watcher action update
+---------------------
+
+.. code-block:: console
+
+   usage: watcher action update [-h] [-f {html,json,shell,table,value,yaml}]
+                                [-c COLUMN] [--max-width <integer>] [--fit-width]
+                                [--print-empty] [--noindent] [--prefix PREFIX]
+                                [--state <state>] [--reason <reason>] <action>
+
+Update action command.
+
+**Positional arguments:**
+
+``<action>``
+  UUID of the action
+
+**Optional arguments:**
+
+``-h, --help``
+  show this help message and exit
+
+``--state <state>``
+  New state for the action (e.g., SKIPPED)
+
+``--reason <reason>``
+  Reason for the action state change.
+
 
 .. _watcher_actionplan_cancel:
 

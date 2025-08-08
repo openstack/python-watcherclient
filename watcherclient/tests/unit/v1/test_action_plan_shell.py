@@ -79,8 +79,9 @@ class ActionPlanShellTest(base.CommandTestCase):
     FIELD_LABELS = resource_fields.ACTION_PLAN_FIELD_LABELS
     GLOBAL_EFFICACY_FIELDS = resource_fields.GLOBAL_EFFICACY_FIELDS
 
-    def setUp(self):
-        super(self.__class__, self).setUp()
+    def setUp(self, os_infra_optim_api_version='1.0'):
+        super(ActionPlanShellTest, self).setUp(
+            os_infra_optim_api_version=os_infra_optim_api_version)
 
         p_audit_manager = mock.patch.object(resource, 'AuditManager')
         p_audit_template_manager = mock.patch.object(
@@ -336,3 +337,14 @@ class ActionPlanShellTest(base.CommandTestCase):
 
         self.assertEqual(1, exit_code)
         self.assertEqual('', result)
+
+
+class ActionPlanShellTest15(ActionPlanShellTest):
+    def setUp(self):
+        super(ActionPlanShellTest15, self).setUp(
+            os_infra_optim_api_version='1.5')
+        v15 = dict(status_message=None)
+        for action_plan in (ACTION_PLAN_1, ACTION_PLAN_2):
+            action_plan.update(v15)
+        self.FIELDS.extend(['status_message'])
+        self.FIELD_LABELS.extend(['Status Message'])

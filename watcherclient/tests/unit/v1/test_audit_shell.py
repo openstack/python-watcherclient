@@ -494,8 +494,9 @@ class AuditShellTestv11(AuditShellTest):
 
 
 class AuditShellTestv12(AuditShellTest):
-    def setUp(self):
-        super(AuditShellTestv12, self).setUp(os_infra_optim_api_version='1.2')
+    def setUp(self, os_infra_optim_api_version='1.2'):
+        super(AuditShellTestv12, self).setUp(
+            os_infra_optim_api_version=os_infra_optim_api_version)
         v11 = dict(start_time=None, end_time=None)
         v12 = dict(force=False)
         for audit in (self.AUDIT_1, self.AUDIT_2, self.AUDIT_3):
@@ -697,3 +698,13 @@ class AuditShellTestv12(AuditShellTest):
             name='my_audit',
             force=False
         )
+
+
+class AuditShellTestv15(AuditShellTestv12):
+    def setUp(self):
+        super(AuditShellTestv15, self).setUp(os_infra_optim_api_version='1.5')
+        v15 = dict(status_message=None)
+        for audit in (self.AUDIT_1, self.AUDIT_2, self.AUDIT_3):
+            audit.update(v15)
+        self.FIELDS.extend(['status_message'])
+        self.FIELD_LABELS.extend(['Status Message'])

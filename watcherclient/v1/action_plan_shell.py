@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import io
 
 from cliff.formatters import yaml_format
@@ -20,10 +21,21 @@ from osc_lib import utils
 from oslo_utils import uuidutils
 
 from watcherclient._i18n import _
+from watcherclient.common import api_versioning
 from watcherclient.common import command
 from watcherclient.common import utils as common_utils
 from watcherclient import exceptions
 from watcherclient.v1 import resource_fields as res_fields
+
+
+def drop_unsupported_field(app_args, fields, field_labels):
+    fields = copy.copy(fields)
+    field_labels = copy.copy(field_labels)
+    api_ver = app_args.os_infra_optim_api_version
+    if not api_versioning.action_update_supported(api_ver):
+        fields.remove('status_message')
+        field_labels.remove('Status Message')
+    return fields, field_labels
 
 
 def format_global_efficacy(global_efficacy):
@@ -101,6 +113,8 @@ class ShowActionPlan(command.ShowOne):
 
         columns = res_fields.ACTION_PLAN_FIELDS
         column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
         return column_headers, utils.get_item_properties(action_plan, columns)
 
 
@@ -178,6 +192,8 @@ class ListActionPlan(command.Lister):
         if parsed_args.detail:
             fields = res_fields.ACTION_PLAN_FIELDS
             field_labels = res_fields.ACTION_PLAN_FIELD_LABELS
+            fields, field_labels = drop_unsupported_field(
+                self.app_args, fields, field_labels)
         else:
             fields = res_fields.ACTION_PLAN_SHORT_LIST_FIELDS
             field_labels = res_fields.ACTION_PLAN_SHORT_LIST_FIELD_LABELS
@@ -239,6 +255,8 @@ class UpdateActionPlan(command.ShowOne):
 
         columns = res_fields.ACTION_PLAN_FIELDS
         column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
 
         return column_headers, utils.get_item_properties(action_plan, columns)
 
@@ -265,6 +283,8 @@ class StartActionPlan(command.ShowOne):
 
         columns = res_fields.ACTION_PLAN_FIELDS
         column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
 
         return column_headers, utils.get_item_properties(action_plan, columns)
 
@@ -314,5 +334,7 @@ class CancelActionPlan(command.ShowOne):
 
         columns = res_fields.ACTION_PLAN_FIELDS
         column_headers = res_fields.ACTION_PLAN_FIELD_LABELS
+        columns, column_headers = drop_unsupported_field(
+            self.app_args, columns, column_headers)
 
         return column_headers, utils.get_item_properties(action_plan, columns)
