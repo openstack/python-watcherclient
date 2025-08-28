@@ -1,0 +1,24 @@
+---
+features:
+  - |
+    Added support for updating action state through the new
+    ``openstack optimize action update`` command. This feature allows
+    operators to manually change action states. The command
+    supports the following options:
+
+    * ``--state <state>`` - New state for the action (required)
+    * ``--reason <reason>`` - Optional reason for the state change
+
+    Currently, the only use case for this update is to Skip an action
+    before starting an Action Plan with an optional reason by setting
+    the state to SKIPPED:
+
+    $ openstack optimize action update --state SKIPPED --reason "Manual skip" <action-uuid>
+
+    This feature requires Watcher API microversion 1.5 or higher.
+
+upgrade:
+  - |
+    The maximum supported API version has been increased from 1.1 to 1.5
+    to support the new action update functionality. This change maintains
+    full backward compatibility with existing deployments.

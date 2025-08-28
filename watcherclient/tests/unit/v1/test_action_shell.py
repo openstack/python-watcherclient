@@ -15,6 +15,7 @@
 
 import datetime
 import io
+import unittest
 from unittest import mock
 
 from watcherclient import exceptions
@@ -78,8 +79,9 @@ class ActionShellTest(base.CommandTestCase):
     FIELDS = resource_fields.ACTION_FIELDS
     FIELD_LABELS = resource_fields.ACTION_FIELD_LABELS
 
-    def setUp(self):
-        super(self.__class__, self).setUp()
+    def setUp(self, os_infra_optim_api_version='1.0'):
+        super(ActionShellTest, self).setUp(
+            os_infra_optim_api_version=os_infra_optim_api_version)
 
         p_action_manager = mock.patch.object(resource, 'ActionManager')
         p_action_plan_manager = mock.patch.object(
@@ -176,3 +178,106 @@ class ActionShellTest(base.CommandTestCase):
 
         self.assertEqual(1, exit_code)
         self.assertEqual('', result)
+
+    def test_do_action_update_unsupported_version(self):
+
+        exit_code, result = self.run_cmd(
+            'action update --state SKIPPED '
+            '770ef053-ecb3-48b0-85b5-d55a2dbc6588',
+            formatting=None)
+
+        self.assertEqual(1, exit_code)
+        self.assertEqual('', result)
+
+
+class ActionShellTest15(ActionShellTest):
+    def setUp(self):
+        super(ActionShellTest15, self).setUp(os_infra_optim_api_version='1.5')
+        v15 = dict(status_message=None)
+        for action in (ACTION_1, ACTION_2, ACTION_3):
+            action.update(v15)
+        self.FIELDS.extend(['status_message'])
+        self.FIELD_LABELS.extend(['Status Message'])
+
+    def test_do_action_update_with_state_only(self):
+        action = resource.Action(mock.Mock(), ACTION_1)
+        self.m_action_mgr.update.return_value = action
+
+        exit_code, result = self.run_cmd(
+            'action update --state SKIPPED '
+            '770ef053-ecb3-48b0-85b5-d55a2dbc6588')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(action, self.FIELDS, self.FIELD_LABELS),
+            result)
+
+        expected_patch = [
+            {'op': 'replace', 'path': '/state', 'value': 'SKIPPED'}
+        ]
+        self.m_action_mgr.update.assert_called_once_with(
+            '770ef053-ecb3-48b0-85b5-d55a2dbc6588', expected_patch)
+
+    def test_do_action_update_with_state_and_reason(self):
+        action = resource.Action(mock.Mock(), ACTION_1)
+        self.m_action_mgr.update.return_value = action
+
+        exit_code, result = self.run_cmd(
+            'action update --state SKIPPED --reason "Manual skip" '
+            '770ef053-ecb3-48b0-85b5-d55a2dbc6588')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(action, self.FIELDS, self.FIELD_LABELS),
+            result)
+
+        expected_patch = [
+            {'op': 'replace', 'path': '/state', 'value': 'SKIPPED'},
+            {'op': 'replace', 'path': '/status_message',
+             'value': 'Manual skip'}
+        ]
+        self.m_action_mgr.update.assert_called_once_with(
+            '770ef053-ecb3-48b0-85b5-d55a2dbc6588', expected_patch)
+
+    def test_do_action_update_with_reason_only(self):
+        action = resource.Action(mock.Mock(), ACTION_1)
+        self.m_action_mgr.update.return_value = action
+
+        exit_code, result = self.run_cmd(
+            'action update --reason "Manual skip" '
+            '770ef053-ecb3-48b0-85b5-d55a2dbc6588')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(
+            self.resource_as_dict(action, self.FIELDS, self.FIELD_LABELS),
+            result)
+
+        expected_patch = [
+            {'op': 'replace', 'path': '/status_message',
+             'value': 'Manual skip'}
+        ]
+        self.m_action_mgr.update.assert_called_once_with(
+            '770ef053-ecb3-48b0-85b5-d55a2dbc6588', expected_patch)
+
+    def test_do_action_update_no_fields_to_update(self):
+        exit_code, result = self.run_cmd(
+            'action update 770ef053-ecb3-48b0-85b5-d55a2dbc6588',
+            formatting=None)
+
+        self.assertEqual(1, exit_code)
+        self.assertEqual('', result)
+
+    def test_do_action_update_action_not_found(self):
+
+        self.m_action_mgr.update.side_effect = exceptions.HTTPNotFound
+
+        exit_code, result = self.run_cmd(
+            'action update --state SKIPPED not_found_uuid',
+            formatting=None)
+
+        self.assertEqual(1, exit_code)
+        self.assertEqual('', result)
+
+    @unittest.skip("Action update is supported in API version 1.5")
+    def test_do_action_update_unsupported_version(self):
+        pass

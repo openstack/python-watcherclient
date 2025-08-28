@@ -32,4 +32,4 @@ API_MIN_VERSION = api_versioning.APIVersion("1.0")
 # when client supported the max version, and bumped sequentially, otherwise
 # the client may break due to server side new version may include some
 # backward incompatible change.
-API_MAX_VERSION = api_versioning.APIVersion("1.1")
+API_MAX_VERSION = api_versioning.APIVersion("1.5")

@@ -92,6 +92,10 @@ fake_responses = {
             {},
             None,
         ),
+        'PATCH': (
+            {},
+            ACTION1,
+        ),
     },
     '/v1/actions/detail?action_plan_uuid=%s' % ACTION1['action_plan']:
     {
@@ -264,3 +268,12 @@ class ActionManagerTest(testtools.TestCase):
         self.assertEqual(ACTION1['uuid'], action.uuid)
         self.assertEqual(ACTION1['action_plan'], action.action_plan)
         self.assertEqual(ACTION1['next'], action.next)
+
+    def test_actions_update(self):
+        patch = [{'op': 'replace', 'path': '/state', 'value': 'SKIPPED'}]
+        action = self.mgr.update(ACTION1['uuid'], patch)
+        expect = [
+            ('PATCH', '/v1/actions/%s' % ACTION1['uuid'], {}, patch),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertEqual(ACTION1['uuid'], action.uuid)

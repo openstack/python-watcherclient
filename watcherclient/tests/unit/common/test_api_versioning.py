@@ -148,3 +148,22 @@ class GetAPIVersionTestCase(utils.BaseTestCase):
         self.assertEqual(mock_apiversion.return_value,
                          api_versioning.get_api_version(version))
         mock_apiversion.assert_called_once_with(version)
+
+
+class APIVersionFunctionsTestCase(utils.BaseTestCase):
+    def test_action_update_supported_true(self):
+        # Test versions >= 1.5 support action update
+        self.assertTrue(api_versioning.action_update_supported("1.5"))
+        self.assertTrue(api_versioning.action_update_supported("1.6"))
+        self.assertTrue(api_versioning.action_update_supported("2.0"))
+
+    def test_action_update_supported_false(self):
+        # Test versions < 1.5 do not support action update
+        self.assertFalse(api_versioning.action_update_supported("1.0"))
+        self.assertFalse(api_versioning.action_update_supported("1.1"))
+        self.assertFalse(api_versioning.action_update_supported("1.4"))
+
+    def test_action_update_supported_edge_case(self):
+        # Test exact boundary
+        self.assertTrue(api_versioning.action_update_supported("1.5"))
+        self.assertFalse(api_versioning.action_update_supported("1.4"))
