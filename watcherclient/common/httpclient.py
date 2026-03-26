@@ -19,10 +19,7 @@ import hashlib
 import http.client
 import io
 import logging
-import os
 import re
-import socket
-import ssl
 import textwrap
 import time
 from urllib import parse as urlparse
@@ -411,68 +408,6 @@ class HTTPClient(VersionNegotiationMixin):
         kwargs['headers'].setdefault('Content-Type',
                                      'application/octet-stream')
         return self._http_request(url, method, **kwargs)
-
-
-class VerifiedHTTPSConnection(http.client.HTTPSConnection):
-    """httplib-compatible connection using client-side SSL authentication
-
-    :see http://code.activestate.com/recipes/
-            577548-https-httplib-client-connection-with-certificate-v/
-    """
-
-    def __init__(self, host, port, key_file=None, cert_file=None,
-                 ca_file=None, timeout=None, insecure=False):
-        super(VerifiedHTTPSConnection, self).__init__(
-            self, host, port, key_file=key_file, cert_file=cert_file)
-        self.key_file = key_file
-        self.cert_file = cert_file
-        if ca_file is not None:
-            self.ca_file = ca_file
-        else:
-            self.ca_file = self.get_system_ca_file()
-        self.timeout = timeout
-        self.insecure = insecure
-
-    def connect(self):
-        """Connect to a host on a given (SSL) port.
-
-        If ca_file is pointing somewhere, use it to check Server Certificate.
-        """
-        sock = socket.create_connection((self.host, self.port), self.timeout)
-
-        if self._tunnel_host:
-            self.sock = sock
-            self._tunnel()
-
-        context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-
-        if self.insecure is True:
-            context.check_hostname = False
-            context.verify_mode = ssl.CERT_NONE
-        else:
-            context.load_verify_locations(self.ca_file)
-
-        if self.cert_file:
-            if self.key_file:
-                context.load_cert_chain(self.cert_file, self.key_file)
-            else:
-                context.load_cert_chain(self.cert_file)
-
-        self.sock = context.wrap_socket(sock)
-
-    @staticmethod
-    def get_system_ca_file():
-        """Return path to system default CA file."""
-        # Standard CA file locations for Debian/Ubuntu, RedHat/Fedora,
-        # Suse, FreeBSD/OpenBSD
-        ca_path = ['/etc/ssl/certs/ca-certificates.crt',
-                   '/etc/pki/tls/certs/ca-bundle.crt',
-                   '/etc/ssl/ca-bundle.pem',
-                   '/etc/ssl/cert.pem']
-        for ca in ca_path:
-            if os.path.exists(ca):
-                return ca
-        return None
 
 
 class SessionClient(VersionNegotiationMixin, adapter.LegacyJsonAdapter):
