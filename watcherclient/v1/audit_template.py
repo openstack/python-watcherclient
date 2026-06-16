@@ -17,7 +17,8 @@ from watcherclient.common import base
 from watcherclient.common import utils
 from watcherclient import exceptions as exc
 
-CREATION_ATTRIBUTES = ['description', 'name', 'goal', 'strategy', 'scope']
+CREATION_ATTRIBUTES = ['description', 'name', 'goal', 'strategy', 'scope',
+                       'default_parameters']
 
 
 class AuditTemplate(base.Resource):

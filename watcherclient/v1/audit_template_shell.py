@@ -19,6 +19,7 @@ from osc_lib import utils
 from oslo_utils import uuidutils
 
 from watcherclient._i18n import _
+from watcherclient.common import api_versioning
 from watcherclient.common import command
 from watcherclient.common import utils as common_utils
 from watcherclient import exceptions
@@ -247,6 +248,14 @@ class CreateAuditTemplate(command.ShowOne):
                    " ]\n"
                    )
         )
+        parser.add_argument(
+            '-p', '--default-parameter',
+            dest='default_parameters',
+            metavar='<name=value>',
+            action='append',
+            help=_("Default strategy parameter/value for audits created from "
+                   "this template. Can be specified multiple times. "
+                   "Requires --strategy and API version >= 1.7."))
 
         return parser
 
@@ -254,8 +263,18 @@ class CreateAuditTemplate(command.ShowOne):
         client = getattr(self.app.client_manager, "infra-optim")
 
         field_list = ['description', 'name', 'goal', 'strategy', 'scope']
+
+        api_ver = self.app_args.os_infra_optim_api_version
+        if api_versioning.allow_audit_template_default_parameters(api_ver):
+            field_list.append('default_parameters')
+        elif vars(parsed_args).get('default_parameters') is not None:
+            raise exceptions.CommandError(
+                _("Audit template default_parameters is not supported in API "
+                  "version %s. Minimum required version is 1.7.") % api_ver)
+
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
+        fields = common_utils.args_array_to_dict(fields, 'default_parameters')
 
         # mandatory
         if not uuidutils.is_uuid_like(fields['goal']):

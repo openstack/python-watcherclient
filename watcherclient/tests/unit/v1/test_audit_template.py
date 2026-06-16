@@ -30,6 +30,7 @@ AUDIT_TMPL1 = {
     'goal_name': 'SERVER_CONSOLIDATION',
     'strategy_uuid': 'bbe6b966-f98e-439b-a01a-17b9b3b8478b',
     'strategy_name': 'server_consolidation',
+    'default_parameters': {'threshold': 35.0},
 }
 
 AUDIT_TMPL2 = {
@@ -446,6 +447,16 @@ class AuditTemplateManagerTest(utils.BaseTestCase):
         audit_template = self.mgr.create(**CREATE_AUDIT_TEMPLATE)
         expect = [
             ('POST', '/v1/audit_templates', {}, CREATE_AUDIT_TEMPLATE),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertTrue(audit_template)
+
+    def test_create_with_default_parameters(self):
+        body = dict(CREATE_AUDIT_TEMPLATE,
+                    default_parameters={'threshold': 35.0})
+        audit_template = self.mgr.create(**body)
+        expect = [
+            ('POST', '/v1/audit_templates', {}, body),
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertTrue(audit_template)

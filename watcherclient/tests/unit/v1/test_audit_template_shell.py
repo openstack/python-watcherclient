@@ -52,7 +52,8 @@ AUDIT_TEMPLATE_1 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
-    'scope': []
+    'scope': [],
+    'default_parameters': {'threshold': 35.0},
 }
 
 AUDIT_TEMPLATE_2 = {
@@ -66,7 +67,8 @@ AUDIT_TEMPLATE_2 = {
     'created_at': datetime.datetime.now().isoformat(),
     'updated_at': None,
     'deleted_at': None,
-    'scope': []
+    'scope': [],
+    'default_parameters': ''
 }
 
 
@@ -78,8 +80,9 @@ class AuditTemplateShellTest(base.CommandTestCase):
     FIELDS = resource_fields.AUDIT_TEMPLATE_FIELDS
     FIELD_LABELS = resource_fields.AUDIT_TEMPLATE_FIELD_LABELS
 
-    def setUp(self):
-        super(self.__class__, self).setUp()
+    def setUp(self, os_infra_optim_api_version='1.0'):
+        super(AuditTemplateShellTest, self).setUp(
+            os_infra_optim_api_version=os_infra_optim_api_version)
 
         # goal mock
         p_goal_manager = mock.patch.object(resource, 'GoalManager')
@@ -370,3 +373,60 @@ class AuditTemplateShellTest(base.CommandTestCase):
         self.m_audit_template_mgr.create.assert_called_once_with(
             goal='fc087747-61be-4aad-8126-b701731ae836',
             name='at1')
+
+
+class AuditTemplateShellTestV17(AuditTemplateShellTest):
+
+    def setUp(self):
+        super().setUp(os_infra_optim_api_version='1.7')
+
+    def test_do_audit_template_create_with_default_parameters(self):
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.create.return_value = audit_template
+
+        exit_code, result = self.run_cmd(
+            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836 '
+            '-s 2cf86250-d309-4b81-818e-1537f3dba6e5 '
+            '-p threshold=35.0')
+
+        self.assertEqual(0, exit_code)
+        self.assertEqual(self.resource_as_dict(audit_template, self.FIELDS,
+                                               self.FIELD_LABELS),
+                         result)
+        self.m_audit_template_mgr.create.assert_called_once_with(
+            goal='fc087747-61be-4aad-8126-b701731ae836',
+            name='at1',
+            strategy='2cf86250-d309-4b81-818e-1537f3dba6e5',
+            default_parameters={'threshold': 35.0})
+
+    def test_do_audit_template_show_includes_default_parameters(self):
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.get.return_value = audit_template
+
+        exit_code, result = self.run_cmd(
+            'audittemplate show %s' % AUDIT_TEMPLATE_1['uuid'])
+
+        self.assertEqual(0, exit_code)
+        self.assertIn('Default Parameters', result)
+        self.assertEqual({'threshold': 35.0}, result['Default Parameters'])
+
+
+class AuditTemplateShellTestOldMicroversion(AuditTemplateShellTest):
+    """Verify default_parameters raises an error when microversion < 1.7."""
+
+    def setUp(self):
+        super().setUp(os_infra_optim_api_version='1.6')
+
+    def test_do_audit_template_create_raises_on_default_parameters(self):
+        audit_template = resource.AuditTemplate(mock.Mock(), AUDIT_TEMPLATE_1)
+        self.m_audit_template_mgr.create.return_value = audit_template
+
+        exit_code, _ = self.run_cmd(
+            'audittemplate create at1 fc087747-61be-4aad-8126-b701731ae836 '
+            '-s 2cf86250-d309-4b81-818e-1537f3dba6e5 '
+            '-p threshold=35.0',
+            formatting='table',
+        )
+
+        self.assertNotEqual(0, exit_code)
+        self.m_audit_template_mgr.create.assert_not_called()

@@ -29,6 +29,7 @@ if not LOG.handlers:
 MINOR_1_START_END_TIMING = '1.1'
 MINOR_2_FORCE_AUDIT = '1.2'
 MINOR_5_ACTION_UPDATE = '1.5'
+MINOR_7_AUDIT_TEMPLATE_DEFAULT_PARAMS = '1.7'
 HEADER_NAME = "OpenStack-API-Version"
 # key is a deprecated version and value is an alternative version.
 DEPRECATED_VERSIONS = {}
@@ -62,6 +63,15 @@ def action_update_supported(requested_version):
     """
     return (APIVersion(requested_version) >=
             APIVersion(MINOR_5_ACTION_UPDATE))
+
+
+def allow_audit_template_default_parameters(requested_version):
+    """Check if we should support default_parameters on audit templates.
+
+    Version 1.7 of the API added default_parameters to AuditTemplate.
+    """
+    return (APIVersion(requested_version) >=
+            APIVersion(MINOR_7_AUDIT_TEMPLATE_DEFAULT_PARAMS))
 
 
 class APIVersion(object):

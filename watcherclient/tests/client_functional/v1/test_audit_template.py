@@ -16,6 +16,7 @@
 from oslo_utils import uuidutils
 
 from watcherclient.tests.client_functional.v1 import base
+from watcherclient.tests.client_functional.v1.base import execute
 
 
 class AuditTemplateTests(base.TestCase):
@@ -87,3 +88,55 @@ class AuditTemplateActiveTests(base.TestCase):
         raw_output = self.watcher('audittemplate delete %s'
                                   % self.audit_template_name)
         self.assertOutput('', raw_output)
+
+
+class AuditTemplateDefaultParametersTests(base.TestCase):
+    """Functional tests for audit template default_parameters (API v1.7)."""
+
+    api_version = 1.7
+    audit_template_name = 'c' + uuidutils.generate_uuid()
+    list_fields = ['UUID', 'Name', 'Goal', 'Strategy']
+    detailed_list_fields = list_fields + [
+        'Created At', 'Updated At', 'Deleted At',
+        'Description', 'Audit Scope', 'Default Parameters',
+    ]
+
+    def _create_with_default_params(self):
+        return self.watcher(
+            'audittemplate create %s dummy -s dummy -p para1=5.0'
+            % self.audit_template_name)
+
+    def _delete(self):
+        self.watcher('audittemplate delete %s' % self.audit_template_name,
+                     fail_ok=True)
+
+    def test_create_with_default_parameters(self):
+        raw_output = self._create_with_default_params()
+        self.assert_table_structure([raw_output], self.detailed_list_fields)
+        parsed = self.parse_show_as_object(raw_output)
+        self.assertIn('para1', parsed['Default Parameters'])
+        self._delete()
+
+    def test_show_includes_default_parameters(self):
+        self._create_with_default_params()
+        raw_output = self.watcher('audittemplate show %s'
+                                  % self.audit_template_name)
+        self.assert_table_structure([raw_output], self.detailed_list_fields)
+        parsed = self.parse_show_as_object(raw_output)
+        self.assertIn('para1', parsed['Default Parameters'])
+        self._delete()
+
+    def test_detailed_list_includes_default_parameters(self):
+        self._create_with_default_params()
+        raw_output = self.watcher('audittemplate list --detail')
+        self.assert_table_structure([raw_output], self.detailed_list_fields)
+        self._delete()
+
+    def test_old_microversion_hides_default_parameters(self):
+        self._create_with_default_params()
+        raw_output = execute(
+            'openstack optimize --os-infra-optim-api-version 1.6 '
+            'audittemplate show %s' % self.audit_template_name)
+        parsed = self.parse_show_as_object(raw_output)
+        self.assertNotIn('para1', parsed.get('Default Parameters', ''))
+        self._delete()

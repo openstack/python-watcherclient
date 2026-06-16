@@ -18,11 +18,13 @@
 # Audit Template
 AUDIT_TEMPLATE_FIELDS = [
     'uuid', 'created_at', 'updated_at', 'deleted_at',
-    'description', 'name', 'goal_name', 'strategy_name', 'scope']
+    'description', 'name', 'goal_name', 'strategy_name', 'scope',
+    'default_parameters']
 
 AUDIT_TEMPLATE_FIELD_LABELS = [
     'UUID', 'Created At', 'Updated At', 'Deleted At',
-    'Description', 'Name', 'Goal', 'Strategy', 'Audit Scope']
+    'Description', 'Name', 'Goal', 'Strategy', 'Audit Scope',
+    'Default Parameters']
 
 AUDIT_TEMPLATE_SHORT_LIST_FIELDS = [
     'uuid', 'name', 'goal_name', 'strategy_name']

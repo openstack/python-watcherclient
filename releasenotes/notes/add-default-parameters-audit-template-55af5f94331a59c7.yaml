@@ -1,0 +1,22 @@
+---
+features:
+  - |
+    Added support for the ``default_parameters`` field on Audit Templates.
+    When creating a template with a strategy, operators can now pre-configure
+    strategy parameter values using the ``--default-parameter`` option:
+
+    $ openstack optimize audittemplate create <name> <goal> -s <strategy> \
+        -p threshold=0.5 -p period=300
+
+    Audits created from a template that has ``default_parameters`` set will
+    inherit those values automatically. Explicitly provided audit parameters
+    take precedence over template defaults.
+
+    The field is shown in ``audittemplate show`` and ``audittemplate list
+    --detail`` responses. This feature requires Watcher API microversion 1.7
+    or higher.
+
+upgrade:
+  - |
+    The maximum supported API version has been increased to 1.7 to support
+    the new ``default_parameters`` field on Audit Templates.
