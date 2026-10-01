@@ -69,7 +69,13 @@ def _extract_error_json(body):
         body_json = jsonutils.loads(body)
         if 'error_message' in body_json:
             raw_msg = body_json['error_message']
-            error_json = jsonutils.loads(raw_msg)
+            # temporary workaround for watcher bug #2169114
+            # after that is resolved, only the path where raw_msg' is not a
+            # string should be needed
+            if isinstance(raw_msg, str):
+                error_json = jsonutils.loads(raw_msg)
+            else:
+                error_json = raw_msg
     except ValueError:
         pass
 
